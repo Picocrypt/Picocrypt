@@ -5,7 +5,7 @@ package main
 Picocrypt v1.34
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
-https://github.com/HACKERALERT/Picocrypt
+https://github.com/Picocrypt/Picocrypt
 
 ~ In cryptography we trust ~
 
