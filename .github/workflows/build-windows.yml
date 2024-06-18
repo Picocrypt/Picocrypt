@@ -23,12 +23,14 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pwd
         cd src
         go mod download
 
     - name: Build
-      run: go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" Picocrypt.go
+      run: |
+        pwd
+        dir
+        go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" Picocrypt.go
       env:
         CGO_ENABLED: 1
 
