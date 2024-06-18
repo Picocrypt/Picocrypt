@@ -33,17 +33,17 @@ jobs:
       env:
         CGO_ENABLED: 1
 
-    - name: Add icon and manifest
-      run: |
-        wget https://www.angusj.com/resourcehacker/reshacker_setup.exe
-        reshacker_setup.exe /SILENT
-        rh
+    # - name: Add icon and manifest
+    #   run: |
+    #     Invoke-WebRequest https://www.angusj.com/resourcehacker/reshacker_setup.exe
+    #     reshacker_setup.exe /SILENT
+    #     rh
 
-    - name: Compress with upx
-      run: |
-        wget https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-win64.zip
-        Expand-Archive upx-4.2.4-win64.zip -DestinationPath upx
-        upx/upx-4.2.4-win64/upx.exe --lzma --brute src/Picocrypt.exe
+    # - name: Compress with upx
+    #   run: |
+    #     Invoke-WebRequest https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-win64.zip
+    #     Expand-Archive upx-4.2.4-win64.zip -DestinationPath upx
+    #     upx/upx-4.2.4-win64/upx.exe --lzma --brute src/Picocrypt.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
