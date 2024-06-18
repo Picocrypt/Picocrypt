@@ -1,0 +1,33 @@
+name: build-windows
+
+on:
+  push:
+    paths:
+      - "src/*.go"
+      - "src/go.mod"
+      - "src/go.sum"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup
+      uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.22'
+        check-latest: true
+
+    - name: Build
+      run: go build -ldflags="-s -w -H=windowsgui -extldflags=-static" -o Picocrypt.exe src/Picocrypt.go
+      env:
+        CGO_ENABLED: 1
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-windows
+        path: Picocrypt.exe
+        if-no-files-found: error
+        compression-level: 9
