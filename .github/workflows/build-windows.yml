@@ -27,7 +27,7 @@ jobs:
         go mod download
 
     - name: Build
-      run: go build -ldflags="-s -w -H=windowsgui -extldflags=-static" -v -o Picocrypt.exe Picocrypt.go
+      run: go build -ldflags="-s -w -H=windowsgui -extldflags=-static" -v -o Picocrypt.exe ./...
       env:
         CGO_ENABLED: 1
 
