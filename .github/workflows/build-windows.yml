@@ -6,6 +6,7 @@ on:
       - "src/*.go"
       - "src/go.mod"
       - "src/go.sum"
+  workflow_dispatch:
 
 jobs:
   build:
