@@ -14,18 +14,24 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup
+    - name: Setup Go
       uses: actions/setup-go@v5
       with:
         go-version: '>=1.22'
         check-latest: true
+        cache-dependency-path: src/go.sum
+
+    - name: Install dependencies
+      run: |
+        cd src
+        go mod download
 
     - name: Build
-      run: go build -ldflags="-s -w -H=windowsgui -extldflags=-static" -o Picocrypt.exe src/Picocrypt.go
+      run: go build -ldflags="-s -w -H=windowsgui -extldflags=-static" -v -o Picocrypt.exe Picocrypt.go
       env:
         CGO_ENABLED: 1
 
-    - name: Upload
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-windows
