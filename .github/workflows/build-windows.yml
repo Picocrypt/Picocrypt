@@ -28,8 +28,7 @@ jobs:
 
     - name: Build
       run: |
-        pwd
-        dir
+        cd src
         go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" Picocrypt.go
       env:
         CGO_ENABLED: 1
