@@ -41,10 +41,10 @@ jobs:
         reshacker_setup/reshacker_setup.exe /SILENT
         Start-Sleep -Seconds 20
         cd src
-        # Invoke-Expression "& `"$Env:P`" -open out.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON,"
-        Start-Process -NoNewWindow -FilePath "$Env:P" -ArgumentList "-open out.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON, -log CON"
+        Invoke-Expression "& `"$Env:P`" -open out.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON,"
         Start-Sleep -Seconds 10
         ls
+        cat resourcehacker.log
         ren new.exe Picocrypt.exe
       env:
         P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
