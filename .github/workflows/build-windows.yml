@@ -17,7 +17,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v5
       with:
-        go-version: '>=1.22'
+        go-version: '>1.18'
         check-latest: true
         cache: false
 
@@ -39,10 +39,10 @@ jobs:
         Invoke-WebRequest -OutFile reshacker_setup.zip https://github.com/user-attachments/files/15893917/reshacker_setup.zip
         Expand-Archive -DestinationPath reshacker_setup reshacker_setup.zip
         reshacker_setup/reshacker_setup.exe /SILENT
-        Start-Process -NoNewWindow -FilePath "$P" -ArgumentList "-open out.exe","-save new.exe","-action add","-res images/key.ico","-mask ICONGROUP,MAINICON,"
+        Start-Sleep -Seconds 20
+        Start-Process -NoNewWindow -FilePath "$Env:P" -ArgumentList "-open out.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON,"
         Start-Sleep -Seconds 10
-        del Picocrypt.exe
-        mv new.exe Picocrypt.exe
+        ren new.exe Picocrypt.exe
       env:
         P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
 
