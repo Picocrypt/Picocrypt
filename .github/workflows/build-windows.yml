@@ -24,7 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd src
-        go mod download -v
+        go mod download
 
     - name: Build
       run: |
