@@ -45,9 +45,10 @@ jobs:
         Start-Sleep -Seconds 5
         Invoke-Expression "& `"$Env:P`" -open src/2.exe -save src/3.exe -action addoverwrite -res images/key.ico -mask `"ICONGROUP,GLFW_ICON,`""
         Start-Sleep -Seconds 5
-        # Invoke-Expression "& `"$Env:P`" -open src/3.exe -save src/4.exe -action addoverwrite -res dist/windows/manifest.xml -mask `"MANIFEST,1,`""
-        # Start-Sleep -Seconds 5
-        # Invoke-Expression "& `"$Env:P`" -open src/4.exe -save src/5.exe -action addoverwrite -res dist/windows/versioninfo.rc -mask `"VERSIONINFO,1,`""
+        Invoke-Expression "& `"$Env:P`" -open src/3.exe -save src/4.exe -action addoverwrite -res dist/windows/manifest.xml -mask `"MANIFEST,1,`""
+        Start-Sleep -Seconds 5
+        Invoke-Expression "& `"$Env:P`" -open src/4.exe -save src/5.exe -action addoverwrite -res dist/windows/versioninfo.rc -mask `"VERSIONINFO,1,`""
+        Start-Sleep -Seconds 5
       env:
         P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
 
