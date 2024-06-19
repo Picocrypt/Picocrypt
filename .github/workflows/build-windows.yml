@@ -29,7 +29,7 @@ jobs:
     - name: Build
       run: |
         cd src
-        go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" -o out.exe Picocrypt.go
+        go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" -o 1.exe Picocrypt.go
       env:
         CGO_ENABLED: 1
 
@@ -40,10 +40,13 @@ jobs:
         Expand-Archive -DestinationPath reshacker_setup reshacker_setup.zip
         reshacker_setup/reshacker_setup.exe /SILENT
         Start-Sleep -Seconds 20
-        Invoke-Expression "& `"$Env:P`" -open src/out.exe -save src/new.exe -action add -res images/key.ico -mask `"ICONGROUP,MAINICON,`""
-        Start-Sleep -Seconds 10
-        cd src
-        ren new.exe Picocrypt.exe
+        Invoke-Expression "& `"$Env:P`" -open src/1.exe -save src/2.exe -action add -res images/key.ico -mask `"ICONGROUP,MAINICON,`""
+        Start-Sleep -Seconds 5
+        Invoke-Expression "& `"$Env:P`" -open src/2.exe -save src/3.exe -action addoverwrite -res images/key.ico -mask `"ICONGROUP,GLFW_ICON,`""
+        Start-Sleep -Seconds 5
+        Invoke-Expression "& `"$Env:P`" -open src/3.exe -save src/4.exe -action addoverwrite -res dist/windows/manifest.xml -mask `"MANIFEST,1,`""
+        Start-Sleep -Seconds 5
+        Invoke-Expression "& `"$Env:P`" -open src/4.exe -save src/5.exe -action addoverwrite -res dist/windows/versioninfo.rc -mask `"VERSIONINFO,1,`""
       env:
         P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
 
@@ -52,7 +55,7 @@ jobs:
       run: |
         Invoke-WebRequest -OutFile upx.zip https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-win64.zip
         Expand-Archive upx.zip -DestinationPath upx
-        upx/upx-4.2.4-win64/upx.exe --lzma --brute src/Picocrypt.exe
+        upx/upx-4.2.4-win64/upx.exe --lzma --brute -o src/Picocrypt.exe src/5.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
