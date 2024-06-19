@@ -53,7 +53,7 @@ jobs:
     - name: Compress with upx
       shell: pwsh
       run: |
-        Invoke-WebRequest -OutFile upx.zip https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-win64.zip
+        Invoke-WebRequest -OutFile upx.zip https://github.com/user-attachments/files/15894908/upx-4.2.4-win64.zip
         Expand-Archive upx.zip -DestinationPath upx
         upx/upx-4.2.4-win64/upx.exe --lzma --brute -o src/Picocrypt.exe src/5.exe
 
