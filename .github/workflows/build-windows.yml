@@ -58,7 +58,7 @@ jobs:
         Invoke-WebRequest -OutFile upx.zip https://github.com/user-attachments/files/15894908/upx-4.2.4-win64.zip
         Expand-Archive upx.zip -DestinationPath upx
         ls src
-        upx/upx-4.2.4-win64/upx.exe --lzma --brute -o src/Picocrypt.exe src/3.exe
+        upx/upx-4.2.4-win64/upx.exe --lzma --brute -o src/Picocrypt.exe src/4.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
