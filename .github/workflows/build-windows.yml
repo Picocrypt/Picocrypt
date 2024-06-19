@@ -40,6 +40,7 @@ jobs:
         Expand-Archive -DestinationPath reshacker_setup reshacker_setup.zip
         reshacker_setup/reshacker_setup.exe /SILENT
         Start-Sleep -Seconds 20
+        cd src
         # Invoke-Expression "& `"$Env:P`" -open out.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON,"
         Start-Process -NoNewWindow -FilePath "$Env:P" -ArgumentList "-open out.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON, -log CON"
         Start-Sleep -Seconds 10
