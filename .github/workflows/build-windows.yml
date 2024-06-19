@@ -42,7 +42,8 @@ jobs:
         Start-Sleep -Seconds 20
         Invoke-Expression "& `"$Env:P`" -open src/out.exe -save src/new.exe -action add -res images/key.ico -mask `"ICONGROUP,MAINICON,`""
         Start-Sleep -Seconds 10
-        ren src/new.exe src/Picocrypt.exe
+        cd src
+        ren new.exe Picocrypt.exe
       env:
         P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
 
