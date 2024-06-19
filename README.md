@@ -14,9 +14,7 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 **Beware of picocrypt.org, which claims to be the official website for this project! Remember, there is no official website for Picocrypt.** Even if this self-proclaimed website is taken down, I will not remove this message; let it be a real-world warning to stay vigilant.
 
 ## Windows
-Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.33/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
-
-If you use Picocrypt frequently, you can also download the installable version from <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.33/Installer.exe">here</a>, which will install Picocrypt onto your system and add it to your start menu for easy access. The installer also includes extra compatibility helpers, so if the portable executable doesn't work, this likely will.
+Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, go [here](https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml) and click on the latest successful build-windows workflow run. Find the Artifacts section and download the build -- inside will be the Picocrypt executable.
 
 ## macOS
 Picocrypt for macOS is very simple as well. Download Picocrypt for Apple silicon <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.34/Picocrypt-arm64.dmg">here</a>, open the container, and drag Picocrypt to your Downloads or Applications. If you can't open Picocrypt because it's not from a verified developer, control-click on Picocrypt and hit Open to bypass the warning. If the app appears to be "damaged" and can't be opened, try manually trusting it from a terminal:
@@ -27,15 +25,6 @@ Note that Picocrypt requires OpenGL, and may not work in the future if Apple rem
 
 ## Linux
 To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.34/Picocrypt">here</a>. Alternatively, you can try the <a href="https://snapcraft.io/picocrypt">Snap</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
-
-## CLI
-A command-line interface is available for Picocrypt <a href="https://github.com/Picocrypt/CLI">here</a>. It can encrypt and decrypt files, folders, and globs, and supports paranoid mode and Reed-Solomon encoding. You can use it on systems that don't have a GUI or can't run the GUI app, or to write automated shell scripts for backups, etc.
-
-## Web
-A web interface for Picocrypt is available <a href="https://picocrypt.pages.dev/">here</a>, allowing you to use a lite version of Picocrypt on any device. Keep in mind that its functionality is very limited and you won't be able to use any advanced features or encrypt large files. It is also quite slow compared to the native app.
-
-## Paranoid Pack
-The Paranoid Pack is a compressed archive that contains executables for Windows, macOS, and Linux, including the source code and dependencies. As long as you have it stored in a place you can access, you'll be able to open it and use Picocrypt on any desktop operating system in case this repository mysteriously vanishes or the entire Internet burns down. Think of it as a seed vault for Picocrypt; as long as one person has the Paranoid Pack within reach, they can share it with the rest of the world and keep Picocrypt functional in case of catastrophic events. The best way to ensure Picocrypt is accessible many decades from now is to keep a Paranoid Pack in a safe place. Get your copy <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.33/Paranoid.zip">here</a>.
 
 # Why Picocrypt?
 Why should you use Picocrypt instead of VeraCrypt, 7-Zip, BitLocker, or Cryptomator? Here are a few reasons why you should choose Picocrypt:
