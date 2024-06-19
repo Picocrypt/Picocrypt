@@ -29,7 +29,7 @@ jobs:
     - name: Build
       run: |
         cd src
-        go build -ldflags="-s -w -H=windowsgui -extldflags=-static" Picocrypt.go
+        go build -ldflags="-s -w -H=windowsgui -extldflags=-static" -o out.exe Picocrypt.go
       env:
         CGO_ENABLED: 1
 
@@ -39,12 +39,12 @@ jobs:
         Invoke-WebRequest -OutFile reshacker_setup.zip https://github.com/user-attachments/files/15893917/reshacker_setup.zip
         Expand-Archive -DestinationPath reshacker_setup reshacker_setup.zip
         reshacker_setup/reshacker_setup.exe /SILENT
-        & "$env:RH" -open Picocrypt.exe -save new.exe -action add -res images/key.ico -mask ICONGROUP,MAINICON,
+        Start-Process -NoNewWindow -FilePath "%P%" -ArgumentList "-open out.exe","-save new.exe","-action add","-res images/key.ico","-mask ICONGROUP,MAINICON,"
         Start-Sleep -Seconds 10
         del Picocrypt.exe
         mv new.exe Picocrypt.exe
       env:
-        RH: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
+        P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
 
     - name: Compress with upx
       shell: pwsh
