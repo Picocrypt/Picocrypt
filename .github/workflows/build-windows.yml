@@ -10,7 +10,6 @@ on:
       - main
   schedule:
     - cron: "0 0 * * *"
-  workflow_dispatch:
 
 jobs:
   build:
@@ -62,8 +61,7 @@ jobs:
       shell: pwsh
       run: |
         Invoke-WebRequest -OutFile upx.zip https://github.com/user-attachments/files/15894908/upx-4.2.4-win64.zip
-        Expand-Archive upx.zip -DestinationPath upx
-        ls src
+        Expand-Archive -DestinationPath upx upx.zip
         upx/upx-4.2.4-win64/upx.exe --lzma --brute -o src/Picocrypt.exe src/5.exe
 
     - name: Upload artifact
