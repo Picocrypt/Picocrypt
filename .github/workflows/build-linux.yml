@@ -37,7 +37,7 @@ jobs:
     - name: Build
       run: |
         cd src
-        go build -v -ldflags="-s -w" -o Picocrypt.go
+        go build -v -ldflags="-s -w" -o Picocrypt Picocrypt.go
       env:
         CGO_ENABLED: 1
         GOAMD64: v2
