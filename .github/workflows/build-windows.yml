@@ -51,9 +51,9 @@ jobs:
         Start-Sleep -Seconds 10
         Invoke-Expression "& `"$Env:P`" -open src/3.exe -save src/4.exe -action addoverwrite -res dist/windows/manifest.xml -mask `"MANIFEST,1,`""
         Start-Sleep -Seconds 10
-        Invoke-Expression "& `"$Env:P`" -open dist/windows/versioninfo.rc -save resources.res -action compile
+        Invoke-Expression "& `"$Env:P`" -open dist/windows/versioninfo.rc -save resources.res -action compile"
         Start-Sleep -Seconds 10
-        Invoke-Expression "& `"$Env:P`" -open src/4.exe -save src/5.exe -action addoverwrite -res resources.res
+        Invoke-Expression "& `"$Env:P`" -open src/4.exe -save src/5.exe -action addoverwrite -res resources.res"
         Start-Sleep -Seconds 10
       env:
         P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
