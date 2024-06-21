@@ -45,7 +45,7 @@ jobs:
     - name: Package as .deb
       run: |
         wget https://github.com/user-attachments/files/15922055/Picocrypt.zip
-        python -m zipfile -e Picocrypt.zip
+        python -m zipfile -e Picocrypt.zip Picocrypt
         ls
         cp src/Picocrypt Picocrypt/Picocrypt/usr/local/bin/
         cd Picocrypt
