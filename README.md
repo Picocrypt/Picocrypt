@@ -1,6 +1,6 @@
-![https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml](https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml/badge.svg)
-![](https://github.com/Picocrypt/Picocrypt/actions/workflows/build-linux.yml/badge.svg)
-![](https://github.com/Picocrypt/Picocrypt/actions/workflows/codeql-analysis.yml/badge.svg)
+<a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml/badge.svg"></a>
+<a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-linux.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-linux.yml/badge.svg"></a>
+<a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/codeql-analysis.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/codeql-analysis.yml/badge.svg"></a>
 
 <p align="center"><img align="center" src="/images/logo.svg" width="512" alt="Picocrypt"></p> 
 
@@ -20,7 +20,9 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 ## Windows
 Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click the button below and go into the latest successful build-windows workflow run. Find the Artifacts section and download the build -- inside will be the Picocrypt executable.
 
-![https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml](https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml/badge.svg)
+<a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml">
+	<img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml/badge.svg">
+</a>
 
 ## macOS
 Picocrypt for macOS is very simple as well. Download Picocrypt for Apple silicon <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.34/Picocrypt-arm64.dmg">here</a>, open the container, and drag Picocrypt to your Downloads or Applications. If you can't open Picocrypt because it's not from a verified developer, control-click on Picocrypt and hit Open to bypass the warning. If the app appears to be "damaged" and can't be opened, try manually trusting it from a terminal:
