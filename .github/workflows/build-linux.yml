@@ -50,13 +50,18 @@ jobs:
         cp src/Picocrypt Picocrypt/Picocrypt/usr/local/bin/
         cd Picocrypt
         dpkg-deb --build --root-owner-group Picocrypt
-      
-    - name: Upload artifact
+
+    - name: Prepare to upload artifacts
+      run: |
+        mv src/Picocrypt .
+        mv Picocrypt/Picocrypt.deb .
+
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-linux
         path: |
-          src/Picocrypt
-          Picocrypt/Picocrypt.deb
+          Picocrypt
+          Picocrypt.deb
         if-no-files-found: error
         compression-level: 9
