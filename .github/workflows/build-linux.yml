@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
 
@@ -53,8 +53,13 @@ jobs:
 
     - name: Prepare to upload artifacts
       run: |
-        mv src/Picocrypt .
-        mv Picocrypt/Picocrypt.deb .
+        mkdir out
+        mv src/Picocrypt out
+        mv Picocrypt/Picocrypt.deb out
+        rm -rf src
+        rm -rf Picocrypt
+        mv out/Picocrypt .
+        mv out/Picocrypt.deb .
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
