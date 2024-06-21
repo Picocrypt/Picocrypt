@@ -27,7 +27,7 @@ jobs:
 
     - name: Install packages
       run: |
-        sudo apt install -y gcc xorg-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa
+        sudo apt install -y gcc xorg-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa wget
 
     - name: Install dependencies
       run: |
@@ -42,10 +42,22 @@ jobs:
         CGO_ENABLED: 1
         GOAMD64: v2
 
+    - name: Package as .deb
+      run: |
+        wget https://github.com/user-attachments/files/15922055/Picocrypt.zip
+        python -m zipfile -e Picocrypt.zip
+        ls
+        cp src/Picocrypt Picocrypt/Picocrypt/usr/local/bin/
+        cd Picocrypt
+        ls
+        dpkg-deb --build --root-owner-group Picocrypt
+        ls
+      
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-linux
-        path: src/Picocrypt
+        path: |
+          src/Picocrypt
         if-no-files-found: error
         compression-level: 9
