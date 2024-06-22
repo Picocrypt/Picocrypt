@@ -55,6 +55,6 @@ jobs:
       with:
         name: build-macos
         path: |
-          Picocrypt.app.zip
+          Picocrypt.zip
         if-no-files-found: error
         compression-level: 9
