@@ -48,7 +48,7 @@ jobs:
         unzip -d Picocrypt.app Picocrypt.app.zip
         rm Picocrypt.app.zip
         mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
-        zip -r Picocrypt.app.zip Picocrypt.app
+        zip -r Picocrypt.zip Picocrypt.app
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
