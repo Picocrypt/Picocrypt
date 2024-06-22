@@ -44,7 +44,8 @@ jobs:
     - name: Package as .app
       run: |
         wget -o Picocrypt.app.zip https://github.com/user-attachments/files/15934813/Picocrypt.app.zip
-        tar -x Picocrypt.app.zip
+        ls -l
+        tar -zxvf Picocrypt.app.zip
         rm Picocrypt.app.zip
         mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
         zip -r Picocrypt.app.zip Picocrypt.app
