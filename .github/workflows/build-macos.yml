@@ -27,7 +27,7 @@ jobs:
 
     - name: Install packages
       run: |
-        brew install glfw glew wget
+        brew install glfw glew curl
 
     - name: Install dependencies
       run: |
@@ -43,7 +43,7 @@ jobs:
 
     - name: Package as .app
       run: |
-        wget -o Picocrypt.app.zip https://github.com/user-attachments/files/15934813/Picocrypt.app.zip
+        curl -o Picocrypt.app.zip https://github.com/user-attachments/files/15934813/Picocrypt.app.zip
         ls -l
         mkdir Picocrypt.app
         unzip -d Picocrypt.app Picocrypt.app.zip
