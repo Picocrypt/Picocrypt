@@ -45,7 +45,6 @@ jobs:
       run: |
         wget https://github.com/user-attachments/files/15934717/Picocrypt.zip
         python -m zipfile -e Picocrypt.zip Picocrypt
-        ls
         cp src/Picocrypt Picocrypt/Picocrypt/usr/bin/picocrypt-gui
         cd Picocrypt
         dpkg-deb --build --root-owner-group Picocrypt
