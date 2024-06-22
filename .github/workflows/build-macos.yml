@@ -27,7 +27,7 @@ jobs:
 
     - name: Install packages
       run: |
-        brew install glfw glew
+        brew install glfw glew wget
 
     - name: Install dependencies
       run: |
@@ -41,11 +41,19 @@ jobs:
       env:
         CGO_ENABLED: 1
 
+    - name: Package as .app
+      run: |
+        wget -o Picocrypt.app.zip https://github.com/user-attachments/files/15934813/Picocrypt.app.zip
+        unzip Picocrypt.app.zip
+        rm Picocrypt.app.zip
+        mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
+        zip -r Picocrypt.app.zip Picocrypt.app
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-macos
         path: |
-          src/Picocrypt
+          Picocrypt.app.zip
         if-no-files-found: error
         compression-level: 9
