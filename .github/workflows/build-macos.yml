@@ -43,7 +43,6 @@ jobs:
     - name: Package as .app
       run: |
         mv dist/macos/Picocrypt.app.zip .
-        ls -l
         unzip -d Picocrypt.app Picocrypt.app.zip
         rm Picocrypt.app.zip
         mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
