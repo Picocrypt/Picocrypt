@@ -76,14 +76,10 @@ jobs:
         if-no-files-found: error
         compression-level: 9
 
-    - name: Get current date
-      run: |
-        echo "{date}={$(date +'%Y-%m-%d')}" >> $GITHUB_STATE
-
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         files: |
           src/Picocrypt.exe
-        tag_name: nightly-${{ env.date }}
+        tag_name: nightly
         make_latest: true
