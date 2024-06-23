@@ -80,6 +80,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          Picocrypt.exe
+          src/Picocrypt.exe
         tag_name: nightly
         make_latest: true
