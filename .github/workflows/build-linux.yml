@@ -1,5 +1,8 @@
 name: build-linux
 
+permissions:
+  contents: write
+
 on:
   push:
     paths:
@@ -76,5 +79,5 @@ jobs:
         files: |
           Picocrypt
           Picocrypt.deb
+        tag_name: nightly
         make_latest: true
-  
