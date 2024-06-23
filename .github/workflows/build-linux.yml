@@ -10,6 +10,7 @@ on:
       - main
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -68,3 +69,12 @@ jobs:
           Picocrypt.deb
         if-no-files-found: error
         compression-level: 9
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          Picocrypt
+          Picocrypt.deb
+        make_latest: true
+  
