@@ -45,8 +45,8 @@ jobs:
         mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
         zip -rX Picocrypt.zip Picocrypt.app
         mkdir out
-        cp Picocrypt.app out
-        hdiutil create Picocrypt.dmg -volname Picocrypt -fs HFS+ -srcfolder out
+        cp -R Picocrypt.app out
+        hdiutil create Picocrypt.dmg -volname Picocrypt -fs APFS -format UDZO -srcfolder out
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
