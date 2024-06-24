@@ -43,9 +43,10 @@ jobs:
         unzip -d Picocrypt.app Picocrypt.app.zip
         rm Picocrypt.app.zip
         mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
-        zip -r Picocrypt.zip Picocrypt.app
-        cd Picocrypt.app
-        zip -rX ../Picocrypt.app.zip *
+        zip -rX Picocrypt.zip Picocrypt.app
+        mkdir out
+        cp Picocrypt.app out
+        hdiutil create Picocrypt.dmg -volname Picocrypt -fs HFS+ -srcfolder out
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -60,6 +61,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          Picocrypt.app.zip
+          Picocrypt.dmg
         tag_name: nightly
         make_latest: true
