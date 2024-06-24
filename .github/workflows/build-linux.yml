@@ -4,16 +4,8 @@ permissions:
   contents: write
 
 on:
-  push:
-    paths:
-      - "src/*.go"
-      - "src/go.mod"
-      - "src/go.sum"
-    branches:
-      - main
   schedule:
     - cron: "0 0 * * *"
-  workflow_dispatch:
 
 jobs:
   build:
