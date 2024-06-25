@@ -14,26 +14,24 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 **Please donate to Picocrypt on <a href="https://opencollective.com/picocrypt">Open Collective</a> (crypto is accepted) to raise money for a security audit from Cure53. Because this is a project that I spend many hours on and make no money from, I cannot pay for an audit myself. <i>Picocrypt needs support from its community.**</i>
 
 # Downloads
-**Important**: There are multiple entities under the name "Picocrypt". For example, there's an old encryption tool called PicoCrypt that uses a broken cipher. There's also an ERC-funded research project called PICOCRYPT. There are even domains related to Picocrypt that I've never registered like picocrypt.com and picocrypt.org. Please don't confuse any of these unrelated (and potentially malicious) projects/domains with Picocrypt (this project). **Make sure to only download Picocrypt from this repository** to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion.
+**Make sure to only download Picocrypt from this repository** to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion.
 
 **Beware of picocrypt.org, which claims to be the official website for this project! Remember, there is no official website for Picocrypt.** Even if this self-proclaimed website is taken down, I will not remove this message; let it be a real-world warning to stay vigilant.
 
 ## Windows
-Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click the button below and go into the latest successful build-windows workflow run. Find the Artifacts section and download the build -- inside will be the Picocrypt executable.
-
-<a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml">
-	<img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml/badge.svg">
-</a>
+Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/download/nightly/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
 
 ## macOS
-Picocrypt for macOS is very simple as well. Download Picocrypt for Apple silicon <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.34/Picocrypt-arm64.dmg">here</a>, open the container, and drag Picocrypt to your Downloads or Applications. If you can't open Picocrypt because it's not from a verified developer, control-click on Picocrypt and hit Open to bypass the warning. If the app appears to be "damaged" and can't be opened, try manually trusting it from a terminal:
+Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/download/nightly/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You may need to manually trust the app from a terminal and control-click on the app if macOS prevents you from opening it:
 ```
 xattr -d com.apple.quarantine /Applications/Picocrypt.app
 ```
-Note that Picocrypt requires OpenGL, and may not work in the future if Apple removes it.
 
 ## Linux
-To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/HACKERALERT/Picocrypt/releases/download/1.34/Picocrypt">here</a>. Alternatively, you can try the <a href="https://snapcraft.io/picocrypt">Snap</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
+To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/download/nightly/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/download/nightly/Picocrypt.deb">.deb</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
+```
+sudo apt install -y libc6 libgcc-s1 libgl1 libgtk-3-0 libstdc++6 libx11-6
+```
 
 # Why Picocrypt?
 Why should you use Picocrypt instead of VeraCrypt, 7-Zip, BitLocker, or Cryptomator? Here are a few reasons why you should choose Picocrypt:
