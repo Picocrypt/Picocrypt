@@ -73,8 +73,9 @@ jobs:
         compression-level: 9
 
     - name: Get version tag
+      shell: pwsh
       run: |
-        VERSION=$(cat VERSION)
+        set VERSION=$(cat VERSION)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Release
