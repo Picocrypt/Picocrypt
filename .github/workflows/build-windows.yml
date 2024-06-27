@@ -75,8 +75,8 @@ jobs:
     - name: Get version tag
       shell: pwsh
       run: |
-        set VERSION=$(cat VERSION)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        $version = Get-Content -Path "VERSION"
+        echo "VERSION=$version" >> $env:GITHUB_ENV
 
     - name: Release
       uses: softprops/action-gh-release@v2
