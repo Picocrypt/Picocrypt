@@ -4,8 +4,12 @@ permissions:
   contents: write
 
 on:
-  schedule:
-    - cron: "0 0 * * *"
+  push:
+      paths:
+        - "VERSION"
+      branches:
+        - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -68,10 +72,15 @@ jobs:
         if-no-files-found: error
         compression-level: 9
 
+    - name: Get version tag
+      run: |
+        VERSION=$(cat VERSION)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         files: |
           src/Picocrypt.exe
-        tag_name: nightly
+        tag_name: ${{ env.VERSION }}
         make_latest: true
