@@ -19,16 +19,16 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 **Beware of picocrypt.org, which claims to be the official website for this project! Remember, there is no official website for Picocrypt.** Even if this self-proclaimed website is taken down, I will not remove this message; let it be a real-world warning to stay vigilant.
 
 ## Windows
-Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/download/latest/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
+Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/download/1.35/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
 
 ## macOS
-Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/download/latest/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You may need to manually trust the app from a terminal and control-click on the app if macOS prevents you from opening it:
+Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/download/1.35/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You may need to manually trust the app from a terminal and control-click on the app if macOS prevents you from opening it:
 ```
 xattr -d com.apple.quarantine /Applications/Picocrypt.app
 ```
 
 ## Linux
-To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/download/latest/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/download/nightly/Picocrypt.deb">.deb</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
+To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/download/1.35/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/download/1.35/Picocrypt.deb">.deb</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
 ```
 sudo apt install -y libc6 libgcc-s1 libgl1 libgtk-3-0 libstdc++6 libx11-6
 ```
