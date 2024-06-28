@@ -445,7 +445,7 @@ func draw() {
 							}
 
 							fout, _ := os.Create(file)
-							data := make([]byte, KiB)
+							data := make([]byte, 32)
 							rand.Read(data)
 							_, err = fout.Write(data)
 							fout.Close()
