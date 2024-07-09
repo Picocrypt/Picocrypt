@@ -42,7 +42,7 @@ jobs:
 
     - name: Package as .deb
       run: |
-        wget https://github.com/user-attachments/files/15934717/Picocrypt.zip
+        wget https://github.com/user-attachments/files/16136712/Picocrypt.zip
         python -m zipfile -e Picocrypt.zip Picocrypt
         cp src/Picocrypt Picocrypt/Picocrypt/usr/bin/picocrypt-gui
         cd Picocrypt
@@ -72,6 +72,8 @@ jobs:
       run: |
         VERSION=$(cat VERSION)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Version: $VERSION" >> Picocrypt/Picocrypt/DEBIAN/control
+        echo "Version=$VERSION" >> Picocrypt/Picocrypt/usr/share/applications/picocrypt.desktop
 
     - name: Release
       uses: softprops/action-gh-release@v2
