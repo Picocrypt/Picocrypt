@@ -40,18 +40,15 @@ jobs:
         CGO_ENABLED: 1
         GOAMD64: v2
 
-    - name: Set .deb version
-      run: |
-        VERSION=$(cat VERSION)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
-        echo "Version: $VERSION" >> Picocrypt/Picocrypt/DEBIAN/control
-        echo "Version=$VERSION" >> Picocrypt/Picocrypt/usr/share/applications/picocrypt.desktop
-
     - name: Package as .deb
       run: |
         wget https://github.com/user-attachments/files/16136712/Picocrypt.zip
         python -m zipfile -e Picocrypt.zip Picocrypt
         cp src/Picocrypt Picocrypt/Picocrypt/usr/bin/picocrypt-gui
+        VERSION=$(cat VERSION)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Version: $VERSION" >> Picocrypt/Picocrypt/DEBIAN/control
+        echo "Version=$VERSION" >> Picocrypt/Picocrypt/usr/share/applications/picocrypt.desktop
         cd Picocrypt
         dpkg-deb -Zxz --build --root-owner-group Picocrypt
 
