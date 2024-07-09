@@ -40,6 +40,13 @@ jobs:
         CGO_ENABLED: 1
         GOAMD64: v2
 
+    - name: Set .deb version
+      run: |
+        VERSION=$(cat VERSION)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Version: $VERSION" >> Picocrypt/Picocrypt/DEBIAN/control
+        echo "Version=$VERSION" >> Picocrypt/Picocrypt/usr/share/applications/picocrypt.desktop
+
     - name: Package as .deb
       run: |
         wget https://github.com/user-attachments/files/16136712/Picocrypt.zip
@@ -67,13 +74,6 @@ jobs:
           Picocrypt.deb
         if-no-files-found: error
         compression-level: 9
-
-    - name: Get version tag
-      run: |
-        VERSION=$(cat VERSION)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
-        echo "Version: $VERSION" >> Picocrypt/Picocrypt/DEBIAN/control
-        echo "Version=$VERSION" >> Picocrypt/Picocrypt/usr/share/applications/picocrypt.desktop
 
     - name: Release
       uses: softprops/action-gh-release@v2
