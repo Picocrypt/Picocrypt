@@ -10,9 +10,6 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 <br>
 <p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt"></p>
 
-# Funding
-**Please donate to Picocrypt on <a href="https://opencollective.com/picocrypt">Open Collective</a> (crypto is accepted) to raise money for a security audit from Cure53. Because this is a project that I spend many hours on and make no money from, I cannot pay for an audit myself. <i>Picocrypt needs support from its community.**</i>
-
 # Downloads
 **Make sure to only download Picocrypt from this repository** to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion.
 
