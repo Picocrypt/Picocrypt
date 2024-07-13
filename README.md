@@ -63,7 +63,7 @@ Here's how Picocrypt compares to other popular encryption tools.
 | Reed-Solomon   |✅ Yes         |❌ No           |❌ No          |❌ No           |❌ No          |
 | Compression    |✅ Yes         |❌ No           |✅ Yes         |✅ Yes          |❌ No          |
 | Telemetry      |✅ None        |✅ None         |✅ None        |❓ Unknown      |✅ None        |
-| Audited        |❌ [Donate](https://opencollective.com/picocrypt)     |✅ Yes          |❌ No          |❓ Unknown      |✅ Yes         |
+| Audited        |🚧 W.I.P       |✅ Yes          |❌ No          |❓ Unknown      |✅ Yes         |
 
 Keep in mind that while Picocrypt does most things better than other tools, it's not a one-size-fits-all and doesn't try to be. There are use cases such as full-disk encryption where VeraCrypt and BitLocker would be a better choice. So while Picocrypt is a great choice for the majority of people, you should still do your own research and use what's best for you.
 
@@ -102,24 +102,27 @@ Yes, Picocrypt is secure against quantum computers. All of the cryptography used
 # Acknowledgements
 A thank you from the bottom of my heart to the significant contributors on Open Collective:
 <ul>
-	<li>donor39 (backer)</li>
-	<li>Pokabu (backer)</li>
-	<li>akp (backer)</li>
-	<li>Marvin (backer)</li>
-	<li>Kenichi Nakasaka (backer)</li>
-	<li>EN (backer)</li>
-	<li>JC (backer)</li>
-	<li>Guest ($842)</li>
-	<li>YellowNight ($818)</li>
+	<li><strong>Mikołaj ($1674)</strong></li>
+	<li><strong>Guest ($842)</strong></li>
+	<li><strong>YellowNight ($818)</strong></li>
+	<li>Incognito ($135)</li>
+	<li>akp ($98)</li>
+	<li>JC ($90)</li>
 	<li>evelian ($50)</li>
 	<li>jp26 ($50)</li>
 	<li>guest-116103ad ($50)</li>
 	<li>Guest ($27)</li>
+	<li>Gittan Pade ($25)</li>
+	<li>Pokabu ($20)</li>
 	<li>oli ($20)</li>
 	<li>Bright ($20)</li>
 	<li>Incognito ($20)</li>
 	<li>Guest ($20)</li>
+	<li>JokiBlue ($20)</li>
+	<li>Guest ($20)</li>
 	<li>Markus ($15)</li>
+	<li>EN ($15)</li>
+	<li>Guest ($13)</li>
 	<li>Tybbs ($10)</li>
 	<li>N. Chin ($10)</li>
 	<li>Manjot ($10)</li>
@@ -134,7 +137,7 @@ A thank you from the bottom of my heart to the significant contributors on Open 
 	<li>Boat ($10)</li>
 	<li>Guest ($10)</li>
 </ul>
-<!-- Last updated April 16, 2024 -->
+<!-- Last updated July 12, 2024 -->
 
 Also, a huge thanks to the following people who were the first to donate and support Picocrypt:
 <ul>
@@ -155,5 +158,6 @@ Finally, thanks to these people/organizations for helping me out when needed:
 	<li>@samuel-lucas6 for feedback, suggestions, and support</li>
 	<li>@AsuxAX and @Minibus93 for testing new features</li>
 	<li>@mdanish-kh and @stephengillie for WinGet package</li>
-	<li><a href="https://privacyguides.org">PrivacyGuides</a> for listing Picocrypt</li>
+	<li><a href="https://privacyguides.org">Privacy Guides</a> for listing Picocrypt</li>
+	<li>You?</li>
 </ul>
