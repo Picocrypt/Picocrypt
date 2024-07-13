@@ -3,6 +3,12 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.35 - v1.37 (Released 07/08/2024)
+<ul>
+	<li>✓ Various small releases to get workflows running and automated builds released</li>
+	<li>✓ Reduce keyfile generator's output size from 1 KiB -> 32 bytes since 32 bytes is enough</li>
+</ul>
+
 # v1.34 (Released 04/29/2024)
 <ul>
 	<li>✓ New CLI with support for files, folders, globs, paranoid mode, and Reed-Solomon</li>
