@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.34
+Picocrypt v1.38
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -58,7 +58,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.33"
+var version = "v1.38"
 var dpi float32
 var mode string
 var working bool
@@ -78,7 +78,7 @@ var outputFile string
 var onlyFiles []string
 var onlyFolders []string
 var allFiles []string
-var inputLabel = "Drop files and folders into this window."
+var inputLabel = "Drop files and folders into this window"
 
 // Password and confirm password
 var password string
@@ -99,7 +99,7 @@ var passgenCopy bool
 var keyfile bool
 var keyfiles []string
 var keyfileOrdered bool
-var keyfileLabel = "None selected."
+var keyfileLabel = "None selected"
 
 // Comments variables
 var comments string
@@ -123,7 +123,7 @@ var kept bool
 
 // Status variables
 var startLabel = "Start"
-var mainStatus = "Ready."
+var mainStatus = "Ready"
 var mainStatusColor = WHITE
 var popupStatus string
 
@@ -207,13 +207,13 @@ func draw() {
 
 			if showKeyfile {
 				giu.PopupModal("Manage keyfiles:##"+strconv.Itoa(modalId)).Flags(70).Layout(
-					giu.Label("Drag and drop your keyfiles here."),
+					giu.Label("Drag and drop your keyfiles here"),
 					giu.Custom(func() {
 						if mode != "decrypt" {
 							giu.Checkbox("Require correct order", &keyfileOrdered).Build()
-							giu.Tooltip("Ordering of keyfiles will matter.").Build()
+							giu.Tooltip("Ordering of keyfiles will matter").Build()
 						} else if keyfileOrdered {
-							giu.Label("Correct ordering is required.").Build()
+							giu.Label("Correct ordering is required").Build()
 						}
 					}),
 					giu.Custom(func() {
@@ -228,14 +228,14 @@ func draw() {
 						giu.Button("Clear").Size(100, 0).OnClick(func() {
 							keyfiles = nil
 							if keyfile {
-								keyfileLabel = "Keyfiles required."
+								keyfileLabel = "Keyfiles required"
 							} else {
-								keyfileLabel = "None selected."
+								keyfileLabel = "None selected"
 							}
 							modalId++
 							giu.Update()
 						}),
-						giu.Tooltip("Remove all keyfiles."),
+						giu.Tooltip("Remove all keyfiles"),
 
 						giu.Button("Done").Size(100, 0).OnClick(func() {
 							giu.CloseCurrentPopup()
@@ -310,7 +310,7 @@ func draw() {
 				giu.SameLine()
 				giu.Style().SetDisabled((len(allFiles) == 0 && len(onlyFiles) == 0) || scanning).To(
 					giu.Button("Clear").Size(bw/dpi, 0).OnClick(resetUI),
-					giu.Tooltip("Clear all input files and reset UI state."),
+					giu.Tooltip("Clear all input files and reset UI state"),
 				).Build()
 			}),
 		),
@@ -329,20 +329,20 @@ func draw() {
 					}
 					giu.Update()
 				}),
-				giu.Tooltip("Toggle the visibility of password entries."),
+				giu.Tooltip("Toggle the visibility of password entries"),
 
 				giu.Button("Clear").Size(54, 0).OnClick(func() {
 					password = ""
 					cpassword = ""
 					giu.Update()
 				}),
-				giu.Tooltip("Clear the password entries."),
+				giu.Tooltip("Clear the password entries"),
 
 				giu.Button("Copy").Size(54, 0).OnClick(func() {
 					giu.Context.GetPlatform().SetClipboard(password)
 					giu.Update()
 				}),
-				giu.Tooltip("Copy the password into your clipboard."),
+				giu.Tooltip("Copy the password into your clipboard"),
 
 				giu.Button("Paste").Size(54, 0).OnClick(func() {
 					tmp := giu.Context.GetPlatform().GetClipboard()
@@ -353,7 +353,7 @@ func draw() {
 					passwordStrength = zxcvbn.PasswordStrength(password, nil).Score
 					giu.Update()
 				}),
-				giu.Tooltip("Paste a password from your clipboard."),
+				giu.Tooltip("Paste a password from your clipboard"),
 
 				giu.Style().SetDisabled(mode == "decrypt").To(
 					giu.Button("Create").Size(54, 0).OnClick(func() {
@@ -362,7 +362,7 @@ func draw() {
 						giu.Update()
 					}),
 				),
-				giu.Tooltip("Generate a cryptographically secure password."),
+				giu.Tooltip("Generate a cryptographically secure password"),
 			),
 			giu.Row(
 				giu.InputText(&password).Flags(passwordState).Size(302/dpi).OnChange(func() {
@@ -424,14 +424,14 @@ func draw() {
 					}),
 					giu.Tooltip("Manage keyfiles to use for "+(func() string {
 						if mode != "decrypt" {
-							return "encryption."
+							return "encryption"
 						}
-						return "decryption."
+						return "decryption"
 					}())),
 
 					giu.Style().SetDisabled(mode == "decrypt").To(
 						giu.Button("Create").Size(54, 0).OnClick(func() {
-							f := dialog.File().Title("Choose where to save the keyfile.")
+							f := dialog.File().Title("Choose where to save the keyfile")
 							f.SetStartDir(func() string {
 								if len(onlyFiles) > 0 {
 									return filepath.Dir(onlyFiles[0])
@@ -453,11 +453,11 @@ func draw() {
 								insufficientSpace(nil, nil)
 								os.Remove(file)
 							} else {
-								mainStatus = "Ready."
+								mainStatus = "Ready"
 								mainStatusColor = WHITE
 							}
 						}),
-						giu.Tooltip("Generate a cryptographically secure keyfile."),
+						giu.Tooltip("Generate a cryptographically secure keyfile"),
 					),
 					giu.Style().SetDisabled(true).To(
 						giu.InputText(&keyfileLabel).Size(giu.Auto),
@@ -468,7 +468,7 @@ func draw() {
 
 		giu.Separator(),
 		giu.Style().SetDisabled(mode != "decrypt" && ((len(keyfiles) == 0 && password == "") || (password != cpassword))).To(
-			giu.Style().SetDisabled(mode == "decrypt" && (comments == "" || comments == "Comments are corrupted.")).To(
+			giu.Style().SetDisabled(mode == "decrypt" && (comments == "" || comments == "Comments are corrupted")).To(
 				giu.Label(commentsLabel),
 				giu.InputText(&comments).Size(giu.Auto).Flags(func() giu.InputTextFlags {
 					if commentsDisabled {
@@ -489,7 +489,7 @@ func draw() {
 				if mode != "decrypt" {
 					giu.Row(
 						giu.Checkbox("Paranoid mode", &paranoid),
-						giu.Tooltip("Provides the highest level of security attainable."),
+						giu.Tooltip("Provides the highest level of security attainable"),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(recursively).To(
 							giu.Checkbox("Compress files", &compress).OnChange(func() {
@@ -501,50 +501,50 @@ func draw() {
 									}
 								}
 							}),
-							giu.Tooltip("Compress files with Deflate before encrypting."),
+							giu.Tooltip("Compress files with Deflate before encrypting"),
 						),
 					).Build()
 
 					giu.Row(
 						giu.Checkbox("Reed-Solomon", &reedsolo),
-						giu.Tooltip("Prevent file corruption with erasure coding."),
+						giu.Tooltip("Prevent file corruption with erasure coding"),
 						giu.Dummy(-170, 0),
 						giu.Checkbox("Delete files", &delete),
-						giu.Tooltip("Delete the input files after encryption."),
+						giu.Tooltip("Delete the input files after encryption"),
 					).Build()
 
 					giu.Row(
 						giu.Checkbox("Deniability", &deniability),
-						giu.Tooltip("Add plausible deniability to the volume."),
+						giu.Tooltip("Add plausible deniability to the volume"),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(!(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
 							giu.Checkbox("Recursively", &recursively).OnChange(func() {
 								compress = false
 							}),
-							giu.Tooltip("Encrypt and decrypt recursive files individually."),
+							giu.Tooltip("Encrypt and decrypt recursive files individually"),
 						),
 					).Build()
 
 					giu.Row(
 						giu.Checkbox("Split into chunks:", &split),
-						giu.Tooltip("Split the output file into smaller chunks."),
+						giu.Tooltip("Split the output file into smaller chunks"),
 						giu.Dummy(-170, 0),
 						giu.InputText(&splitSize).Size(86/dpi).Flags(2).OnChange(func() {
 							split = splitSize != ""
 						}),
-						giu.Tooltip("Choose the chunk size."),
+						giu.Tooltip("Choose the chunk size"),
 						giu.Combo("##splitter", splitUnits[splitSelected], splitUnits, &splitSelected).Size(68),
-						giu.Tooltip("Choose the chunk units."),
+						giu.Tooltip("Choose the chunk units"),
 					).Build()
 				} else {
 					giu.Row(
 						giu.Style().SetDisabled(deniability).To(
 							giu.Checkbox("Force decrypt", &keep),
-							giu.Tooltip("Override security measures when decrypting."),
+							giu.Tooltip("Override security measures when decrypting"),
 						),
 						giu.Dummy(-170, 0),
 						giu.Checkbox("Delete volume", &delete),
-						giu.Tooltip("Delete the volume after a successful decryption."),
+						giu.Tooltip("Delete the volume after a successful decryption"),
 					).Build()
 				}
 			}),
@@ -576,7 +576,7 @@ func draw() {
 
 					giu.SameLine()
 					giu.Button("Change").Size(bw/dpi, 0).OnClick(func() {
-						f := dialog.File().Title("Choose where to save the output. Don't include extensions.")
+						f := dialog.File().Title("Choose where to save the output. Don't include extensions")
 						f.SetStartDir(func() string {
 							if len(onlyFiles) > 0 {
 								return filepath.Dir(onlyFiles[0])
@@ -614,10 +614,10 @@ func draw() {
 							}
 						}
 						outputFile = file
-						mainStatus = "Ready."
+						mainStatus = "Ready"
 						mainStatusColor = WHITE
 					}).Build()
-					giu.Tooltip("Save the output with a custom name and path.").Build()
+					giu.Tooltip("Save the output with a custom name and path").Build()
 				}),
 			),
 
@@ -631,13 +631,13 @@ func draw() {
 				return "Process"
 			}()).Size(giu.Auto, 34).OnClick(func() {
 				if keyfile && keyfiles == nil {
-					mainStatus = "Please select your keyfiles."
+					mainStatus = "Please select your keyfiles"
 					mainStatusColor = RED
 					return
 				}
 				tmp, err := strconv.Atoi(splitSize)
 				if split && (splitSize == "" || tmp <= 0 || err != nil) {
-					mainStatus = "Invalid chunk size."
+					mainStatus = "Invalid chunk size"
 					mainStatusColor = RED
 					return
 				}
@@ -769,11 +769,11 @@ func onDrop(names []string) {
 
 		// Update the keyfile status
 		if len(keyfiles) == 0 {
-			keyfileLabel = "None selected."
+			keyfileLabel = "None selected"
 		} else if len(keyfiles) == 1 {
-			keyfileLabel = "Using 1 keyfile."
+			keyfileLabel = "Using 1 keyfile"
 		} else {
-			keyfileLabel = fmt.Sprintf("Using %d keyfiles.", len(keyfiles))
+			keyfileLabel = fmt.Sprintf("Using %d keyfiles", len(keyfiles))
 		}
 
 		modalId++
@@ -794,7 +794,7 @@ func onDrop(names []string) {
 		if stat.IsDir() {
 			folders++
 			mode = "encrypt"
-			inputLabel = "1 folder."
+			inputLabel = "1 folder"
 			startLabel = "Encrypt"
 			onlyFolders = append(onlyFolders, names[0])
 			inputFile = filepath.Join(filepath.Dir(names[0]), "Encrypted") + ".zip"
@@ -815,7 +815,7 @@ func onDrop(names []string) {
 			// Decide if encrypting or decrypting
 			if strings.HasSuffix(names[0], ".pcv") || isSplit {
 				mode = "decrypt"
-				inputLabel = "Volume for decryption."
+				inputLabel = "Volume for decryption"
 				startLabel = "Decrypt"
 				commentsLabel = "Comments (read-only):"
 				commentsDisabled = true
@@ -863,7 +863,7 @@ func onDrop(names []string) {
 				if valid, _ := regexp.Match(`^v1\.\d{2}`, tmp); !valid || err != nil {
 					// Volume has plausible deniability
 					deniability = true
-					mainStatus = "Can't read header, assuming volume is deniable."
+					mainStatus = "Can't read header, assuming volume is deniable"
 					fin.Close()
 				} else {
 					// Read comments from file and check for corruption
@@ -878,13 +878,13 @@ func onDrop(names []string) {
 						for i := 0; i < commentsLength*3; i += 3 {
 							t, err := rsDecode(rs1, tmp[i:i+3])
 							if err != nil {
-								comments = "Comments are corrupted."
+								comments = "Comments are corrupted"
 								break
 							}
 							comments += string(t)
 						}
 					} else {
-						comments = "Comments are corrupted."
+						comments = "Comments are corrupted"
 					}
 
 					// Read flags from file and check for corruption
@@ -893,7 +893,7 @@ func onDrop(names []string) {
 					fin.Close()
 					flags, err = rsDecode(rs5, flags)
 					if err != nil {
-						mainStatus = "The volume header is damaged."
+						mainStatus = "The volume header is damaged"
 						mainStatusColor = RED
 						return
 					}
@@ -901,9 +901,9 @@ func onDrop(names []string) {
 					// Update UI and variables according to flags
 					if flags[1] == 1 {
 						keyfile = true
-						keyfileLabel = "Keyfiles required."
+						keyfileLabel = "Keyfiles required"
 					} else {
-						keyfileLabel = "Not applicable."
+						keyfileLabel = "Not applicable"
 					}
 					if flags[2] == 1 {
 						keyfileOrdered = true
@@ -911,7 +911,7 @@ func onDrop(names []string) {
 				}
 			} else { // One file was dropped for encryption
 				mode = "encrypt"
-				inputLabel = "1 file."
+				inputLabel = "1 file"
 				startLabel = "Encrypt"
 				inputFile = names[0]
 				outputFile = names[0] + ".pcv"
@@ -947,18 +947,18 @@ func onDrop(names []string) {
 
 		// Update UI with the number of files and folders selected
 		if folders == 0 {
-			inputLabel = fmt.Sprintf("%d files.", files)
+			inputLabel = fmt.Sprintf("%d files", files)
 		} else if files == 0 {
-			inputLabel = fmt.Sprintf("%d folders.", folders)
+			inputLabel = fmt.Sprintf("%d folders", folders)
 		} else {
 			if files == 1 && folders > 1 {
-				inputLabel = fmt.Sprintf("1 file and %d folders.", folders)
+				inputLabel = fmt.Sprintf("1 file and %d folders", folders)
 			} else if folders == 1 && files > 1 {
-				inputLabel = fmt.Sprintf("%d files and 1 folder.", files)
+				inputLabel = fmt.Sprintf("%d files and 1 folder", files)
 			} else if folders == 1 && files == 1 {
-				inputLabel = "1 file and 1 folder."
+				inputLabel = "1 file and 1 folder"
 			} else {
-				inputLabel = fmt.Sprintf("%d files and %d folders.", files, folders)
+				inputLabel = fmt.Sprintf("%d files and %d folders", files, folders)
 			}
 		}
 
@@ -1111,7 +1111,7 @@ func work() {
 		// Make sure not to overwrite anything
 		_, err := os.Stat(outputFile + ".pcv")
 		if err == nil { // File already exists
-			mainStatus = "Please remove " + filepath.Base(outputFile+".pcv") + "."
+			mainStatus = "Please remove " + filepath.Base(outputFile+".pcv")
 			mainStatusColor = RED
 			return
 		}
@@ -1242,7 +1242,7 @@ func work() {
 		if valid, _ := regexp.Match(`^v1\.\d{2}`, tmp); !valid || err != nil {
 			os.Remove(inputFile)
 			inputFile = strings.TrimSuffix(inputFile, ".tmp")
-			broken(nil, nil, "Password is incorrect or the file is not a volume.", true)
+			broken(nil, nil, "Password is incorrect or the file is not a volume", true)
 			if recombine {
 				inputFile = inputFileOld
 			}
@@ -1288,7 +1288,7 @@ func work() {
 			if len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
 				os.Remove(inputFile)
 			}
-			mainStatus = "Please remove " + filepath.Base(outputFile) + "."
+			mainStatus = "Please remove " + filepath.Base(outputFile)
 			mainStatusColor = RED
 			return
 		}
@@ -1434,7 +1434,7 @@ func work() {
 				if keep { // If the user chooses to force decrypt
 					kept = true
 				} else {
-					broken(fin, nil, "The volume header is damaged.", true)
+					broken(fin, nil, "The volume header is damaged", true)
 					return
 				}
 			}
@@ -1571,12 +1571,12 @@ func work() {
 				kept = true
 			} else {
 				if !keyCorrect {
-					mainStatus = "The provided password is incorrect."
+					mainStatus = "The provided password is incorrect"
 				} else {
 					if keyfileOrdered {
-						mainStatus = "Incorrect keyfiles or ordering."
+						mainStatus = "Incorrect keyfiles or ordering"
 					} else {
-						mainStatus = "Incorrect keyfiles."
+						mainStatus = "Incorrect keyfiles"
 					}
 					if deniability {
 						fin.Close()
@@ -1607,7 +1607,7 @@ func work() {
 	if len(keyfiles) > 0 || keyfile {
 		// Prevent an even number of duplicate keyfiles
 		if bytes.Equal(keyfileKey, make([]byte, 32)) {
-			mainStatus = "Duplicate keyfiles detected."
+			mainStatus = "Duplicate keyfiles detected"
 			mainStatusColor = RED
 			fin.Close()
 			if len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
@@ -1716,7 +1716,7 @@ func work() {
 							if keep {
 								kept = true
 							} else {
-								broken(fin, fout, "The input file is irrecoverably damaged.", false)
+								broken(fin, fout, "The input file is irrecoverably damaged", false)
 								return
 							}
 						}
@@ -1741,7 +1741,7 @@ func work() {
 							if keep {
 								kept = true
 							} else {
-								broken(fin, fout, "The input file is irrecoverably damaged.", false)
+								broken(fin, fout, "The input file is irrecoverably damaged", false)
 								return
 							}
 						}
@@ -1761,7 +1761,7 @@ func work() {
 						if keep {
 							kept = true
 						} else {
-							broken(fin, fout, "The input file is irrecoverably damaged.", false)
+							broken(fin, fout, "The input file is irrecoverably damaged", false)
 							return
 						}
 					}
@@ -1856,7 +1856,7 @@ func work() {
 			if keep {
 				kept = true
 			} else {
-				broken(fin, fout, "The input file is damaged or modified.", false)
+				broken(fin, fout, "The input file is damaged or modified", false)
 				return
 			}
 		}
@@ -2091,17 +2091,17 @@ func work() {
 
 	// If the user chose to keep a corrupted/modified file, let them know
 	if kept {
-		mainStatus = "The input file was modified. Please be careful."
+		mainStatus = "The input file was modified. Please be careful"
 		mainStatusColor = YELLOW
 	} else {
-		mainStatus = "Completed."
+		mainStatus = "Completed"
 		mainStatusColor = GREEN
 	}
 }
 
 // If the OS denies reading or writing to a file
 func accessDenied(s string) {
-	mainStatus = s + " access denied by operating system."
+	mainStatus = s + " access denied by operating system"
 	mainStatusColor = RED
 }
 
@@ -2109,7 +2109,7 @@ func accessDenied(s string) {
 func insufficientSpace(fin *os.File, fout *os.File) {
 	fin.Close()
 	fout.Close()
-	mainStatus = "Insufficient disk space."
+	mainStatus = "Insufficient disk space"
 	mainStatusColor = RED
 }
 
@@ -2133,7 +2133,7 @@ func broken(fin *os.File, fout *os.File, message string, keepOutput bool) {
 func cancel(fin *os.File, fout *os.File) {
 	fin.Close()
 	fout.Close()
-	mainStatus = "Operation cancelled by user."
+	mainStatus = "Operation cancelled by user"
 	mainStatusColor = WHITE
 }
 
@@ -2148,7 +2148,7 @@ func resetUI() {
 	onlyFiles = nil
 	onlyFolders = nil
 	allFiles = nil
-	inputLabel = "Drop files and folders into this window."
+	inputLabel = "Drop files and folders into this window"
 
 	password = ""
 	cpassword = ""
@@ -2165,7 +2165,7 @@ func resetUI() {
 	keyfile = false
 	keyfiles = nil
 	keyfileOrdered = false
-	keyfileLabel = "None selected."
+	keyfileLabel = "None selected"
 
 	comments = ""
 	commentsLabel = "Comments:"
@@ -2185,7 +2185,7 @@ func resetUI() {
 	kept = false
 
 	startLabel = "Start"
-	mainStatus = "Ready."
+	mainStatus = "Ready"
 	mainStatusColor = WHITE
 	popupStatus = ""
 
