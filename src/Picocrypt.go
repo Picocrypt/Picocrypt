@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.38
+Picocrypt v1.39
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -58,7 +58,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.38"
+var version = "v1.39"
 var dpi float32
 var mode string
 var working bool
@@ -467,12 +467,14 @@ func draw() {
 		),
 
 		giu.Separator(),
-		giu.Style().SetDisabled(mode != "decrypt" && ((len(keyfiles) == 0 && password == "") || (password != cpassword))).To(
+		giu.Style().SetDisabled(mode != "decrypt" && ((len(keyfiles) == 0 && password == "") || (password != cpassword)) || deniability).To(
 			giu.Style().SetDisabled(mode == "decrypt" && (comments == "" || comments == "Comments are corrupted")).To(
 				giu.Label(commentsLabel),
 				giu.InputText(&comments).Size(giu.Auto).Flags(func() giu.InputTextFlags {
 					if commentsDisabled {
 						return giu.InputTextFlagsReadOnly
+					} else if deniability {
+						comments = ""
 					}
 					return giu.InputTextFlagsNone
 				}()),
@@ -515,7 +517,7 @@ func draw() {
 
 					giu.Row(
 						giu.Checkbox("Deniability", &deniability),
-						giu.Tooltip("Add plausible deniability to the volume"),
+						giu.Tooltip("Add plausible deniability to the volume\nIf enabled, the comments will not work"),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(!(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
 							giu.Checkbox("Recursively", &recursively).OnChange(func() {
