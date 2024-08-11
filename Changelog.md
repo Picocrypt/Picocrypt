@@ -3,6 +3,21 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.40 (Released 08/10/2024)
+<ul>
+	<li>✓ Allow "Open with Picocrypt" to work; you can drop files and folders onto the executable now!</li>
+</ul>
+
+# v1.39 (Released 08/07/2024)
+<ul>
+	<li>✓ Disable comments if deniability is enabled</li>
+</ul>
+
+# v1.38 (Released 08/03/2024)
+<ul>
+	<li>✓ Remove periods from the end of labels</li>
+</ul>
+
 # v1.35 - v1.37 (Released 07/08/2024)
 <ul>
 	<li>✓ Various small releases to get workflows running and automated builds released</li>
