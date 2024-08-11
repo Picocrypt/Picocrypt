@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.39
+Picocrypt v1.40
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -18,6 +18,7 @@ import (
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/subtle"
+	"flag"
 	"fmt"
 	"hash"
 	"image"
@@ -58,7 +59,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.39"
+var version = "v1.40"
 var dpi float32
 var mode string
 var working bool
@@ -517,7 +518,7 @@ func draw() {
 
 					giu.Row(
 						giu.Checkbox("Deniability", &deniability),
-						giu.Tooltip("Add plausible deniability to the volume\nIf enabled, the comments will not work"),
+						giu.Tooltip("Add plausible deniability to the volume\nIf enabled, comments will not be usable"),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(!(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
 							giu.Checkbox("Recursively", &recursively).OnChange(func() {
@@ -763,7 +764,7 @@ func onDrop(names []string) {
 				giu.Update()
 				return
 			}
-			if !duplicate && !stat.IsDir() && err == nil {
+			if !duplicate && !stat.IsDir() {
 				tmp = append(tmp, i)
 			}
 		}
@@ -862,7 +863,7 @@ func onDrop(names []string) {
 				tmp := make([]byte, 15)
 				fin.Read(tmp)
 				tmp, err = rsDecode(rs5, tmp)
-				if valid, _ := regexp.Match(`^v1\.\d{2}`, tmp); !valid || err != nil {
+				if valid, _ := regexp.Match(`^v\d\.\d{2}`, tmp); !valid || err != nil {
 					// Volume has plausible deniability
 					deniability = true
 					mainStatus = "Can't read header, assuming volume is deniable"
@@ -2319,6 +2320,12 @@ func main() {
 
 	// Set universal DPI
 	dpi = giu.Context.GetPlatform().GetContentScale()
+
+	// Simulate dropping command line arguments
+	flag.Parse()
+	if flag.NArg() > 0 {
+		onDrop(flag.Args())
+	}
 
 	// Start the UI
 	window.Run(draw)
