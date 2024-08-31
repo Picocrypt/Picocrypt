@@ -3,6 +3,11 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.41 (Released 08/30/2024)
+<ul>
+	<li>✓ Move all external packages to under Picocrypt organization</li>
+</ul>
+
 # v1.40 (Released 08/10/2024)
 <ul>
 	<li>✓ Allow "Open with Picocrypt" to work; you can drop files and folders onto the executable now!</li>
