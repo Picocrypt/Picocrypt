@@ -34,8 +34,8 @@ import (
 	"time"
 
 	"github.com/Picocrypt/dialog"
-	"github.com/HACKERALERT/giu"
-	"github.com/HACKERALERT/imgui-go"
+	"github.com/Picocrypt/giu"
+	"github.com/Picocrypt/imgui-go"
 	"github.com/Picocrypt/infectious"
 	"github.com/Picocrypt/serpent"
 	"github.com/Picocrypt/zxcvbn-go"
