@@ -18,6 +18,7 @@ import (
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/subtle"
+	"errors"
 	"flag"
 	"fmt"
 	"hash"
@@ -1315,6 +1316,10 @@ func work() {
 
 		// Write the program version to file
 		_, errs[0] = fout.Write(rsEncode(rs5, []byte(version)))
+
+		if len(comments) > 99999 {
+			panic(errors.New("comments exceed maximum length"))
+		}
 
 		// Encode and write the comment length to file
 		commentsLength := []byte(fmt.Sprintf("%05d", len(comments)))
