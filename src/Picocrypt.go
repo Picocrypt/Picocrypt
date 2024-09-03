@@ -448,7 +448,9 @@ func draw() {
 
 							fout, _ := os.Create(file)
 							data := make([]byte, 32)
-							rand.Read(data)
+							if _, err := rand.Read(data); err != nil {
+								panic(err)
+							}
 							_, err = fout.Write(data)
 							fout.Close()
 							if err != nil {
@@ -1353,10 +1355,18 @@ func work() {
 		_, errs[3] = fout.Write(rsEncode(rs5, flags))
 
 		// Fill values with Go's CSPRNG
-		rand.Read(salt)
-		rand.Read(hkdfSalt)
-		rand.Read(serpentIV)
-		rand.Read(nonce)
+		if _, err := rand.Read(salt); err != nil {
+			panic(err)
+		}
+		if _, err := rand.Read(hkdfSalt); err != nil {
+			panic(err)
+		}
+		if _, err := rand.Read(serpentIV); err != nil {
+			panic(err)
+		}
+		if _, err := rand.Read(nonce); err != nil {
+			panic(err)
+		}
 
 		// Encode values with Reed-Solomon and write to file
 		_, errs[4] = fout.Write(rsEncode(rs16, salt))
@@ -1897,8 +1907,12 @@ func work() {
 		// Use a random Argon2 salt and XChaCha20 nonce
 		salt := make([]byte, 16)
 		nonce := make([]byte, 24)
-		rand.Read(salt)
-		rand.Read(nonce)
+		if _, err := rand.Read(salt); err != nil {
+			panic(err)
+		}
+		if _, err := rand.Read(nonce); err != nil {
+			panic(err)
+		}
 		fout.Write(salt)
 		fout.Write(nonce)
 
