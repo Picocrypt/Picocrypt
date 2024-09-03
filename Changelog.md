@@ -3,6 +3,14 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.42 (Released 09/03/2024)
+<ul>
+	<li>✓ <strong>Security audit by Radically Open Security has concluded! No major security issues were found🥳</strong></li>
+	<li>✓ Panic if crypto/rand.Read fails</li>
+	<li>✓ Assume host machine is trusted, make notes in documentation accordingly</li>
+	<li>✓ Handle edge cases regarding comments</li>
+</ul>
+
 # v1.41 (Released 08/30/2024)
 <ul>
 	<li>✓ Move all external packages to under Picocrypt organization</li>
