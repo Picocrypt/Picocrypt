@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.40
+Picocrypt v1.42
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -59,7 +59,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.40"
+var version = "v1.42"
 var dpi float32
 var mode string
 var working bool
@@ -1388,6 +1388,12 @@ func work() {
 		tmp := make([]byte, 15)
 		fin.Read(tmp)
 		tmp, errs[1] = rsDecode(rs5, tmp)
+
+		if valid, err := regexp.Match(`^\d{5}$`, tmp); !valid || err != nil {
+			broken(fin, nil, "Unable to read comments length", true)
+			return
+		}
+
 		commentsLength, _ := strconv.Atoi(string(tmp))
 		fin.Read(make([]byte, commentsLength*3))
 		total -= int64(commentsLength) * 3
