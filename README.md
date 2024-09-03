@@ -158,5 +158,6 @@ Finally, thanks to these people/organizations for helping me out when needed:
 	<li>@AsuxAX and @Minibus93 for testing new features</li>
 	<li>@mdanish-kh and @stephengillie for WinGet package</li>
 	<li><a href="https://privacyguides.org">Privacy Guides</a> for listing Picocrypt</li>
+	<li><a href="https://www.radicallyopensecurity.com/">Radically Open Security</a> for auditing Picocrypt</li>
 	<li>You?</li>
 </ul>
