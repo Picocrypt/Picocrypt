@@ -1,0 +1,39 @@
+app-id: com.github.Picocrypt
+runtime: org.freedesktop.Platform
+runtime-version: "22.08"
+sdk: org.freedesktop.Sdk
+command: picocrypt-gui
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --filesystem=home
+modules:
+  - name: picocrypt
+    buildsystem: simple
+    build-commands:
+      - bsdtar --to-stdout -xf Picocrypt.deb data.* | bsdtar -xf -
+      - mv usr/bin /app/
+      - chmod +x /app/bin/picocrypt-gui
+      - cp -a usr/share /app/
+      - rm usr/share/applications/picocrypt.desktop
+      - mv usr/share/icons/picocrypt.svg /app/com.github.Picocrypt.svg
+      - touch /app/com.github.Picocrypt.desktop
+      - echo "[Desktop Entry]" >> /app/com.github.Picocrypt.desktop
+      - echo "Name=Picocrypt" >> /app/com.github.Picocrypt.desktop
+      - echo "Comment=Secure file encryption tool" >> /app/com.github.Picocrypt.desktop
+      - echo "Exec=picocrypt-gui" >> /app/com.github.Picocrypt.desktop
+      - echo "Icon=com.github.Picocrypt" >> com.github.Picocrypt.desktop
+      - echo "Type=Application" >> /app/com.github.Picocrypt.desktop
+      - echo "Categories=Utility;Security;" >> /app/com.github.Picocrypt.desktop
+      - install -Dm644 /app/com.github.Picocrypt.desktop /app/share/applications/com.github.Picocrypt.desktop
+      - install -Dm644 /app/com.github.Picocrypt.svg /app/share/icons/hicolor/scalable/apps/com.github.Picocrypt.svg
+    sources:
+      - type: file
+        url: https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb
+        sha256: a7525a21a81647e8d56bc99ba7c8fa298971c82bde4923972186fa8766a19026
+    cleanup:
+      - share/applications/picocrypt.desktop
+      - share/icons/picocrypt.svg
+      - Picocrypt.deb
