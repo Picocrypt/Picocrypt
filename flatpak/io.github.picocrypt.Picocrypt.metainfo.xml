@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.picocrypt.Picocrypt</id>
+  <name>Picocrypt</name>
+  <summary>A very small, very simple, yet very secure encryption tool</summary>
+  <developer id="io.github.picocrypt">
+  	<name>Evan Su</name>
+  </developer>
+  <metadata_license>MIT</metadata_license>
+  <project_license>GPL-3.0</project_license>
+  <url type="homepage">https://github.com/Picocrypt/Picocrypt</url>
+  <url type="bugtracker">https://github.com/Picocrypt/Picocrypt/issues</url>
+  <content_rating type="oars-1.0" />
+
+  <description>
+    <p>
+      Picocrypt is a very small (hence Pico), very simple, yet very secure encryption tool that you can use to protect your files. It is designed to be the go-to tool for encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security, even from three-letter agencies like the NSA. Your privacy and security is under attack. Take it back with confidence by protecting your files with Picocrypt. For a more detailed information, please visit the main page of the project.
+    </p>
+  </description>
+  
+  <categories>
+    <category>Utility</category>
+    <category>Security</category>
+  </categories>
+
+  <launchable type="desktop-id">io.github.picocrypt.Picocrypt.desktop</launchable>
+  <icon type="stock">io.github.picocrypt.Picocrypt</icon>
+  <provides>
+    <id>io.github.picocrypt.Picocrypt.desktop</id>
+  </provides>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/Picocrypt/Picocrypt/raw/main/images/screenshot.png</image>
+      <caption>Main window</caption>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="1.42" date="2024-09-03">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v142-released-09032024</url>
+      <description>
+        <p>Security audit by Radically Open Security has concluded! No major security issues were found</p>
+        <ul>
+          <li>Panic if crypto/rand.Read fails</li>
+          <li>Assume host machine is trusted, make notes in documentation accordingly</li>
+          <li>Handle edge cases regarding comments</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.41" date="2024-08-30"/>
+    <release version="1.40" date="2024-08-10"/>
+    <release version="1.39" date="2024-08-07"/>
+    <release version="1.38" date="2024-08-03"/>
+  </releases>
+</component>
