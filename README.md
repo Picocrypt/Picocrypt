@@ -25,7 +25,7 @@ xattr -d com.apple.quarantine /Applications/Picocrypt.app
 ```
 
 ## Linux
-To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb">.deb</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
+To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb">.deb</a>, <a href="https://flathub.org/apps/io.github.picocrypt.Picocrypt">Flatpak</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
 ```
 sudo apt install -y libc6 libgcc-s1 libgl1 libgtk-3-0 libstdc++6 libx11-6
 ```
@@ -157,6 +157,7 @@ Finally, thanks to these people/organizations for helping me out when needed:
 	<li>@samuel-lucas6 for feedback, suggestions, and support</li>
 	<li>@AsuxAX and @Minibus93 for testing new features</li>
 	<li>@mdanish-kh and @stephengillie for WinGet package</li>
+	<li>@Retengart for helping create the Flatpak</li>
 	<li><a href="https://privacyguides.org">Privacy Guides</a> for listing Picocrypt</li>
 	<li><a href="https://www.radicallyopensecurity.com/">Radically Open Security</a> for auditing Picocrypt</li>
 	<li>You?</li>
