@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.42
+Picocrypt v1.43
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -60,7 +60,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.42"
+var version = "v1.43"
 var dpi float32
 var mode string
 var working bool
