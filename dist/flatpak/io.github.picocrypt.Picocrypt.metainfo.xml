@@ -44,15 +44,10 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.42" date="2024-09-03">
-      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v142-released-09032024</url>
+    <release version="1.44" date="2024-11-09">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v144-released-11092024</url>
       <description>
-        <p>Security audit by Radically Open Security has concluded! No major security issues were found</p>
-        <ul>
-          <li>Panic if crypto/rand.Read fails</li>
-          <li>Assume host machine is trusted, make notes in documentation accordingly</li>
-          <li>Handle edge cases regarding comments</li>
-        </ul>
+        <p>No code changes; just updated dependencies.</p>
       </description>
     </release>
   </releases>
