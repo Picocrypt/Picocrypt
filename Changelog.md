@@ -3,6 +3,11 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.44 (Released 11/09/2024)
+<ul>
+	<li>✓ No changes, just updated dependencies</li>
+</ul>
+
 # v1.43 (Released 09/11/2024)
 <ul>
 	<li>✓ No changes, just updated dependencies</li>
