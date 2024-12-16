@@ -44,8 +44,8 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.44" date="2024-11-09">
-      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v144-released-11092024</url>
+    <release version="1.45" date="2024-12-05">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v145-released-12052024</url>
       <description>
         <p>No code changes; just updated dependencies.</p>
       </description>
