@@ -9,10 +9,11 @@ on:
         - "VERSION"
       branches:
         - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
     - uses: actions/checkout@v4
 
@@ -34,7 +35,7 @@ jobs:
         go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" -o 1.exe Picocrypt.go
       env:
         CGO_ENABLED: 1
-        GOAMD64: v2
+        GOAMD64: v1
 
     - name: Add icon, manifest, and version info
       shell: pwsh
@@ -67,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-windows
-        path: src/Picocrypt.exe
+        path: src/*.exe
         if-no-files-found: error
         compression-level: 9
 
