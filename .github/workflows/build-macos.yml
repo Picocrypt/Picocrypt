@@ -76,4 +76,4 @@ jobs:
         tag_name: ${{ env.VERSION }}
         make_latest: true
         body: |
-          **Picocrypt.dmg sha256**: ${{ env.CHECKSUM_PICOCRYPT }}
+          **Picocrypt.dmg  ${{ env.CHECKSUM_PICOCRYPT }}
