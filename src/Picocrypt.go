@@ -2119,12 +2119,27 @@ func work() {
 	}
 
 	if mode == "decrypt" && !kept && unpack {
+		showProgress = true // Turn on the progress popup
+		canCancel = true    // Allow the user to cancel
+		progress = 0
+		progressInfo = ""
+		popupStatus = "Preparing to unpack..."
+		giu.Update()
+
 		err := unpackArchive(outputFile)
 		if err != nil {
 			mainStatus = "Extraction failed: " + err.Error()
 			mainStatusColor = RED
 			giu.Update()
 		}
+
+		// Turn off the progress UI
+		showProgress = false
+		canCancel = false
+		progress = 0
+		progressInfo = ""
+		popupStatus = ""
+		giu.Update()
 	}
 	// All done, reset the UI
 	oldKept := kept
@@ -2223,6 +2238,7 @@ func resetUI() {
 	recombine = false
 	compress = false
 	delete = false
+	unpack = false
 	keep = false
 	kept = false
 
@@ -2345,47 +2361,93 @@ func sizeify(size int64) string {
 }
 
 func unpackArchive(zipPath string) error {
+	// Open the .zip
 	reader, err := zip.OpenReader(zipPath)
 	if err != nil {
 		return err
 	}
 	defer reader.Close()
 
-	// Extract files directly into the folder that contains zipPath
+	// Calculate total unpack size by summing each entry’s UncompressedSize64
+	var totalSize int64
+	for _, f := range reader.File {
+		totalSize += int64(f.UncompressedSize64)
+	}
+
+	// Directory containing the .zip
 	extractDir := filepath.Dir(zipPath)
 
-	for _, f := range reader.File {
+	// Setup progress tracking
+	var done int64
+	startTime := time.Now()
+
+	// Iterate over each file in the archive
+	for i, f := range reader.File {
+		// If user clicked "Cancel" elsewhere, stop
+		if !working {
+			return errors.New("operation canceled by user")
+		}
+
 		outPath := filepath.Join(extractDir, f.Name)
 
+		// Make directory if current entry is a folder
 		if f.FileInfo().IsDir() {
-			// Make sure nested directories exist
 			if err := os.MkdirAll(outPath, f.Mode()); err != nil {
 				return err
 			}
 			continue
 		}
 
-		// Create necessary directories for this file
+		// Otherwise create necessary parent directories
 		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
 			return err
 		}
 
-		// Extract the file
+		// Open the file inside the archive
+		fileInArchive, err := f.Open()
+		if err != nil {
+			return err
+		}
+		defer fileInArchive.Close()
+
+		// Create/overwrite the destination file
 		dstFile, err := os.OpenFile(outPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
 			return err
 		}
-		fileInArchive, err := f.Open()
-		if err != nil {
-			dstFile.Close()
-			return err
+
+		// Read from zip in chunks to update progress
+		buffer := make([]byte, MiB) // e.g., 1 MiB chunk
+		for {
+			if !working {
+				dstFile.Close()
+				os.Remove(outPath) // remove partial extraction if canceled
+				return errors.New("operation canceled by user")
+			}
+			n, readErr := fileInArchive.Read(buffer)
+			if n > 0 {
+				_, writeErr := dstFile.Write(buffer[:n])
+				if writeErr != nil {
+					dstFile.Close()
+					return writeErr
+				}
+
+				// Update "done" and recalc progress, speed, eta
+				done += int64(n)
+				progress, speed, eta = statify(done, totalSize, startTime)
+				progressInfo = fmt.Sprintf("%d/%d", i+1, len(reader.File))
+				popupStatus = fmt.Sprintf("Unpacking at %.2f MiB/s (ETA: %s)", speed, eta)
+				giu.Update()
+			}
+			if readErr != nil {
+				if readErr == io.EOF {
+					break
+				}
+				dstFile.Close()
+				return readErr
+			}
 		}
-		_, copyErr := io.Copy(dstFile, fileInArchive)
-		fileInArchive.Close()
 		dstFile.Close()
-		if copyErr != nil {
-			return copyErr
-		}
 	}
 
 	return nil
