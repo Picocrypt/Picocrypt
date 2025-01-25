@@ -120,6 +120,7 @@ var splitSelected int32 = 1
 var recombine bool
 var compress bool
 var delete bool
+var unpack bool
 var keep bool
 var kept bool
 
@@ -551,6 +552,11 @@ func draw() {
 						giu.Dummy(-170, 0),
 						giu.Checkbox("Delete volume", &delete),
 						giu.Tooltip("Delete the volume after a successful decryption"),
+					).Build()
+
+					giu.Row(
+						giu.Checkbox("Unpack .zip", &unpack),
+						giu.Tooltip("Extract the decrypted .zip (ovewrite files)"),
 					).Build()
 				}
 			}),
@@ -2112,6 +2118,14 @@ func work() {
 		os.Remove(inputFile)
 	}
 
+	if mode == "decrypt" && !kept && unpack {
+		err := unpackArchive(outputFile)
+		if err != nil {
+			mainStatus = "Extraction failed: " + err.Error()
+			mainStatusColor = RED
+			giu.Update()
+		}
+	}
 	// All done, reset the UI
 	oldKept := kept
 	resetUI()
@@ -2330,9 +2344,56 @@ func sizeify(size int64) string {
 	}
 }
 
+func unpackArchive(zipPath string) error {
+	reader, err := zip.OpenReader(zipPath)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	// Extract files directly into the folder that contains zipPath
+	extractDir := filepath.Dir(zipPath)
+
+	for _, f := range reader.File {
+		outPath := filepath.Join(extractDir, f.Name)
+
+		if f.FileInfo().IsDir() {
+			// Make sure nested directories exist
+			if err := os.MkdirAll(outPath, f.Mode()); err != nil {
+				return err
+			}
+			continue
+		}
+
+		// Create necessary directories for this file
+		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+			return err
+		}
+
+		// Extract the file
+		dstFile, err := os.OpenFile(outPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			return err
+		}
+		fileInArchive, err := f.Open()
+		if err != nil {
+			dstFile.Close()
+			return err
+		}
+		_, copyErr := io.Copy(dstFile, fileInArchive)
+		fileInArchive.Close()
+		dstFile.Close()
+		if copyErr != nil {
+			return copyErr
+		}
+	}
+
+	return nil
+}
+
 func main() {
 	// Create the main window
-	window = giu.NewMasterWindow("Picocrypt", 318, 507, giu.MasterWindowFlagsNotResizable)
+	window = giu.NewMasterWindow("Picocrypt "+version[1:], 318, 507, giu.MasterWindowFlagsNotResizable)
 
 	// Start the dialog module
 	dialog.Init()
