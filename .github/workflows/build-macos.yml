@@ -9,6 +9,7 @@ on:
       - "VERSION"
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -75,5 +76,6 @@ jobs:
           Picocrypt.dmg
         tag_name: ${{ env.VERSION }}
         make_latest: true
+        append_body: true
         body: |
-          **Picocrypt.dmg  ${{ env.CHECKSUM_PICOCRYPT }}
+          `sha256(Picocrypt.dmg)  ${{ env.CHECKSUM_PICOCRYPT }}`
