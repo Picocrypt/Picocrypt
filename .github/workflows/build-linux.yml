@@ -5,10 +5,11 @@ permissions:
 
 on:
   push:
-      paths:
-        - "VERSION"
-      branches:
-        - main
+    paths:
+      - "VERSION"
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -38,7 +39,7 @@ jobs:
         go build -v -ldflags="-s -w" -o Picocrypt Picocrypt.go
       env:
         CGO_ENABLED: 1
-        GOAMD64: v2
+        GOAMD64: v1
 
     - name: Package as .deb
       run: |
@@ -85,7 +86,7 @@ jobs:
           Picocrypt.deb
         tag_name: ${{ env.VERSION }}
         make_latest: true
+        append_body: true
         body: |
-          **SHA256:**
-          **Picocrypt      ${{ env.CHECKSUM_PICOCRYPT }}
-          **Picocrypt.deb  ${{ env.CHECKSUM_DEB }}
+          `sha256(Picocrypt)      ${{ env.CHECKSUM_PICOCRYPT }}`
+          `sha256(Picocrypt.deb)  ${{ env.CHECKSUM_DEB }}`
