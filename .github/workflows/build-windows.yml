@@ -92,4 +92,5 @@ jobs:
         tag_name: ${{ env.VERSION }}
         make_latest: true
         body: |
-          **Picocrypt.exe  ${{ env.CHECKSUM_PICOCRYPT }}
+          **Windows:**
+          `sha256(Picocrypt.exe)  ${{ env.CHECKSUM_PICOCRYPT }}`
