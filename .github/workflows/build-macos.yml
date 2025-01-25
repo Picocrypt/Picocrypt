@@ -78,4 +78,5 @@ jobs:
         make_latest: true
         append_body: true
         body: |
+          **macOS:**
           `sha256(Picocrypt.dmg)  ${{ env.CHECKSUM_PICOCRYPT }}`
