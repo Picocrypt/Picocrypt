@@ -3,6 +3,12 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.46 (Released 01/26/2025)
+<ul>
+	<li>✓ Added Picocrypt version to the window title</li>
+	<li>✓ Added ability to automatically unpack zip archives during decryption</li>
+</ul>
+
 # v1.45 (Released 12/05/2024)
 <ul>
 	<li>✓ Bumped GitHub Actions Ubuntu 22 -> 24 and macOS 14 -> 15</li>

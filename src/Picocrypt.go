@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.45
+Picocrypt v1.46
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -60,7 +60,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.45"
+var version = "v1.46"
 var dpi float32
 var mode string
 var working bool
@@ -556,7 +556,7 @@ func draw() {
 
 					giu.Row(
 						giu.Checkbox("Unpack .zip", &unpack),
-						giu.Tooltip("Extract the decrypted .zip (ovewrite files)"),
+						giu.Tooltip("Extract the decrypted .zip (overwrite files)"),
 					).Build()
 				}
 			}),
