@@ -5,10 +5,10 @@ permissions:
 
 on:
   push:
-      paths:
-        - "VERSION"
-      branches:
-        - main
+    paths:
+      - "VERSION"
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -78,6 +78,12 @@ jobs:
         $version = Get-Content -Path "VERSION"
         echo "VERSION=$version" >> $env:GITHUB_ENV
 
+    - name: Generate checksums
+      shell: pwsh
+      run: |
+        $hash = Get-FileHash "src/Picocrypt.exe" -Algorithm SHA256
+        echo "CHECKSUM_PICOCRYPT=$($hash.Hash)" >> $env:GITHUB_ENV
+
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
@@ -85,3 +91,5 @@ jobs:
           src/Picocrypt.exe
         tag_name: ${{ env.VERSION }}
         make_latest: true
+        body: |
+          **Picocrypt.exe  ${{ env.CHECKSUM_PICOCRYPT }}

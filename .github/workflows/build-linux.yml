@@ -72,6 +72,11 @@ jobs:
         if-no-files-found: error
         compression-level: 9
 
+    - name: Generate checksums
+      run: |
+        echo "CHECKSUM_PICOCRYPT=$(sha256sum Picocrypt | cut -d ' ' -f1)" >> $GITHUB_ENV
+        echo "CHECKSUM_DEB=$(sha256sum Picocrypt.deb | cut -d ' ' -f1)" >> $GITHUB_ENV
+
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
@@ -80,3 +85,7 @@ jobs:
           Picocrypt.deb
         tag_name: ${{ env.VERSION }}
         make_latest: true
+        body: |
+          **SHA256:**
+          **Picocrypt      ${{ env.CHECKSUM_PICOCRYPT }}
+          **Picocrypt.deb  ${{ env.CHECKSUM_DEB }}
