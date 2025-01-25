@@ -88,5 +88,6 @@ jobs:
         make_latest: true
         append_body: true
         body: |
+          **Linux:**
           `sha256(Picocrypt)      ${{ env.CHECKSUM_PICOCRYPT }}`
           `sha256(Picocrypt.deb)  ${{ env.CHECKSUM_DEB }}`
