@@ -2388,7 +2388,10 @@ func unpackArchive(zipPath string) error {
 	startTime := time.Now()
 
 	for _, f := range reader.File {
-		outPath := filepath.Join(extractDir, filepath.Clean(strings.ReplaceAll(f.Name, "\\", "/")))
+		if strings.Contains(f.Name, "..") {
+			return errors.New("potentially malicious zip item path")
+		}
+		outPath := filepath.Join(extractDir, f.Name)
 
 		// Make directory if current entry is a folder
 		if f.FileInfo().IsDir() {
@@ -2399,12 +2402,16 @@ func unpackArchive(zipPath string) error {
 	}
 
 	for i, f := range reader.File {
+		if strings.Contains(f.Name, "..") {
+			return errors.New("potentially malicious zip item path")
+		}
+
 		// Already handled above
 		if f.FileInfo().IsDir() {
 			continue
 		}
 
-		outPath := filepath.Join(extractDir, filepath.Clean(strings.ReplaceAll(f.Name, "\\", "/")))
+		outPath := filepath.Join(extractDir, f.Name)
 
 		// Otherwise create necessary parent directories
 		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
