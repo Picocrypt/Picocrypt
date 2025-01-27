@@ -120,7 +120,8 @@ var splitSelected int32 = 1
 var recombine bool
 var compress bool
 var delete bool
-var unpack bool
+var autoUnzip bool
+var sameLevel bool
 var keep bool
 var kept bool
 
@@ -555,8 +556,19 @@ func draw() {
 					).Build()
 
 					giu.Row(
-						giu.Checkbox("Unpack .zip", &unpack),
-						giu.Tooltip("Extract the decrypted .zip (overwrite files)"),
+						giu.Style().SetDisabled(!strings.HasSuffix(inputFile, ".zip.pcv")).To(
+							giu.Checkbox("Auto unzip", &autoUnzip).OnChange(func() {
+								if !autoUnzip {
+									sameLevel = false
+								}
+							}),
+							giu.Tooltip("Extract .zip upon decryption (may overwrite)"),
+						),
+						giu.Dummy(-170, 0),
+						giu.Style().SetDisabled(!autoUnzip).To(
+							giu.Checkbox("Same level", &sameLevel),
+							giu.Tooltip("Extract .zip contents to same folder as volume"),
+						),
 					).Build()
 				}
 			}),
@@ -2118,29 +2130,19 @@ func work() {
 		os.Remove(inputFile)
 	}
 
-	if mode == "decrypt" && !kept && unpack {
-		showProgress = true // Turn on the progress popup
-		canCancel = true    // Allow the user to cancel
-		progress = 0
-		progressInfo = ""
-		popupStatus = "Preparing to unpack..."
+	if mode == "decrypt" && !kept && autoUnzip {
+		showProgress = true
+		popupStatus = "Unzipping..."
 		giu.Update()
 
-		err := unpackArchive(outputFile)
-		if err != nil {
-			mainStatus = "Extraction failed: " + err.Error()
+		if err := unpackArchive(outputFile); err != nil {
+			mainStatus = "Auto unzipping failed!"
 			mainStatusColor = RED
 			giu.Update()
+			return
 		}
-
-		// Turn off the progress UI
-		showProgress = false
-		canCancel = false
-		progress = 0
-		progressInfo = ""
-		popupStatus = ""
-		giu.Update()
 	}
+
 	// All done, reset the UI
 	oldKept := kept
 	resetUI()
@@ -2238,7 +2240,8 @@ func resetUI() {
 	recombine = false
 	compress = false
 	delete = false
-	unpack = false
+	autoUnzip = false
+	sameLevel = false
 	keep = false
 	kept = false
 
