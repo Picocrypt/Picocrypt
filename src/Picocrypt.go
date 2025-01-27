@@ -2387,16 +2387,24 @@ func unpackArchive(zipPath string) error {
 	var done int64
 	startTime := time.Now()
 
-	for i, f := range reader.File {
-		outPath := filepath.Join(extractDir, f.Name)
+	for _, f := range reader.File {
+		outPath := filepath.Join(extractDir, filepath.Clean(strings.ReplaceAll(f.Name, "\\", "/")))
 
 		// Make directory if current entry is a folder
 		if f.FileInfo().IsDir() {
 			if err := os.MkdirAll(outPath, f.Mode()); err != nil {
 				return err
 			}
+		}
+	}
+
+	for i, f := range reader.File {
+		// Already handled above
+		if f.FileInfo().IsDir() {
 			continue
 		}
+
+		outPath := filepath.Join(extractDir, filepath.Clean(strings.ReplaceAll(f.Name, "\\", "/")))
 
 		// Otherwise create necessary parent directories
 		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
@@ -2426,7 +2434,6 @@ func unpackArchive(zipPath string) error {
 					return writeErr
 				}
 
-				// Update "done" and recalc progress, speed, eta
 				done += int64(n)
 				progress, speed, eta = statify(done, totalSize, startTime)
 				progressInfo = fmt.Sprintf("%d/%d", i+1, len(reader.File))
