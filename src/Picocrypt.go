@@ -2141,6 +2141,8 @@ func work() {
 			giu.Update()
 			return
 		}
+
+		os.Remove(outputFile)
 	}
 
 	// All done, reset the UI
@@ -2364,33 +2366,28 @@ func sizeify(size int64) string {
 }
 
 func unpackArchive(zipPath string) error {
-	// Open the .zip
 	reader, err := zip.OpenReader(zipPath)
 	if err != nil {
 		return err
 	}
 	defer reader.Close()
 
-	// Calculate total unpack size by summing each entry’s UncompressedSize64
 	var totalSize int64
 	for _, f := range reader.File {
 		totalSize += int64(f.UncompressedSize64)
 	}
 
-	// Directory containing the .zip
-	extractDir := filepath.Dir(zipPath)
+	var extractDir string
+	if sameLevel {
+		extractDir = filepath.Dir(zipPath)
+	} else {
+		extractDir = filepath.Join(filepath.Dir(zipPath), strings.TrimSuffix(filepath.Base(zipPath), ".zip"))
+	}
 
-	// Setup progress tracking
 	var done int64
 	startTime := time.Now()
 
-	// Iterate over each file in the archive
 	for i, f := range reader.File {
-		// If user clicked "Cancel" elsewhere, stop
-		if !working {
-			return errors.New("operation canceled by user")
-		}
-
 		outPath := filepath.Join(extractDir, f.Name)
 
 		// Make directory if current entry is a folder
@@ -2413,20 +2410,14 @@ func unpackArchive(zipPath string) error {
 		}
 		defer fileInArchive.Close()
 
-		// Create/overwrite the destination file
-		dstFile, err := os.OpenFile(outPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		dstFile, err := os.Create(outPath)
 		if err != nil {
 			return err
 		}
 
 		// Read from zip in chunks to update progress
-		buffer := make([]byte, MiB) // e.g., 1 MiB chunk
+		buffer := make([]byte, MiB)
 		for {
-			if !working {
-				dstFile.Close()
-				os.Remove(outPath) // remove partial extraction if canceled
-				return errors.New("operation canceled by user")
-			}
 			n, readErr := fileInArchive.Read(buffer)
 			if n > 0 {
 				_, writeErr := dstFile.Write(buffer[:n])
