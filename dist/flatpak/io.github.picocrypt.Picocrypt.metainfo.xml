@@ -44,8 +44,8 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.46" date="2025-01-26">
-      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v146-released-01262025</url>
+    <release version="1.46" date="2025-01-29">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v146-released-01292025</url>
       <description>
         <ul>
           <li>Added Picocrypt version to the window title.</li>
