@@ -2438,6 +2438,7 @@ func unpackArchive(zipPath string) error {
 				_, writeErr := dstFile.Write(buffer[:n])
 				if writeErr != nil {
 					dstFile.Close()
+					os.Remove(dstFile.Name())
 					return writeErr
 				}
 
