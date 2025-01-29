@@ -44,11 +44,17 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.45" date="2024-12-05">
-      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v145-released-12052024</url>
+    <release version="1.46" date="2025-01-29">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v146-released-01292025</url>
       <description>
-        <p>No code changes; just updated dependencies.</p>
+        <ul>
+          <li>Added Picocrypt version to the window title.</li>
+          <li>Added ability to automatically unpack zip archives during decryption.</li>
+        </ul>
       </description>
+    </release>
+    <release version="1.45" date="2024-12-05">
+      <description></description>
     </release>
   </releases>
 </component>

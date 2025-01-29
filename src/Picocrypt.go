@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.45
+Picocrypt v1.46
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -60,7 +60,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.45"
+var version = "v1.46"
 var dpi float32
 var mode string
 var working bool
@@ -120,6 +120,8 @@ var splitSelected int32 = 1
 var recombine bool
 var compress bool
 var delete bool
+var autoUnzip bool
+var sameLevel bool
 var keep bool
 var kept bool
 
@@ -551,6 +553,22 @@ func draw() {
 						giu.Dummy(-170, 0),
 						giu.Checkbox("Delete volume", &delete),
 						giu.Tooltip("Delete the volume after a successful decryption"),
+					).Build()
+
+					giu.Row(
+						giu.Style().SetDisabled(!strings.HasSuffix(inputFile, ".zip.pcv")).To(
+							giu.Checkbox("Auto unzip", &autoUnzip).OnChange(func() {
+								if !autoUnzip {
+									sameLevel = false
+								}
+							}),
+							giu.Tooltip("Extract .zip upon decryption (may overwrite)"),
+						),
+						giu.Dummy(-170, 0),
+						giu.Style().SetDisabled(!autoUnzip).To(
+							giu.Checkbox("Same level", &sameLevel),
+							giu.Tooltip("Extract .zip contents to same folder as volume"),
+						),
 					).Build()
 				}
 			}),
@@ -2112,6 +2130,21 @@ func work() {
 		os.Remove(inputFile)
 	}
 
+	if mode == "decrypt" && !kept && autoUnzip {
+		showProgress = true
+		popupStatus = "Unzipping..."
+		giu.Update()
+
+		if err := unpackArchive(outputFile); err != nil {
+			mainStatus = "Auto unzipping failed!"
+			mainStatusColor = RED
+			giu.Update()
+			return
+		}
+
+		os.Remove(outputFile)
+	}
+
 	// All done, reset the UI
 	oldKept := kept
 	resetUI()
@@ -2209,6 +2242,8 @@ func resetUI() {
 	recombine = false
 	compress = false
 	delete = false
+	autoUnzip = false
+	sameLevel = false
 	keep = false
 	kept = false
 
@@ -2330,9 +2365,106 @@ func sizeify(size int64) string {
 	}
 }
 
+func unpackArchive(zipPath string) error {
+	reader, err := zip.OpenReader(zipPath)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	var totalSize int64
+	for _, f := range reader.File {
+		totalSize += int64(f.UncompressedSize64)
+	}
+
+	var extractDir string
+	if sameLevel {
+		extractDir = filepath.Dir(zipPath)
+	} else {
+		extractDir = filepath.Join(filepath.Dir(zipPath), strings.TrimSuffix(filepath.Base(zipPath), ".zip"))
+	}
+
+	var done int64
+	startTime := time.Now()
+
+	for _, f := range reader.File {
+		if strings.Contains(f.Name, "..") {
+			return errors.New("potentially malicious zip item path")
+		}
+		outPath := filepath.Join(extractDir, f.Name)
+
+		// Make directory if current entry is a folder
+		if f.FileInfo().IsDir() {
+			if err := os.MkdirAll(outPath, f.Mode()); err != nil {
+				return err
+			}
+		}
+	}
+
+	for i, f := range reader.File {
+		if strings.Contains(f.Name, "..") {
+			return errors.New("potentially malicious zip item path")
+		}
+
+		// Already handled above
+		if f.FileInfo().IsDir() {
+			continue
+		}
+
+		outPath := filepath.Join(extractDir, f.Name)
+
+		// Otherwise create necessary parent directories
+		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+			return err
+		}
+
+		// Open the file inside the archive
+		fileInArchive, err := f.Open()
+		if err != nil {
+			return err
+		}
+		defer fileInArchive.Close()
+
+		dstFile, err := os.Create(outPath)
+		if err != nil {
+			return err
+		}
+
+		// Read from zip in chunks to update progress
+		buffer := make([]byte, MiB)
+		for {
+			n, readErr := fileInArchive.Read(buffer)
+			if n > 0 {
+				_, writeErr := dstFile.Write(buffer[:n])
+				if writeErr != nil {
+					dstFile.Close()
+					os.Remove(dstFile.Name())
+					return writeErr
+				}
+
+				done += int64(n)
+				progress, speed, eta = statify(done, totalSize, startTime)
+				progressInfo = fmt.Sprintf("%d/%d", i+1, len(reader.File))
+				popupStatus = fmt.Sprintf("Unpacking at %.2f MiB/s (ETA: %s)", speed, eta)
+				giu.Update()
+			}
+			if readErr != nil {
+				if readErr == io.EOF {
+					break
+				}
+				dstFile.Close()
+				return readErr
+			}
+		}
+		dstFile.Close()
+	}
+
+	return nil
+}
+
 func main() {
 	// Create the main window
-	window = giu.NewMasterWindow("Picocrypt", 318, 507, giu.MasterWindowFlagsNotResizable)
+	window = giu.NewMasterWindow("Picocrypt "+version[1:], 318, 507, giu.MasterWindowFlagsNotResizable)
 
 	// Start the dialog module
 	dialog.Init()
