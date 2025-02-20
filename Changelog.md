@@ -3,6 +3,12 @@
 	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
 </ul>
 
+# v1.47 (Released 02/19/2025)
+<ul>
+	<li>✓ No code changes, just build on newly released Go 1.24</li>
+	<li>✓ Reintroduce the Windows installer made using Inno Setup</li>
+</ul>
+
 # v1.46 (Released 01/29/2025)
 <ul>
 	<li>✓ Added Picocrypt version to the window title</li>
