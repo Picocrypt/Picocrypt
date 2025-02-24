@@ -9,7 +9,7 @@ require (
 	github.com/Picocrypt/infectious v0.0.0-20240830233326-3a050f65f9ec
 	github.com/Picocrypt/serpent v0.0.0-20240830233833-9ad6ab254fd7
 	github.com/Picocrypt/zxcvbn-go v0.0.0-20240831000415-fccb38ccb913
-	golang.org/x/crypto v0.33.0
+	golang.org/x/crypto v0.35.0
 )
 
 require (
