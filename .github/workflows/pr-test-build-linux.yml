@@ -1,0 +1,71 @@
+name: pr-test-build-linux
+
+permissions:
+  contents: write
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pr-test-build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.24'
+        check-latest: true
+        cache: false
+
+    - name: Install packages
+      run: |
+        sudo apt install -y gcc xorg-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa wget
+
+    - name: Install dependencies
+      run: |
+        cd src
+        go mod download
+
+    - name: Build
+      run: |
+        cd src
+        go build -v -ldflags="-s -w" -o Picocrypt Picocrypt.go
+      env:
+        CGO_ENABLED: 1
+        GOAMD64: v1
+
+    - name: Package as .deb
+      run: |
+        wget https://github.com/user-attachments/files/16136712/Picocrypt.zip
+        python -m zipfile -e Picocrypt.zip Picocrypt
+        cp src/Picocrypt Picocrypt/Picocrypt/usr/bin/picocrypt-gui
+        VERSION=$(cat VERSION)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Version: $VERSION" >> Picocrypt/Picocrypt/DEBIAN/control
+        echo "Version=$VERSION" >> Picocrypt/Picocrypt/usr/share/applications/picocrypt.desktop
+        cd Picocrypt
+        dpkg-deb -Zxz --build --root-owner-group Picocrypt
+
+    - name: Prepare to upload artifacts
+      run: |
+        mkdir out
+        mv src/Picocrypt out
+        mv Picocrypt/Picocrypt.deb out
+        rm -rf src
+        rm -rf Picocrypt
+        mv out/Picocrypt .
+        mv out/Picocrypt.deb .
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-test-build-linux-ONLY-FOR-TESTING
+        path: |
+          Picocrypt
+          Picocrypt.deb
+        if-no-files-found: error
+        compression-level: 9
