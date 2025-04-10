@@ -30,6 +30,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -130,6 +131,9 @@ var startLabel = "Start"
 var mainStatus = "Ready"
 var mainStatusColor = WHITE
 var popupStatus string
+
+var temporaryZip bool
+var externalDst bool
 
 // Progress variables
 var progress float32
@@ -606,7 +610,7 @@ func draw() {
 						giu.Checkbox("Paranoid mode", &paranoid),
 						giu.Tooltip("Provides the highest level of security attainable"),
 						giu.Dummy(-170, 0),
-						giu.Style().SetDisabled(recursively).To(
+						giu.Style().SetDisabled(recursively || !(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
 							giu.Checkbox("Compress files", &compress).OnChange(func() {
 								if !(len(allFiles) > 1 || len(onlyFolders) > 0) {
 									if compress {
@@ -736,6 +740,21 @@ func draw() {
 							} else {
 								file += filepath.Ext(inputFile) + ".pcv"
 							}
+							externalDst = false
+							GOOS := strings.ToLower(runtime.GOOS)
+							if strings.HasPrefix(GOOS, "windows") {
+								if !strings.HasPrefix(file, "C:") {
+									externalDst = true
+								}
+							} else if strings.HasPrefix(GOOS, "linux") {
+								if strings.Contains(file, "/media/") || strings.Contains(file, "/mnt/") {
+									externalDst = true
+								}
+							} else if strings.HasPrefix(GOOS, "darwin") {
+								if strings.Contains(file, "/Volumes/") {
+									externalDst = true
+								}
+							}
 						} else {
 							if strings.HasSuffix(inputFile, ".zip.pcv") {
 								file += ".zip"
@@ -761,9 +780,25 @@ func draw() {
 				}
 				return "Process"
 			}()).Size(giu.Auto, 34).OnClick(onClickStartButton),
-			giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
-				giu.Label(mainStatus),
-			),
+			giu.Custom(func() {
+				if temporaryZip && externalDst {
+					giu.Style().SetColor(giu.StyleColorText, YELLOW).To(
+						giu.Label("Warning: unencrypted temp files will be created"),
+					).Build()
+				} else if temporaryZip {
+					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
+						giu.Label(mainStatus + " (info: will create temporary files)"),
+					).Build()
+				} else if externalDst {
+					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
+						giu.Label(mainStatus + " (info: target may be an external drive)"),
+					).Build()
+				} else {
+					giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
+						giu.Label(mainStatus),
+					).Build()
+				}
+			}),
 		),
 
 		giu.Custom(func() {
@@ -1000,6 +1035,7 @@ func onDrop(names []string) {
 		// Set the input and output paths
 		inputFile = filepath.Join(filepath.Dir(names[0]), "Encrypted") + ".zip"
 		outputFile = inputFile + ".pcv"
+		temporaryZip = true
 	}
 
 	// Recursively add all files in 'onlyFolders' to 'allFiles'
@@ -2262,6 +2298,8 @@ func resetUI() {
 	mainStatus = "Ready"
 	mainStatusColor = WHITE
 	popupStatus = ""
+	temporaryZip = false
+	externalDst = false
 
 	progress = 0
 	progressInfo = ""
