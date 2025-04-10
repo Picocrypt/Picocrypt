@@ -781,21 +781,27 @@ func draw() {
 				return "Process"
 			}()).Size(giu.Auto, 34).OnClick(onClickStartButton),
 			giu.Custom(func() {
+				if mainStatus != "Ready" {
+					giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
+						giu.Label(mainStatus),
+					).Build()
+					return
+				}
 				if temporaryZip && externalDst {
 					giu.Style().SetColor(giu.StyleColorText, YELLOW).To(
 						giu.Label("Warning: unencrypted temp files will be created"),
 					).Build()
 				} else if temporaryZip {
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
-						giu.Label(mainStatus + " (info: will create temporary files)"),
+						giu.Label("Ready (info: will create a temporary zip file)"),
 					).Build()
 				} else if externalDst {
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
-						giu.Label(mainStatus + " (info: target may be an external drive)"),
+						giu.Label("Ready (info: target may be an external drive)"),
 					).Build()
 				} else {
 					giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
-						giu.Label(mainStatus),
+						giu.Label("Ready"),
 					).Build()
 				}
 			}),
