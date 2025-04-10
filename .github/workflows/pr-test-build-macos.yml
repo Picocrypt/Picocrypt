@@ -1,0 +1,57 @@
+name: pr-test-build-macos
+
+permissions:
+  contents: write
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pr-test-build-macos:
+    runs-on: macos-15
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.24'
+        check-latest: true
+        cache: false
+
+    - name: Install packages
+      run: |
+        brew install glfw glew
+
+    - name: Install dependencies
+      run: |
+        cd src
+        go mod download
+
+    - name: Build
+      run: |
+        cd src
+        go build -v -ldflags="-s -w" -o Picocrypt Picocrypt.go
+      env:
+        CGO_ENABLED: 1
+
+    - name: Package as .app in a .dmg
+      run: |
+        mv dist/macos/Picocrypt.app.zip .
+        unzip -d Picocrypt.app Picocrypt.app.zip
+        rm Picocrypt.app.zip
+        mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
+        mkdir out
+        cp -R Picocrypt.app out
+        hdiutil create Picocrypt.dmg -volname Picocrypt -fs APFS -format UDZO -srcfolder out
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-test-build-macos-ONLY-FOR-TESTING
+        path: |
+          Picocrypt.dmg
+        if-no-files-found: error
+        compression-level: 9
