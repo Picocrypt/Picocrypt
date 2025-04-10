@@ -1,8 +1,3 @@
-# Future
-<ul>
-	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
-</ul>
-
 # v1.48 (Released 04/11/2025)
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
