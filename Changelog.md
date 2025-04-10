@@ -6,6 +6,7 @@
 # v1.48 (Released 04/11/2025)
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
+	<li>✓ Warn user when encrypting multiple files to an external drive</li>
 </ul>
 
 # v1.47 (Released 02/19/2025)
