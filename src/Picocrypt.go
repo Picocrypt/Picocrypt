@@ -173,10 +173,117 @@ func (p *compressorProgress) Read(data []byte) (int, error) {
 	return read, err
 }
 
+var onClickStartButton = func() {
+	// Start button should be disabled if these conditions are true; don't do anything if so
+	if (len(keyfiles) == 0 && password == "") || (mode == "encrypt" && password != cpassword) {
+		return
+	}
+
+	if keyfile && keyfiles == nil {
+		mainStatus = "Please select your keyfiles"
+		mainStatusColor = RED
+		return
+	}
+	tmp, err := strconv.Atoi(splitSize)
+	if split && (splitSize == "" || tmp <= 0 || err != nil) {
+		mainStatus = "Invalid chunk size"
+		mainStatusColor = RED
+		return
+	}
+
+	// Check if output file already exists
+	_, err = os.Stat(outputFile)
+
+	// Check if any split chunks already exist
+	if split {
+		names, _ := filepath.Glob(outputFile + ".*")
+		if len(names) > 0 {
+			err = nil
+		} else {
+			err = os.ErrNotExist
+		}
+	}
+
+	// If files already exist, show the overwrite modal
+	if err == nil && !recursively {
+		showOverwrite = true
+		modalId++
+		giu.Update()
+	} else { // Nothing to worry about, start working
+		showProgress = true
+		fastDecode = true
+		canCancel = true
+		modalId++
+		giu.Update()
+		if !recursively {
+			go func() {
+				work()
+				working = false
+				showProgress = false
+				giu.Update()
+			}()
+		} else {
+			// Store variables as they will be cleared
+			oldPassword := password
+			oldKeyfile := keyfile
+			oldKeyfiles := keyfiles
+			oldKeyfileOrdered := keyfileOrdered
+			oldKeyfileLabel := keyfileLabel
+			oldComments := comments
+			oldParanoid := paranoid
+			oldReedsolo := reedsolo
+			oldDeniability := deniability
+			oldSplit := split
+			oldSplitSize := splitSize
+			oldSplitSelected := splitSelected
+			oldDelete := delete
+			files := allFiles
+			go func() {
+				for _, file := range files {
+					// Simulate dropping the file
+					onDrop([]string{file})
+
+					// Restore variables and options
+					password = oldPassword
+					cpassword = oldPassword
+					keyfile = oldKeyfile
+					keyfiles = oldKeyfiles
+					keyfileOrdered = oldKeyfileOrdered
+					keyfileLabel = oldKeyfileLabel
+					comments = oldComments
+					paranoid = oldParanoid
+					reedsolo = oldReedsolo
+					deniability = oldDeniability
+					split = oldSplit
+					splitSize = oldSplitSize
+					splitSelected = oldSplitSelected
+					delete = oldDelete
+
+					work()
+					if !working {
+						resetUI()
+						cancel(nil, nil)
+						showProgress = false
+						giu.Update()
+						return
+					}
+				}
+				working = false
+				showProgress = false
+				giu.Update()
+			}()
+		}
+	}
+}
+
 // The main user interface
 func draw() {
 	giu.SingleWindow().Flags(524351).Layout(
 		giu.Custom(func() {
+			if giu.IsKeyReleased(giu.KeyEnter) {
+				onClickStartButton()
+				return
+			}
 			if showPassgen {
 				giu.PopupModal("Generate password:##"+strconv.Itoa(modalId)).Flags(6).Layout(
 					giu.Row(
@@ -653,103 +760,7 @@ func draw() {
 					return startLabel
 				}
 				return "Process"
-			}()).Size(giu.Auto, 34).OnClick(func() {
-				if keyfile && keyfiles == nil {
-					mainStatus = "Please select your keyfiles"
-					mainStatusColor = RED
-					return
-				}
-				tmp, err := strconv.Atoi(splitSize)
-				if split && (splitSize == "" || tmp <= 0 || err != nil) {
-					mainStatus = "Invalid chunk size"
-					mainStatusColor = RED
-					return
-				}
-
-				// Check if output file already exists
-				_, err = os.Stat(outputFile)
-
-				// Check if any split chunks already exist
-				if split {
-					names, _ := filepath.Glob(outputFile + ".*")
-					if len(names) > 0 {
-						err = nil
-					} else {
-						err = os.ErrNotExist
-					}
-				}
-
-				// If files already exist, show the overwrite modal
-				if err == nil && !recursively {
-					showOverwrite = true
-					modalId++
-					giu.Update()
-				} else { // Nothing to worry about, start working
-					showProgress = true
-					fastDecode = true
-					canCancel = true
-					modalId++
-					giu.Update()
-					if !recursively {
-						go func() {
-							work()
-							working = false
-							showProgress = false
-							giu.Update()
-						}()
-					} else {
-						// Store variables as they will be cleared
-						oldPassword := password
-						oldKeyfile := keyfile
-						oldKeyfiles := keyfiles
-						oldKeyfileOrdered := keyfileOrdered
-						oldKeyfileLabel := keyfileLabel
-						oldComments := comments
-						oldParanoid := paranoid
-						oldReedsolo := reedsolo
-						oldDeniability := deniability
-						oldSplit := split
-						oldSplitSize := splitSize
-						oldSplitSelected := splitSelected
-						oldDelete := delete
-						files := allFiles
-						go func() {
-							for _, file := range files {
-								// Simulate dropping the file
-								onDrop([]string{file})
-
-								// Restore variables and options
-								password = oldPassword
-								cpassword = oldPassword
-								keyfile = oldKeyfile
-								keyfiles = oldKeyfiles
-								keyfileOrdered = oldKeyfileOrdered
-								keyfileLabel = oldKeyfileLabel
-								comments = oldComments
-								paranoid = oldParanoid
-								reedsolo = oldReedsolo
-								deniability = oldDeniability
-								split = oldSplit
-								splitSize = oldSplitSize
-								splitSelected = oldSplitSelected
-								delete = oldDelete
-
-								work()
-								if !working {
-									resetUI()
-									cancel(nil, nil)
-									showProgress = false
-									giu.Update()
-									return
-								}
-							}
-							working = false
-							showProgress = false
-							giu.Update()
-						}()
-					}
-				}
-			}),
+			}()).Size(giu.Auto, 34).OnClick(onClickStartButton),
 			giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
 				giu.Label(mainStatus),
 			),
