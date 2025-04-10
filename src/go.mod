@@ -1,6 +1,6 @@
 module Picocrypt
 
-go 1.24
+go 1.24.2
 
 require (
 	github.com/Picocrypt/dialog v0.0.0-20250410154130-d98dc55ea635

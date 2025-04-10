@@ -1,0 +1,70 @@
+name: pr-test-build-windows
+
+permissions:
+  contents: write
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pr-test-build-windows:
+    runs-on: windows-2025
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.24'
+        check-latest: true
+        cache: false
+
+    - name: Install dependencies
+      run: |
+        cd src
+        go mod download
+
+    - name: Build
+      run: |
+        cd src
+        go build -v -ldflags="-s -w -H=windowsgui -extldflags=-static" -o 1.exe Picocrypt.go
+      env:
+        CGO_ENABLED: 1
+        GOAMD64: v1
+
+    - name: Add icon, manifest, and version info
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -OutFile reshacker_setup.zip https://github.com/user-attachments/files/18878075/reshacker_setup.zip
+        Expand-Archive -DestinationPath reshacker_setup reshacker_setup.zip
+        reshacker_setup/reshacker_setup.exe /SILENT
+        Start-Sleep -Seconds 60
+        Invoke-Expression "& `"$Env:P`" -open src/1.exe -save src/2.exe -action addoverwrite -res images/key.ico -mask `"ICONGROUP,MAINICON,`""
+        Start-Sleep -Seconds 30
+        Invoke-Expression "& `"$Env:P`" -open src/2.exe -save src/3.exe -action addoverwrite -res images/key.ico -mask `"ICONGROUP,GLFW_ICON,`""
+        Start-Sleep -Seconds 30
+        Invoke-Expression "& `"$Env:P`" -open src/3.exe -save src/4.exe -action addoverwrite -res dist/windows/manifest.xml -mask `"MANIFEST,1,`""
+        Start-Sleep -Seconds 30
+        Invoke-Expression "& `"$Env:P`" -open dist/windows/versioninfo.rc -save resources.res -action compile"
+        Start-Sleep -Seconds 30
+        Invoke-Expression "& `"$Env:P`" -open src/4.exe -save src/5.exe -action addoverwrite -res resources.res"
+        Start-Sleep -Seconds 30
+      env:
+        P: "C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe"
+
+    - name: Compress with upx
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -OutFile upx.zip https://github.com/user-attachments/files/15894908/upx-4.2.4-win64.zip
+        Expand-Archive -DestinationPath upx upx.zip
+        upx/upx-4.2.4-win64/upx.exe --lzma --brute -o src/Picocrypt.exe src/5.exe
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-test-build-windows-ONLY-FOR-TESTING
+        path: src/*.exe
+        if-no-files-found: error
+        compression-level: 9
