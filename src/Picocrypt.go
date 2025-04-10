@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.47
+Picocrypt v1.48
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
@@ -30,6 +30,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -60,7 +61,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.47"
+var version = "v1.48"
 var dpi float32
 var mode string
 var working bool
@@ -131,6 +132,9 @@ var mainStatus = "Ready"
 var mainStatusColor = WHITE
 var popupStatus string
 
+var temporaryZip bool
+var externalDst bool
+
 // Progress variables
 var progress float32
 var progressInfo string
@@ -173,10 +177,117 @@ func (p *compressorProgress) Read(data []byte) (int, error) {
 	return read, err
 }
 
+var onClickStartButton = func() {
+	// Start button should be disabled if these conditions are true; don't do anything if so
+	if (len(keyfiles) == 0 && password == "") || (mode == "encrypt" && password != cpassword) {
+		return
+	}
+
+	if keyfile && keyfiles == nil {
+		mainStatus = "Please select your keyfiles"
+		mainStatusColor = RED
+		return
+	}
+	tmp, err := strconv.Atoi(splitSize)
+	if split && (splitSize == "" || tmp <= 0 || err != nil) {
+		mainStatus = "Invalid chunk size"
+		mainStatusColor = RED
+		return
+	}
+
+	// Check if output file already exists
+	_, err = os.Stat(outputFile)
+
+	// Check if any split chunks already exist
+	if split {
+		names, _ := filepath.Glob(outputFile + ".*")
+		if len(names) > 0 {
+			err = nil
+		} else {
+			err = os.ErrNotExist
+		}
+	}
+
+	// If files already exist, show the overwrite modal
+	if err == nil && !recursively {
+		showOverwrite = true
+		modalId++
+		giu.Update()
+	} else { // Nothing to worry about, start working
+		showProgress = true
+		fastDecode = true
+		canCancel = true
+		modalId++
+		giu.Update()
+		if !recursively {
+			go func() {
+				work()
+				working = false
+				showProgress = false
+				giu.Update()
+			}()
+		} else {
+			// Store variables as they will be cleared
+			oldPassword := password
+			oldKeyfile := keyfile
+			oldKeyfiles := keyfiles
+			oldKeyfileOrdered := keyfileOrdered
+			oldKeyfileLabel := keyfileLabel
+			oldComments := comments
+			oldParanoid := paranoid
+			oldReedsolo := reedsolo
+			oldDeniability := deniability
+			oldSplit := split
+			oldSplitSize := splitSize
+			oldSplitSelected := splitSelected
+			oldDelete := delete
+			files := allFiles
+			go func() {
+				for _, file := range files {
+					// Simulate dropping the file
+					onDrop([]string{file})
+
+					// Restore variables and options
+					password = oldPassword
+					cpassword = oldPassword
+					keyfile = oldKeyfile
+					keyfiles = oldKeyfiles
+					keyfileOrdered = oldKeyfileOrdered
+					keyfileLabel = oldKeyfileLabel
+					comments = oldComments
+					paranoid = oldParanoid
+					reedsolo = oldReedsolo
+					deniability = oldDeniability
+					split = oldSplit
+					splitSize = oldSplitSize
+					splitSelected = oldSplitSelected
+					delete = oldDelete
+
+					work()
+					if !working {
+						resetUI()
+						cancel(nil, nil)
+						showProgress = false
+						giu.Update()
+						return
+					}
+				}
+				working = false
+				showProgress = false
+				giu.Update()
+			}()
+		}
+	}
+}
+
 // The main user interface
 func draw() {
 	giu.SingleWindow().Flags(524351).Layout(
 		giu.Custom(func() {
+			if giu.IsKeyReleased(giu.KeyEnter) {
+				onClickStartButton()
+				return
+			}
 			if showPassgen {
 				giu.PopupModal("Generate password:##"+strconv.Itoa(modalId)).Flags(6).Layout(
 					giu.Row(
@@ -499,7 +610,7 @@ func draw() {
 						giu.Checkbox("Paranoid mode", &paranoid),
 						giu.Tooltip("Provides the highest level of security attainable"),
 						giu.Dummy(-170, 0),
-						giu.Style().SetDisabled(recursively).To(
+						giu.Style().SetDisabled(recursively || !(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
 							giu.Checkbox("Compress files", &compress).OnChange(func() {
 								if !(len(allFiles) > 1 || len(onlyFolders) > 0) {
 									if compress {
@@ -629,6 +740,21 @@ func draw() {
 							} else {
 								file += filepath.Ext(inputFile) + ".pcv"
 							}
+							externalDst = false
+							GOOS := strings.ToLower(runtime.GOOS)
+							if strings.HasPrefix(GOOS, "windows") {
+								if !strings.HasPrefix(file, "C:") {
+									externalDst = true
+								}
+							} else if strings.HasPrefix(GOOS, "linux") {
+								if strings.Contains(file, "/media/") || strings.Contains(file, "/mnt/") {
+									externalDst = true
+								}
+							} else if strings.HasPrefix(GOOS, "darwin") {
+								if strings.Contains(file, "/Volumes/") {
+									externalDst = true
+								}
+							}
 						} else {
 							if strings.HasSuffix(inputFile, ".zip.pcv") {
 								file += ".zip"
@@ -653,106 +779,32 @@ func draw() {
 					return startLabel
 				}
 				return "Process"
-			}()).Size(giu.Auto, 34).OnClick(func() {
-				if keyfile && keyfiles == nil {
-					mainStatus = "Please select your keyfiles"
-					mainStatusColor = RED
+			}()).Size(giu.Auto, 34).OnClick(onClickStartButton),
+			giu.Custom(func() {
+				if mainStatus != "Ready" {
+					giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
+						giu.Label(mainStatus),
+					).Build()
 					return
 				}
-				tmp, err := strconv.Atoi(splitSize)
-				if split && (splitSize == "" || tmp <= 0 || err != nil) {
-					mainStatus = "Invalid chunk size"
-					mainStatusColor = RED
-					return
-				}
-
-				// Check if output file already exists
-				_, err = os.Stat(outputFile)
-
-				// Check if any split chunks already exist
-				if split {
-					names, _ := filepath.Glob(outputFile + ".*")
-					if len(names) > 0 {
-						err = nil
-					} else {
-						err = os.ErrNotExist
-					}
-				}
-
-				// If files already exist, show the overwrite modal
-				if err == nil && !recursively {
-					showOverwrite = true
-					modalId++
-					giu.Update()
-				} else { // Nothing to worry about, start working
-					showProgress = true
-					fastDecode = true
-					canCancel = true
-					modalId++
-					giu.Update()
-					if !recursively {
-						go func() {
-							work()
-							working = false
-							showProgress = false
-							giu.Update()
-						}()
-					} else {
-						// Store variables as they will be cleared
-						oldPassword := password
-						oldKeyfile := keyfile
-						oldKeyfiles := keyfiles
-						oldKeyfileOrdered := keyfileOrdered
-						oldKeyfileLabel := keyfileLabel
-						oldComments := comments
-						oldParanoid := paranoid
-						oldReedsolo := reedsolo
-						oldDeniability := deniability
-						oldSplit := split
-						oldSplitSize := splitSize
-						oldSplitSelected := splitSelected
-						oldDelete := delete
-						files := allFiles
-						go func() {
-							for _, file := range files {
-								// Simulate dropping the file
-								onDrop([]string{file})
-
-								// Restore variables and options
-								password = oldPassword
-								cpassword = oldPassword
-								keyfile = oldKeyfile
-								keyfiles = oldKeyfiles
-								keyfileOrdered = oldKeyfileOrdered
-								keyfileLabel = oldKeyfileLabel
-								comments = oldComments
-								paranoid = oldParanoid
-								reedsolo = oldReedsolo
-								deniability = oldDeniability
-								split = oldSplit
-								splitSize = oldSplitSize
-								splitSelected = oldSplitSelected
-								delete = oldDelete
-
-								work()
-								if !working {
-									resetUI()
-									cancel(nil, nil)
-									showProgress = false
-									giu.Update()
-									return
-								}
-							}
-							working = false
-							showProgress = false
-							giu.Update()
-						}()
-					}
+				if temporaryZip && externalDst {
+					giu.Style().SetColor(giu.StyleColorText, YELLOW).To(
+						giu.Label("Warning: unencrypted temp files will be created"),
+					).Build()
+				} else if temporaryZip {
+					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
+						giu.Label("Ready (info: will create a temporary zip file)"),
+					).Build()
+				} else if externalDst {
+					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
+						giu.Label("Ready (info: target may be an external drive)"),
+					).Build()
+				} else {
+					giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
+						giu.Label("Ready"),
+					).Build()
 				}
 			}),
-			giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
-				giu.Label(mainStatus),
-			),
 		),
 
 		giu.Custom(func() {
@@ -989,6 +1041,7 @@ func onDrop(names []string) {
 		// Set the input and output paths
 		inputFile = filepath.Join(filepath.Dir(names[0]), "Encrypted") + ".zip"
 		outputFile = inputFile + ".pcv"
+		temporaryZip = true
 	}
 
 	// Recursively add all files in 'onlyFolders' to 'allFiles'
@@ -2251,6 +2304,8 @@ func resetUI() {
 	mainStatus = "Ready"
 	mainStatusColor = WHITE
 	popupStatus = ""
+	temporaryZip = false
+	externalDst = false
 
 	progress = 0
 	progressInfo = ""

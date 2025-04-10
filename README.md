@@ -18,8 +18,6 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 ## Windows
 Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
 
-If you use Picocrypt frequently, you can download an installer <a href="https://github.com/Picocrypt/Picocrypt/releases/download/1.47/Install-Picocrypt.exe">here</a> for easier launching. It does not require any admin permissions to install and it also bundles a software OpenGL renderer for compatibility, so if the portable executable isn't working, this installer likely will.
-
 ## macOS
 Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You may need to manually trust the app from a terminal and control-click on the app if macOS prevents you from opening it:
 ```
@@ -91,6 +89,14 @@ While being simple, Picocrypt also strives to be powerful in the hands of knowle
 	<li><strong>Deniability</strong>: Picocrypt volumes typically follow an easily recognizable header format. However, if you want to hide the fact that you are encrypting your files, enabling this option will provide you with plausible deniability. The output volume will indistinguishable from a stream of random bytes, and no one can prove it is a volume without the correct password. This can be useful in an authoritarian country where the only way to transport your files safely is if they don't "exist" in the first place. Keep in mind that this mode slows down encryption and decryption speeds, requires you to manually rename the volume afterward, renders comments useless, and also voids the extra security precautions of the paranoid mode, so you should only use it if absolutely necessary.</li>
 	<li><strong>Recursively</strong>: If you want to encrypt and/or decrypt a large set of files individually, this option will tell Picocrypt to go through every recursive file that you drop in and encrypt/decrypt it separately. This is useful, for example, if you are encrypting thousands of large documents and want to be able to decrypt any one of them in particular without having to download and decrypt the entire set of documents. Keep in mind that this is a very complex feature that should only be used if you know what you are doing.</li>
 </ul>
+
+# Caveats
+When encrypting multiple files, Picocrypt will automatically zip them into one file before encrypting it. However, this requires a two-step process that creates an unencrypted temporary `.zip.tmp` file in the same destination folder. This has two implications:
+<ol>
+	<li>There must be at least double the available free space on the target drive as the combined total size of input files</li>
+	<li>The target drive must be safe to save confidential data; if not, the unencrypted temporary file may be recoverable even after deletion</li>
+</ol>
+To mitigate these caveats, Picocrypt will show info and warning labels accordingly. However, it is best to prevent these issues altogether <strong>by always encrypting and decrypting on your main host drive</strong> and then copying encrypted volumes to and from external sources, <strong>or zipping up input files beforehand and encrypting that single file</strong> which doesn't have these caveats.
 
 # Security
 For more information on how Picocrypt handles cryptography, see <a href="Internals.md">Internals</a> for the technical details. If you're worried about the safety of me or this project, let me assure you that this repository won't be hijacked or backdoored. I have 2FA (TOTP) enabled on all accounts with a tie to Picocrypt (GitHub, Reddit, Google, etc.), in addition to full-disk encryption on all of my portable devices. For further hardening, Picocrypt uses my isolated forks of dependencies and I fetch upstream only when I have taken a look at the changes and believe that there aren't any security issues. This means that if a dependency gets hacked or deleted by the author, Picocrypt will be using my fork of it and remain completely unaffected. You can feel confident about using Picocrypt as long as you understand:
