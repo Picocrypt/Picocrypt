@@ -5,9 +5,22 @@ body:
     attributes:
       value: |
         # Rules
+  - type: markdown
+    attributes:
+      value: |
         Test abc
   - type: checkboxes
     attributes:
       options:
         - label: I have read and agree to the rules
           required: true
+  - type: input
+    attributes:
+      label: Describe the issue briefly
+      description: "Give a short (max one paragraph in length) summary"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      values: |
+        Create the issue and you can add additional details in a separate comment.
