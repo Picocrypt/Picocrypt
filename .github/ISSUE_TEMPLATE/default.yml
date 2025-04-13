@@ -11,17 +11,13 @@ body:
         Test abc
   - type: checkboxes
     attributes:
-      label: "Please confirm"
+      label: "Please confirm:"
       options:
-        - label: I have read and agree to the rules
+        - label: "I have read and agree to the rules"
           required: true
   - type: input
     attributes:
-      label: Describe the issue briefly
-      description: "Give a short (max one paragraph in length) summary"
+      label: "Describe the issue briefly in a few sentences:"
+      description: "After creating the issue, you can add more details in a separate comment"
     validations:
       required: true
-  - type: markdown
-    attributes:
-      value: |
-        Create the issue and you can add additional details in a separate comment.
