@@ -4,11 +4,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        Hi
+        # Rules
+        Test abc
   - type: checkboxes
     attributes:
-      label: Label
-      description: abc
       options:
-        - label: Orange cat
+        - label: I have read and agree to the rules
           required: true
