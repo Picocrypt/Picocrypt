@@ -1040,7 +1040,7 @@ func onDrop(names []string) {
 		}
 
 		// Set the input and output paths
-		inputFile = filepath.Join(filepath.Dir(names[0]), "Encrypted") + ".zip"
+		inputFile = filepath.Join(filepath.Dir(names[0]), "encrypted-"+strconv.Itoa(int(time.Now().Unix()))) + ".zip"
 		outputFile = inputFile + ".pcv"
 		usingTempZip = true
 	}
