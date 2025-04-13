@@ -2486,7 +2486,7 @@ func unpackArchive(zipPath string) error {
 
 		// Make directory if current entry is a folder
 		if f.FileInfo().IsDir() {
-			if err := os.MkdirAll(outPath, f.Mode()); err != nil {
+			if err := os.MkdirAll(outPath, 0700); err != nil {
 				return err
 			}
 		}
@@ -2505,7 +2505,7 @@ func unpackArchive(zipPath string) error {
 		outPath := filepath.Join(extractDir, f.Name)
 
 		// Otherwise create necessary parent directories
-		if err := os.MkdirAll(filepath.Dir(outPath), 0600); err != nil {
+		if err := os.MkdirAll(filepath.Dir(outPath), 0700); err != nil {
 			return err
 		}
 
