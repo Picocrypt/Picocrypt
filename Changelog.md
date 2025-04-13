@@ -1,7 +1,12 @@
+# Future
+<ul>
+	<li>Figure out how to remove use of temporary files completely</li>
+</ul>
+
 # v1.48 (Released 04/11/2025)
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
-	<li>✓ Warn user when encrypting multiple files to an external drive</li>
+	<li>✓ Encrypt previously unencrypted temporary zip files</li>
 </ul>
 
 # v1.47 (Released 02/19/2025)
