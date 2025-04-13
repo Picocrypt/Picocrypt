@@ -1,12 +1,11 @@
 name: Default template
-about: The default template for all issues
+description: The default template for all issues
 body:
   - type: markdown
     attributes:
       value: |
         Hi
   - type: checkboxes
-    id: agreement
     attributes:
       label: Label
       description: abc
