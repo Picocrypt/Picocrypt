@@ -131,6 +131,7 @@ var mainStatus = "Ready"
 var mainStatusColor = WHITE
 var popupStatus string
 var usingTempZip bool
+var requiredFreeSpace int64
 
 // Progress variables
 var progress float32
@@ -635,15 +636,7 @@ func draw() {
 						giu.Tooltip("Provides the highest level of security attainable"),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(recursively || !(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
-							giu.Checkbox("Compress files", &compress).OnChange(func() {
-								if !(len(allFiles) > 1 || len(onlyFolders) > 0) {
-									if compress {
-										outputFile = filepath.Join(filepath.Dir(outputFile), "Encrypted") + ".zip.pcv"
-									} else {
-										outputFile = filepath.Join(filepath.Dir(outputFile), filepath.Base(inputFile)) + ".pcv"
-									}
-								}
-							}),
+							giu.Checkbox("Compress files", &compress),
 							giu.Tooltip("Compress files with Deflate before encrypting"),
 						),
 					).Build()
@@ -747,7 +740,7 @@ func draw() {
 						tmp := strings.TrimSuffix(filepath.Base(outputFile), ".pcv")
 						f.SetInitFilename(strings.TrimSuffix(tmp, filepath.Ext(tmp)))
 						if mode == "encrypt" && (len(allFiles) > 1 || len(onlyFolders) > 0 || compress) {
-							f.SetInitFilename("Encrypted")
+							f.SetInitFilename("encrypted-" + strconv.Itoa(int(time.Now().Unix())))
 						}
 
 						// Get the chosen file path
@@ -796,12 +789,12 @@ func draw() {
 					).Build()
 					return
 				}
-				if usingTempZip {
+				if requiredFreeSpace > 0 {
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
-						giu.Label("Ready (info: will create a temporary zip file)"),
+						giu.Label("Ready (ensure " + sizeify(requiredFreeSpace) + " of disk space is free)"),
 					).Build()
 				} else {
-					giu.Style().SetColor(giu.StyleColorText, mainStatusColor).To(
+					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
 						giu.Label("Ready"),
 					).Build()
 				}
@@ -872,12 +865,18 @@ func onDrop(names []string) {
 			folders++
 			mode = "encrypt"
 			inputLabel = "1 folder"
-			startLabel = "Encrypt"
+			startLabel = "Zip and Encrypt"
 			onlyFolders = append(onlyFolders, names[0])
-			inputFile = filepath.Join(filepath.Dir(names[0]), "Encrypted") + ".zip"
+			inputFile = filepath.Join(filepath.Dir(names[0]), "encrypted-"+strconv.Itoa(int(time.Now().Unix()))) + ".zip"
 			outputFile = inputFile + ".pcv"
+			size, err := dirSize(names[0])
+			if err != nil {
+				panic(err)
+			}
+			requiredFreeSpace = 2 * size
 		} else { // A file was dropped
 			files++
+			requiredFreeSpace += stat.Size()
 
 			// Is the file a part of a split volume?
 			nums := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
@@ -914,6 +913,7 @@ func onDrop(names []string) {
 						}
 						totalFiles++
 						compressTotal += stat.Size()
+						requiredFreeSpace += stat.Size()
 					}
 				} else {
 					outputFile = names[0][:len(names[0])-4]
@@ -1003,7 +1003,7 @@ func onDrop(names []string) {
 		}
 	} else { // There are multiple dropped items
 		mode = "encrypt"
-		startLabel = "Encrypt"
+		startLabel = "Zip and Encrypt"
 
 		// Go through each dropped item and add to corresponding slices
 		for _, name := range names {
@@ -1017,6 +1017,7 @@ func onDrop(names []string) {
 				allFiles = append(allFiles, name)
 
 				compressTotal += stat.Size()
+				requiredFreeSpace += 2 * stat.Size()
 				inputLabel = fmt.Sprintf("Scanning files... (%s)", sizeify(compressTotal))
 				giu.Update()
 			}
@@ -1055,6 +1056,7 @@ func onDrop(names []string) {
 				if err == nil && !stat.IsDir() {
 					allFiles = append(allFiles, path)
 					compressTotal += stat.Size()
+					requiredFreeSpace += 2 * stat.Size()
 					inputLabel = fmt.Sprintf("Scanning files... (%s)", sizeify(compressTotal))
 					giu.Update()
 				}
@@ -2339,6 +2341,7 @@ func resetUI() {
 	mainStatusColor = WHITE
 	popupStatus = ""
 	usingTempZip = false
+	requiredFreeSpace = 0
 
 	progress = 0
 	progressInfo = ""
@@ -2548,6 +2551,20 @@ func unpackArchive(zipPath string) error {
 	}
 
 	return nil
+}
+
+func dirSize(path string) (int64, error) {
+	var size int64
+	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			size += info.Size()
+		}
+		return err
+	})
+	return size, err
 }
 
 func main() {

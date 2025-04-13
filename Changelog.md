@@ -6,6 +6,8 @@
 # v1.48 (Released 04/15/2025)
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
+	<li>✓ Update "Encrypt" button to "Zip and Encrypt" if multiple files</li>
+	<li>✓ Give user estimated required free disk space in status label</li>
 	<li>✓ Encrypt previously unencrypted temporary zip files</li>
 	<li>✓ Add `.incomplete` to filenames while work is in progress</li>
 	<li>✓ Use `encrypted-*.zip.pcv` output name instead of `Encrypted.zip.pcv`</li>
