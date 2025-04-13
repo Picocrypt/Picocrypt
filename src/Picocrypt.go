@@ -2502,7 +2502,7 @@ func unpackArchive(zipPath string) error {
 		outPath := filepath.Join(extractDir, f.Name)
 
 		// Otherwise create necessary parent directories
-		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(outPath), 0600); err != nil {
 			return err
 		}
 

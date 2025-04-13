@@ -9,6 +9,7 @@
 	<li>✓ Encrypt previously unencrypted temporary zip files</li>
 	<li>✓ Add `.incomplete` to filenames while work is in progress</li>
 	<li>✓ Use `encrypted-*.zip.pcv` output name instead of `Encrypted.zip.pcv`</li>
+	<li>✓ Use 0600 permissions when auto unzipping for optimal security</li>
 </ul>
 
 # v1.47 (Released 02/19/2025)
