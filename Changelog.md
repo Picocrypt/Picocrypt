@@ -7,6 +7,7 @@
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
 	<li>✓ Encrypt previously unencrypted temporary zip files</li>
+	<li>✓ Add `.incomplete` to filenames while work is in progress</li>
 </ul>
 
 # v1.47 (Released 02/19/2025)

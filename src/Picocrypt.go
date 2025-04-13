@@ -1115,7 +1115,7 @@ func work() {
 		}
 
 		// Open a temporary .zip for writing
-		inputFile = strings.TrimSuffix(outputFile, ".pcv")
+		inputFile = strings.TrimSuffix(outputFile, ".pcv") + ".tmp"
 		file, err := os.Create(inputFile)
 		if err != nil { // Make sure file is writable
 			accessDenied("Write")
@@ -1388,7 +1388,7 @@ func work() {
 		}
 
 		// Create the output file
-		fout, err = os.Create(outputFile)
+		fout, err = os.Create(outputFile + ".incomplete")
 		if err != nil {
 			fin.Close()
 			if len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
@@ -1473,7 +1473,7 @@ func work() {
 				if len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
 					os.Remove(inputFile)
 				}
-				os.Remove(outputFile)
+				os.Remove(fout.Name())
 				return
 			}
 		}
@@ -1705,7 +1705,7 @@ func work() {
 		}
 
 		// Create the output file for decryption
-		fout, err = os.Create(outputFile)
+		fout, err = os.Create(outputFile + ".incomplete")
 		if err != nil {
 			fin.Close()
 			if recombine {
@@ -1771,7 +1771,7 @@ func work() {
 			if recombine || len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
 				os.Remove(inputFile)
 			}
-			os.Remove(outputFile)
+			os.Remove(fout.Name())
 			return
 		}
 
@@ -1908,7 +1908,7 @@ func work() {
 			if recombine || len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
 				os.Remove(inputFile)
 			}
-			os.Remove(outputFile)
+			os.Remove(fout.Name())
 			return
 		}
 
@@ -1987,6 +1987,8 @@ func work() {
 	fin.Close()
 	fout.Close()
 
+	os.Rename(outputFile+".incomplete", outputFile)
+
 	// Add plausible deniability
 	if mode == "encrypt" && deniability {
 		popupStatus = "Adding plausible deniability..."
@@ -1994,13 +1996,13 @@ func work() {
 		giu.Update()
 
 		// Get size of volume for showing progress
-		stat, _ := os.Stat(fout.Name())
+		stat, _ := os.Stat(outputFile)
 		total := stat.Size()
 
 		// Rename the output volume to free up the filename
-		os.Rename(fout.Name(), fout.Name()+".tmp")
-		fin, _ := os.Open(fout.Name() + ".tmp")
-		fout, _ := os.Create(fout.Name())
+		os.Rename(outputFile, outputFile+".tmp")
+		fin, _ := os.Open(outputFile + ".tmp")
+		fout, _ := os.Create(outputFile + ".incomplete")
 
 		// Use a random Argon2 salt and XChaCha20 nonce
 		salt := make([]byte, 16)
@@ -2050,6 +2052,7 @@ func work() {
 		fin.Close()
 		fout.Close()
 		os.Remove(fin.Name())
+		os.Rename(outputFile+".incomplete", outputFile)
 		canCancel = true
 		giu.Update()
 	}
@@ -2094,7 +2097,7 @@ func work() {
 		startTime := time.Now()
 		for i := 0; i < chunks; i++ {
 			// Make the chunk
-			fout, _ := os.Create(fmt.Sprintf("%s.%d", outputFile, i))
+			fout, _ := os.Create(fmt.Sprintf("%s.%d.incomplete", outputFile, i))
 			done := 0
 
 			// Copy data into the chunk
@@ -2160,6 +2163,10 @@ func work() {
 
 		fin.Close()
 		os.Remove(outputFile)
+		names, _ = filepath.Glob(outputFile + ".*.incomplete")
+		for _, i := range names {
+			os.Rename(i, strings.TrimSuffix(i, ".incomplete"))
+		}
 	}
 
 	canCancel = false
