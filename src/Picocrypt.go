@@ -177,6 +177,33 @@ func (p *compressorProgress) Read(data []byte) (int, error) {
 	return read, err
 }
 
+type encryptedZipWriter struct {
+	_w      io.Writer
+	_cipher *chacha20.Cipher
+}
+
+func (ezw *encryptedZipWriter) Write(data []byte) (n int, err error) {
+	dst := make([]byte, len(data))
+	ezw._cipher.XORKeyStream(dst, data)
+	return ezw._w.Write(dst)
+}
+
+type encryptedZipReader struct {
+	_r      io.Reader
+	_cipher *chacha20.Cipher
+}
+
+func (ezr *encryptedZipReader) Read(data []byte) (n int, err error) {
+	src := make([]byte, len(data))
+	n, err = ezr._r.Read(src)
+	if err == nil && n > 0 {
+		dst := make([]byte, n)
+		ezr._cipher.XORKeyStream(dst, src[:n])
+		copy(data, dst)
+	}
+	return n, err
+}
+
 var onClickStartButton = func() {
 	// Start button should be disabled if these conditions are true; don't do anything if so
 	if (len(keyfiles) == 0 && password == "") || (mode == "encrypt" && password != cpassword) {
@@ -610,7 +637,7 @@ func draw() {
 						giu.Checkbox("Paranoid mode", &paranoid),
 						giu.Tooltip("Provides the highest level of security attainable"),
 						giu.Dummy(-170, 0),
-						giu.Style().SetDisabled(recursively || !(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
+						giu.Style().SetDisabled(recursively).To(
 							giu.Checkbox("Compress files", &compress).OnChange(func() {
 								if !(len(allFiles) > 1 || len(onlyFolders) > 0) {
 									if compress {
@@ -1086,6 +1113,17 @@ func work() {
 	var keyfileHashRef []byte          // Same as 'keyfileHash', but used for comparison
 	var authTag []byte                 // 64-byte authentication tag (BLAKE2b or HMAC-SHA3)
 
+	var tempZipCipherW *chacha20.Cipher
+	var tempZipCipherR *chacha20.Cipher
+	var tempZipInUse bool = false
+	func() {
+		key, nonce := make([]byte, 32), make([]byte, 12)
+		rand.Read(key)
+		rand.Read(nonce)
+		tempZipCipherW, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
+		tempZipCipherR, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
+	}()
+
 	// Combine/compress all files into a .zip file if needed
 	if len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
 		// Consider case where compressing only one file
@@ -1111,7 +1149,12 @@ func work() {
 		}
 
 		// Add each file to the .zip
-		writer := zip.NewWriter(file)
+		tempZip := encryptedZipWriter{
+			_w:      file,
+			_cipher: tempZipCipherW,
+		}
+		tempZipInUse = true
+		writer := zip.NewWriter(&tempZip)
 		compressStart = time.Now()
 		for i, path := range files {
 			progressInfo = fmt.Sprintf("%d/%d", i+1, len(files))
@@ -1744,6 +1787,10 @@ func work() {
 	// Start the main encryption process
 	canCancel = true
 	startTime := time.Now()
+	tempZip := encryptedZipReader{
+		_r:      fin,
+		_cipher: tempZipCipherR,
+	}
 	for {
 		if !working {
 			cancel(fin, fout)
@@ -1761,7 +1808,13 @@ func work() {
 		} else {
 			src = make([]byte, MiB)
 		}
-		size, err := fin.Read(src)
+
+		var size int
+		if tempZipInUse {
+			size, err = tempZip.Read(src)
+		} else {
+			size, err = fin.Read(src)
+		}
 		if err != nil {
 			break
 		}
