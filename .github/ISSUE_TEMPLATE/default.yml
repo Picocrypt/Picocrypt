@@ -25,7 +25,7 @@ body:
     attributes:
       value: |
         These are high-priority and the main purpose of leaving issues open for creation. Make the issue with a short description, and then once the issue is created, add a comment with as many details as possible. Ping me (@HACKERALERT) in the comment so that I can get to it as soon as possible. Keep in mind that I define "bug" as something wrong with Picocrypt's code itself. If it's not Picocrypt's fault, it's not a bug.
-- type: markdown
+  - type: markdown
     attributes:
       value: |
         ### Problems running/starting Picocrypt
@@ -33,7 +33,7 @@ body:
     attributes:
       value: |
         Usually these issues are not directly because of Picocrypt's code. Create the issue and in a separate comment, provide details about the environment you're running in (like OS, OS version, DE, etc.). **Do not ping me initially.** Let the issue sit for at least *3 days* to allow other users to potentially help you resolve the issue. If after 3 days, you haven't figured things out, then you may ping me (@HACKERALERT).
-- type: markdown
+  - type: markdown
     attributes:
       value: |
         ### Support requests/usage questions
@@ -41,7 +41,7 @@ body:
     attributes:
       value: |
         Create the issue and ask your question or support request in a separate comment. **Do not ping me initially.** Let the issue marinate for at least *5 days* to give other users a chance to help you first. If after 5 days, you have not received any assistance, then you may ping me (@HACKERALERT).
-- type: markdown
+  - type: markdown
     attributes:
       value: |
         ### Feature requests/suggestions
@@ -49,7 +49,7 @@ body:
     attributes:
       value: |
         Picocrypt is mature software; I do not intend to add any new features. Generally, do not create any feature requests unless it's very minor and can be implemented with low effort and minimal impact on reliability. What is considered "minor" is subjective, but here is an example: "ability to decrypt a volume entirely in-memory" is pretty significant, while "press the Start button on Enter key" is relatively minor.
-- type: markdown
+  - type: markdown
     attributes:
       value: |
         ### Performance issues/improvements
@@ -57,7 +57,7 @@ body:
     attributes:
       value: |
         Picocrypt prioritizes correctness and reliability over performance, so many parts of the code are written sequentially and don't use concurrency. This is intentional and need not be pointed out. Unless performance is absolutely atrocious to the point where it is indicative of a potential bug, do not make issues about performance.
-- type: markdown
+  - type: markdown
     attributes:
       value: |
         ### Other issues/generic topics
