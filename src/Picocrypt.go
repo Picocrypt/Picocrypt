@@ -131,7 +131,6 @@ var startLabel = "Start"
 var mainStatus = "Ready"
 var mainStatusColor = WHITE
 var popupStatus string
-var usingTempZip bool
 var requiredFreeSpace int64
 
 // Progress variables
@@ -787,6 +786,7 @@ func draw() {
 						outputFile = file
 						mainStatus = "Ready"
 						mainStatusColor = WHITE
+						giu.Update()
 					}).Build()
 					giu.Tooltip("Save the output with a custom name and path").Build()
 				}),
@@ -855,7 +855,7 @@ func onDrop(names []string) {
 					duplicate = true
 				}
 			}
-			stat, _ := os.Stat(i)
+			stat, statErr := os.Stat(i)
 			fin, err := os.Open(i)
 			if err == nil {
 				fin.Close()
@@ -866,7 +866,7 @@ func onDrop(names []string) {
 				giu.Update()
 				return
 			}
-			if !duplicate && !stat.IsDir() {
+			if !duplicate && statErr == nil && !stat.IsDir() {
 				tmp = append(tmp, i)
 			}
 		}
@@ -897,6 +897,7 @@ func onDrop(names []string) {
 		if err != nil {
 			mainStatus = "Failed to stat dropped item"
 			mainStatusColor = RED
+			giu.Update()
 			return
 		}
 
@@ -965,48 +966,84 @@ func onDrop(names []string) {
 				if err != nil {
 					resetUI()
 					accessDenied("Read")
+					giu.Update()
 					return
 				}
 
 				// Check if version can be read from header
 				tmp := make([]byte, 15)
-				fin.Read(tmp)
+				if n, err := fin.Read(tmp); err != nil || n != 15 {
+					fin.Close()
+					mainStatus = "Failed to read 15 bytes from file"
+					mainStatusColor = RED
+					giu.Update()
+					return
+				}
 				tmp, err = rsDecode(rs5, tmp)
-				if valid, _ := regexp.Match(`^v\d\.\d{2}`, tmp); !valid || err != nil {
+				if valid, _ := regexp.Match(`^v\d\.\d{2}`, tmp); err != nil || !valid {
 					// Volume has plausible deniability
 					deniability = true
 					mainStatus = "Can't read header, assuming volume is deniable"
 					fin.Close()
+					giu.Update()
 				} else {
 					// Read comments from file and check for corruption
 					tmp = make([]byte, 15)
-					fin.Read(tmp)
+					if n, err := fin.Read(tmp); err != nil || n != 15 {
+						fin.Close()
+						mainStatus = "Failed to read 15 bytes from file"
+						mainStatusColor = RED
+						giu.Update()
+						return
+					}
 					tmp, err = rsDecode(rs5, tmp)
 					if err == nil {
-						commentsLength, _ := strconv.Atoi(string(tmp))
-						tmp = make([]byte, commentsLength*3)
-						fin.Read(tmp)
-						comments = ""
-						for i := 0; i < commentsLength*3; i += 3 {
-							t, err := rsDecode(rs1, tmp[i:i+3])
-							if err != nil {
-								comments = "Comments are corrupted"
-								break
+						commentsLength, err := strconv.Atoi(string(tmp))
+						if err != nil {
+							comments = "Comment length is corrupted"
+							giu.Update()
+						} else {
+							tmp = make([]byte, commentsLength*3)
+							if n, err := fin.Read(tmp); err != nil || n != commentsLength*3 {
+								fin.Close()
+								mainStatus = "Failed to read comments from file"
+								mainStatusColor = RED
+								giu.Update()
+								return
 							}
-							comments += string(t)
+							comments = ""
+							for i := 0; i < commentsLength*3; i += 3 {
+								t, err := rsDecode(rs1, tmp[i:i+3])
+								if err != nil {
+									comments = "Comments are corrupted"
+									break
+								}
+								comments += string(t)
+							}
+							giu.Update()
 						}
 					} else {
 						comments = "Comments are corrupted"
+						giu.Update()
 					}
 
 					// Read flags from file and check for corruption
 					flags := make([]byte, 15)
-					fin.Read(flags)
-					fin.Close()
+					if n, err := fin.Read(flags); err != nil || n != 15 {
+						fin.Close()
+						mainStatus = "Failed to read 15 bytes from file"
+						mainStatusColor = RED
+						giu.Update()
+						return
+					}
+					if err := fin.Close(); err != nil {
+						panic(err)
+					}
 					flags, err = rsDecode(rs5, flags)
 					if err != nil {
 						mainStatus = "The volume header is damaged"
 						mainStatusColor = RED
+						giu.Update()
 						return
 					}
 
@@ -1020,6 +1057,7 @@ func onDrop(names []string) {
 					if flags[2] == 1 {
 						keyfileOrdered = true
 					}
+					giu.Update()
 				}
 			} else { // One file was dropped for encryption
 				mode = "encrypt"
@@ -1027,6 +1065,7 @@ func onDrop(names []string) {
 				startLabel = "Encrypt"
 				inputFile = names[0]
 				outputFile = names[0] + ".pcv"
+				giu.Update()
 			}
 
 			// Add the file
@@ -1035,6 +1074,7 @@ func onDrop(names []string) {
 			if !isSplit {
 				compressTotal += stat.Size()
 			}
+			giu.Update()
 		}
 	} else { // There are multiple dropped items
 		mode = "encrypt"
@@ -1042,7 +1082,14 @@ func onDrop(names []string) {
 
 		// Go through each dropped item and add to corresponding slices
 		for _, name := range names {
-			stat, _ := os.Stat(name)
+			stat, err := os.Stat(name)
+			if err != nil {
+				resetUI()
+				mainStatus = "Failed to stat dropped items"
+				mainStatusColor = RED
+				giu.Update()
+				return
+			}
 			if stat.IsDir() {
 				folders++
 				onlyFolders = append(onlyFolders, name)
@@ -1078,17 +1125,31 @@ func onDrop(names []string) {
 		// Set the input and output paths
 		inputFile = filepath.Join(filepath.Dir(names[0]), "encrypted-"+strconv.Itoa(int(time.Now().Unix()))) + ".zip"
 		outputFile = inputFile + ".pcv"
-		usingTempZip = true
+		giu.Update()
 	}
 
 	// Recursively add all files in 'onlyFolders' to 'allFiles'
 	go func() {
 		oldInputLabel := inputLabel
 		for _, name := range onlyFolders {
-			filepath.Walk(name, func(path string, _ os.FileInfo, _ error) error {
+			if filepath.Walk(name, func(path string, _ os.FileInfo, err error) error {
+				if err != nil {
+					resetUI()
+					mainStatus = "Failed to walk through dropped items"
+					mainStatusColor = RED
+					giu.Update()
+					return err
+				}
 				stat, err := os.Stat(path)
+				if err != nil {
+					resetUI()
+					mainStatus = "Failed to walk through dropped items"
+					mainStatusColor = RED
+					giu.Update()
+					return err
+				}
 				// If 'path' is a valid file path, add to 'allFiles'
-				if err == nil && !stat.IsDir() {
+				if !stat.IsDir() {
 					allFiles = append(allFiles, path)
 					compressTotal += stat.Size()
 					requiredFreeSpace += stat.Size()
@@ -1096,7 +1157,13 @@ func onDrop(names []string) {
 					giu.Update()
 				}
 				return nil
-			})
+			}) != nil {
+				resetUI()
+				mainStatus = "Failed to walk through dropped items"
+				mainStatusColor = RED
+				giu.Update()
+				return
+			}
 		}
 		inputLabel = fmt.Sprintf("%s (%s)", oldInputLabel, sizeify(compressTotal))
 		scanning = false
@@ -2375,7 +2442,6 @@ func resetUI() {
 	mainStatus = "Ready"
 	mainStatusColor = WHITE
 	popupStatus = ""
-	usingTempZip = false
 	requiredFreeSpace = 0
 
 	progress = 0
