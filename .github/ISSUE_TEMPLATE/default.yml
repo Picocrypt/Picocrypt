@@ -36,6 +36,14 @@ body:
   - type: markdown
     attributes:
       value: |
+        ### Picocrypt is crashing
+  - type: markdown
+    attributes:
+      value: |
+        This is almost always caused by input/output files being in locations where you don't have the correct read/write permissions. Try working within your user/home folder only and copy to/from other places to see if that resolves the crash. If not, run Picocrypt from the command line (e.g. `Picocrypt.exe` or `./Picocrypt`) so you can read the crash message. If you still can't fix the crash, create an issue and ping me (@HACKERALERT).
+  - type: markdown
+    attributes:
+      value: |
         ### Antivirus problems
   - type: markdown
     attributes:
