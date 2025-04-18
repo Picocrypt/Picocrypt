@@ -1194,12 +1194,24 @@ func work() {
 	var tempZipCipherW *chacha20.Cipher
 	var tempZipCipherR *chacha20.Cipher
 	var tempZipInUse bool = false
-	func() {
+	func() { // enclose to keep out of parent scope
 		key, nonce := make([]byte, 32), make([]byte, 12)
-		rand.Read(key)
-		rand.Read(nonce)
-		tempZipCipherW, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
-		tempZipCipherR, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
+		if n, err := rand.Read(key); err != nil || n != 32 {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if n, err := rand.Read(nonce); err != nil || n != 12 {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if bytes.Equal(key, make([]byte, 32)) || bytes.Equal(nonce, make([]byte, 12)) {
+			panic(errors.New("fatal crypto/rand error")) // this should never happen but be safe
+		}
+		var errW error
+		var errR error
+		tempZipCipherW, errW = chacha20.NewUnauthenticatedCipher(key, nonce)
+		tempZipCipherR, errR = chacha20.NewUnauthenticatedCipher(key, nonce)
+		if errW != nil || errR != nil {
+			panic(errors.New("fatal chacha20 init error"))
+		}
 	}()
 
 	// Combine/compress all files into a .zip file if needed
