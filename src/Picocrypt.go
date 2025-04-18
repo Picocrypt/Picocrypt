@@ -803,7 +803,6 @@ func draw() {
 					if recombine {
 						multiplier++
 					}
-					fmt.Println(multiplier, requiredFreeSpace)
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
 						giu.Label("Ready (ensure " + sizeify(requiredFreeSpace*int64(multiplier)) + " of disk space is free)"),
 					).Build()
