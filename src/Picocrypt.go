@@ -1253,9 +1253,24 @@ func work() {
 			// Create file info header (size, last modified, etc.)
 			stat, err := os.Stat(path)
 			if err != nil {
-				continue // Skip temporary and inaccessible files
+				writer.Close()
+				file.Close()
+				os.Remove(inputFile)
+				resetUI()
+				mainStatus = "Failed to stat input files"
+				mainStatusColor = RED
+				return
 			}
-			header, _ := zip.FileInfoHeader(stat)
+			header, err := zip.FileInfoHeader(stat)
+			if err != nil {
+				writer.Close()
+				file.Close()
+				os.Remove(inputFile)
+				resetUI()
+				mainStatus = "Failed to create zip.FileInfoHeader"
+				mainStatusColor = RED
+				return
+			}
 			header.Name = strings.TrimPrefix(path, rootDir)
 			header.Name = filepath.ToSlash(header.Name)
 			header.Name = strings.TrimPrefix(header.Name, "/")
@@ -1267,7 +1282,16 @@ func work() {
 			}
 
 			// Open the file for reading
-			entry, _ := writer.CreateHeader(header)
+			entry, err := writer.CreateHeader(header)
+			if err != nil {
+				writer.Close()
+				file.Close()
+				os.Remove(inputFile)
+				resetUI()
+				mainStatus = "Failed to writer.CreateHeader"
+				mainStatusColor = RED
+				return
+			}
 			fin, err := os.Open(path)
 			if err != nil {
 				writer.Close()
@@ -1298,8 +1322,12 @@ func work() {
 				return
 			}
 		}
-		writer.Close()
-		file.Close()
+		if err := writer.Close(); err != nil {
+			panic(err)
+		}
+		if err := file.Close(); err != nil {
+			panic(err)
+		}
 	}
 
 	// Recombine a split file if necessary
