@@ -1423,26 +1423,44 @@ func work() {
 		giu.Update()
 
 		// Get size of volume for showing progress
-		stat, _ := os.Stat(inputFile)
+		stat, err := os.Stat(inputFile)
+		if err != nil {
+			// we already read from inputFile successfully in onDrop
+			// so it is very unlikely this err != nil, we can just panic
+			panic(err)
+		}
 		total := stat.Size()
 
 		// Rename input volume to free up the filename
-		fin, _ := os.Open(inputFile)
+		fin, err := os.Open(inputFile)
+		if err != nil {
+			panic(err)
+		}
 		for strings.HasSuffix(inputFile, ".tmp") {
 			inputFile = strings.TrimSuffix(inputFile, ".tmp")
 		}
 		inputFile += ".tmp"
-		fout, _ := os.Create(inputFile)
+		fout, err := os.Create(inputFile)
+		if err != nil {
+			panic(err)
+		}
 
 		// Get the Argon2 salt and XChaCha20 nonce from input volume
 		salt := make([]byte, 16)
 		nonce := make([]byte, 24)
-		fin.Read(salt)
-		fin.Read(nonce)
+		if n, err := fin.Read(salt); err != nil || n != 16 {
+			panic(errors.New("failed to read 16 bytes from file"))
+		}
+		if n, err := fin.Read(nonce); err != nil || n != 24 {
+			panic(errors.New("failed to read 24 bytes from file"))
+		}
 
 		// Generate key and XChaCha20
 		key := argon2.IDKey([]byte(password), salt, 4, 1<<20, 4, 32)
-		chacha, _ := chacha20.NewUnauthenticatedCipher(key, nonce)
+		chacha, err := chacha20.NewUnauthenticatedCipher(key, nonce)
+		if err != nil {
+			panic(err)
+		}
 
 		// Decrypt the entire volume
 		done, counter := 0, 0
@@ -1455,7 +1473,11 @@ func work() {
 			src = src[:size]
 			dst := make([]byte, len(src))
 			chacha.XORKeyStream(dst, src)
-			fout.Write(dst)
+			if n, err := fout.Write(dst); err != nil || n != len(dst) {
+				fout.Close()
+				os.Remove(fout.Name())
+				panic(errors.New("failed to write dst"))
+			}
 
 			// Update stats
 			done += size
@@ -1466,23 +1488,39 @@ func work() {
 			// Change nonce after 60 GiB to prevent overflow
 			if counter >= 60*GiB {
 				tmp := sha3.New256()
-				tmp.Write(nonce)
+				if n, err := tmp.Write(nonce); err != nil || n != len(nonce) {
+					panic(errors.New("failed to write nonce to tmp during rekeying"))
+				}
 				nonce = tmp.Sum(nil)[:24]
-				chacha, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
+				chacha, err = chacha20.NewUnauthenticatedCipher(key, nonce)
+				if err != nil {
+					panic(err)
+				}
 				counter = 0
 			}
 		}
 
-		fin.Close()
-		fout.Close()
+		if err := fin.Close(); err != nil {
+			panic(err)
+		}
+		if err := fout.Close(); err != nil {
+			panic(err)
+		}
 
 		// Check if the version can be read from the volume
-		fin, _ = os.Open(inputFile)
+		fin, err = os.Open(inputFile)
+		if err != nil {
+			panic(err)
+		}
 		tmp := make([]byte, 15)
-		fin.Read(tmp)
-		fin.Close()
-		tmp, err := rsDecode(rs5, tmp)
-		if valid, _ := regexp.Match(`^v1\.\d{2}`, tmp); !valid || err != nil {
+		if n, err := fin.Read(tmp); err != nil || n != 15 {
+			panic(errors.New("failed to read 15 bytes from file"))
+		}
+		if err := fin.Close(); err != nil {
+			panic(err)
+		}
+		tmp, err = rsDecode(rs5, tmp)
+		if valid, _ := regexp.Match(`^v1\.\d{2}`, tmp); err != nil || !valid {
 			os.Remove(inputFile)
 			inputFile = strings.TrimSuffix(inputFile, ".tmp")
 			broken(nil, nil, "Password is incorrect or the file is not a volume", true)
