@@ -605,7 +605,7 @@ func draw() {
 								panic(errors.New("fatal crypto/rand error"))
 							}
 							n, err := fout.Write(data)
-							if n != 32 {
+							if err != nil || n != 32 {
 								fout.Close()
 								panic(errors.New("failed to write full keyfile"))
 							}
