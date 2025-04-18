@@ -651,13 +651,13 @@ func draw() {
 
 					giu.Row(
 						giu.Checkbox("Deniability", &deniability),
-						giu.Tooltip("Add plausible deniability to the volume\nIf enabled, comments will not be usable"),
+						giu.Tooltip("Warning: only use this if you know what it does!"),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(!(len(allFiles) > 1 || len(onlyFolders) > 0)).To(
 							giu.Checkbox("Recursively", &recursively).OnChange(func() {
 								compress = false
 							}),
-							giu.Tooltip("Encrypt and decrypt recursive files individually"),
+							giu.Tooltip("Warning: only use this if you know what it does!"),
 						),
 					).Build()
 
@@ -690,7 +690,7 @@ func draw() {
 									sameLevel = false
 								}
 							}),
-							giu.Tooltip("Extract .zip upon decryption (may overwrite)"),
+							giu.Tooltip("Extract .zip upon decryption (may overwrite files)"),
 						),
 						giu.Dummy(-170, 0),
 						giu.Style().SetDisabled(!autoUnzip).To(
@@ -807,7 +807,7 @@ func draw() {
 						multiplier++
 					}
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
-						giu.Label("Ready (ensure " + sizeify(requiredFreeSpace*int64(multiplier)) + " of disk space is free)"),
+						giu.Label("Ready (ensure >" + sizeify(requiredFreeSpace*int64(multiplier)) + " of disk space is free)"),
 					).Build()
 				} else {
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
