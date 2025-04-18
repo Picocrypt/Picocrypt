@@ -48,10 +48,11 @@ import (
 )
 
 // Constants
-var KiB = 1 << 10
-var MiB = 1 << 20
-var GiB = 1 << 30
-var TiB = 1 << 40
+const KiB = 1 << 10
+const MiB = 1 << 20
+const GiB = 1 << 30
+const TiB = 1 << 40
+
 var WHITE = color.RGBA{0xff, 0xff, 0xff, 0xff}
 var RED = color.RGBA{0xff, 0x00, 0x00, 0xff}
 var GREEN = color.RGBA{0x00, 0xff, 0x00, 0xff}
@@ -141,13 +142,13 @@ var eta string
 var canCancel bool
 
 // Reed-Solomon encoders
-var rs1, _ = infectious.NewFEC(1, 3)
-var rs5, _ = infectious.NewFEC(5, 15)
-var rs16, _ = infectious.NewFEC(16, 48)
-var rs24, _ = infectious.NewFEC(24, 72)
-var rs32, _ = infectious.NewFEC(32, 96)
-var rs64, _ = infectious.NewFEC(64, 192)
-var rs128, _ = infectious.NewFEC(128, 136)
+var rs1, rsErr1 = infectious.NewFEC(1, 3)
+var rs5, rsErr2 = infectious.NewFEC(5, 15)
+var rs16, rsErr3 = infectious.NewFEC(16, 48)
+var rs24, rsErr4 = infectious.NewFEC(24, 72)
+var rs32, rsErr5 = infectious.NewFEC(32, 96)
+var rs64, rsErr6 = infectious.NewFEC(64, 192)
+var rs128, rsErr7 = infectious.NewFEC(128, 136)
 var fastDecode bool
 
 // Compression variables and passthrough
@@ -197,7 +198,9 @@ func (ezr *encryptedZipReader) Read(data []byte) (n int, err error) {
 	if err == nil && n > 0 {
 		dst := make([]byte, n)
 		ezr._cipher.XORKeyStream(dst, src[:n])
-		copy(data, dst)
+		if copy(data, dst) != n {
+			panic(errors.New("built-in copy() function failed"))
+		}
 	}
 	return n, err
 }
@@ -2570,6 +2573,9 @@ func unpackArchive(zipPath string) error {
 }
 
 func main() {
+	if rsErr1 != nil || rsErr2 != nil || rsErr3 != nil || rsErr4 != nil || rsErr5 != nil || rsErr6 != nil || rsErr7 != nil {
+		panic(errors.New("rs failed to init"))
+	}
 	// Create the main window
 	window = giu.NewMasterWindow("Picocrypt "+version[1:], 318, 507, giu.MasterWindowFlagsNotResizable)
 
