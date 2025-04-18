@@ -1978,17 +1978,27 @@ func work() {
 	var mac hash.Hash
 	subkey := make([]byte, 32)
 	hkdf := hkdf.New(sha3.New256, key, hkdfSalt, nil)
-	hkdf.Read(subkey)
+	if n, err := hkdf.Read(subkey); err != nil || n != 32 {
+		panic(errors.New("fatal hkdf.Read error"))
+	}
 	if paranoid {
 		mac = hmac.New(sha3.New512, subkey) // HMAC-SHA3
 	} else {
-		mac, _ = blake2b.New512(subkey) // Keyed BLAKE2b
+		mac, err = blake2b.New512(subkey) // Keyed BLAKE2b
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	// Generate another subkey for use as Serpent's key
 	serpentKey := make([]byte, 32)
-	hkdf.Read(serpentKey)
-	s, _ := serpent.NewCipher(serpentKey)
+	if n, err := hkdf.Read(serpentKey); err != nil || n != 32 {
+		panic(errors.New("fatal hkdf.Read error"))
+	}
+	s, err := serpent.NewCipher(serpentKey)
+	if err != nil {
+		panic(err)
+	}
 	serpent := cipher.NewCTR(s, serpentIV)
 
 	// Start the main encryption process
@@ -2036,7 +2046,9 @@ func work() {
 			}
 
 			chacha.XORKeyStream(dst, src)
-			mac.Write(dst)
+			if _, err := mac.Write(dst); err != nil {
+				panic(err)
+			}
 
 			if reedsolo {
 				copy(src, dst)
@@ -2090,7 +2102,7 @@ func work() {
 				} else {
 					// Decode the full chunks
 					chunks := len(dst)/136 - 1
-					for i := 0; i < chunks; i++ {
+					for i := range chunks {
 						tmp, err := rsDecode(rs128, dst[i*136:(i+1)*136])
 						if err != nil {
 							if keep {
@@ -2125,7 +2137,9 @@ func work() {
 				dst = make([]byte, len(src))
 			}
 
-			mac.Write(src)
+			if _, err := mac.Write(src); err != nil {
+				panic(err)
+			}
 			chacha.XORKeyStream(dst, src)
 
 			if paranoid {
@@ -2167,12 +2181,19 @@ func work() {
 		if counter >= 60*GiB {
 			// ChaCha20
 			nonce = make([]byte, 24)
-			hkdf.Read(nonce)
-			chacha, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
+			if n, err := hkdf.Read(nonce); err != nil || n != 24 {
+				panic(errors.New("fatal hkdf.Read error"))
+			}
+			chacha, err = chacha20.NewUnauthenticatedCipher(key, nonce)
+			if err != nil {
+				panic(err)
+			}
 
 			// Serpent
 			serpentIV = make([]byte, 16)
-			hkdf.Read(serpentIV)
+			if n, err := hkdf.Read(serpentIV); err != nil || n != 16 {
+				panic(errors.New("fatal hkdf.Read error"))
+			}
 			serpent = cipher.NewCTR(s, serpentIV)
 
 			// Reset counter to 0
@@ -2189,10 +2210,18 @@ func work() {
 		giu.Update()
 
 		// Seek back to header and write important values
-		fout.Seek(int64(309+len(comments)*3), 0)
-		fout.Write(rsEncode(rs64, keyHash))
-		fout.Write(rsEncode(rs32, keyfileHash))
-		fout.Write(rsEncode(rs64, mac.Sum(nil)))
+		if _, err := fout.Seek(int64(309+len(comments)*3), 0); err != nil {
+			panic(err)
+		}
+		if _, err := fout.Write(rsEncode(rs64, keyHash)); err != nil {
+			panic(err)
+		}
+		if _, err := fout.Write(rsEncode(rs32, keyfileHash)); err != nil {
+			panic(err)
+		}
+		if _, err := fout.Write(rsEncode(rs64, mac.Sum(nil))); err != nil {
+			panic(err)
+		}
 	} else {
 		popupStatus = "Comparing values..."
 		giu.Update()
@@ -2217,10 +2246,16 @@ func work() {
 		}
 	}
 
-	fin.Close()
-	fout.Close()
+	if err := fin.Close(); err != nil {
+		panic(err)
+	}
+	if err := fout.Close(); err != nil {
+		panic(err)
+	}
 
-	os.Rename(outputFile+".incomplete", outputFile)
+	if err := os.Rename(outputFile+".incomplete", outputFile); err != nil {
+		panic(err)
+	}
 
 	// Add plausible deniability
 	if mode == "encrypt" && deniability {
@@ -2229,29 +2264,51 @@ func work() {
 		giu.Update()
 
 		// Get size of volume for showing progress
-		stat, _ := os.Stat(outputFile)
+		stat, err := os.Stat(outputFile)
+		if err != nil {
+			panic(err)
+		}
 		total := stat.Size()
 
 		// Rename the output volume to free up the filename
 		os.Rename(outputFile, outputFile+".tmp")
-		fin, _ := os.Open(outputFile + ".tmp")
-		fout, _ := os.Create(outputFile + ".incomplete")
+		fin, err := os.Open(outputFile + ".tmp")
+		if err != nil {
+			panic(err)
+		}
+		fout, err := os.Create(outputFile + ".incomplete")
+		if err != nil {
+			panic(err)
+		}
 
 		// Use a random Argon2 salt and XChaCha20 nonce
 		salt := make([]byte, 16)
 		nonce := make([]byte, 24)
-		if _, err := rand.Read(salt); err != nil {
+		if n, err := rand.Read(salt); err != nil || n != 16 {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if n, err := rand.Read(nonce); err != nil || n != 24 {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if bytes.Equal(salt, make([]byte, 16)) || bytes.Equal(nonce, make([]byte, 24)) {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if _, err := fout.Write(salt); err != nil {
 			panic(err)
 		}
-		if _, err := rand.Read(nonce); err != nil {
+		if _, err := fout.Write(nonce); err != nil {
 			panic(err)
 		}
-		fout.Write(salt)
-		fout.Write(nonce)
 
 		// Generate key and XChaCha20
 		key := argon2.IDKey([]byte(password), salt, 4, 1<<20, 4, 32)
-		chacha, _ := chacha20.NewUnauthenticatedCipher(key, nonce)
+		if bytes.Equal(key, make([]byte, 32)) {
+			panic(errors.New("fatal crypto/argon2 error"))
+		}
+		chacha, err := chacha20.NewUnauthenticatedCipher(key, nonce)
+		if err != nil {
+			panic(err)
+		}
 
 		// Encrypt the entire volume
 		done, counter := 0, 0
@@ -2264,7 +2321,9 @@ func work() {
 			src = src[:size]
 			dst := make([]byte, len(src))
 			chacha.XORKeyStream(dst, src)
-			fout.Write(dst)
+			if _, err := fout.Write(dst); err != nil {
+				panic(err)
+			}
 
 			// Update stats
 			done += size
@@ -2275,17 +2334,30 @@ func work() {
 			// Change nonce after 60 GiB to prevent overflow
 			if counter >= 60*GiB {
 				tmp := sha3.New256()
-				tmp.Write(nonce)
+				if _, err := tmp.Write(nonce); err != nil {
+					panic(err)
+				}
 				nonce = tmp.Sum(nil)[:24]
-				chacha, _ = chacha20.NewUnauthenticatedCipher(key, nonce)
+				chacha, err = chacha20.NewUnauthenticatedCipher(key, nonce)
+				if err != nil {
+					panic(err)
+				}
 				counter = 0
 			}
 		}
 
-		fin.Close()
-		fout.Close()
-		os.Remove(fin.Name())
-		os.Rename(outputFile+".incomplete", outputFile)
+		if err := fin.Close(); err != nil {
+			panic(err)
+		}
+		if err := fout.Close(); err != nil {
+			panic(err)
+		}
+		if err := os.Remove(fin.Name()); err != nil {
+			panic(err)
+		}
+		if err := os.Rename(outputFile+".incomplete", outputFile); err != nil {
+			panic(err)
+		}
 		canCancel = true
 		giu.Update()
 	}
@@ -2293,11 +2365,17 @@ func work() {
 	// Split the file into chunks
 	if split {
 		var splitted []string
-		stat, _ := os.Stat(outputFile)
+		stat, err := os.Stat(outputFile)
+		if err != nil {
+			panic(err)
+		}
 		size := stat.Size()
 		finishedFiles := 0
 		finishedBytes := 0
-		chunkSize, _ := strconv.Atoi(splitSize)
+		chunkSize, err := strconv.Atoi(splitSize)
+		if err != nil {
+			panic(err)
+		}
 
 		// Calculate chunk size
 		if splitSelected == 0 {
@@ -2318,17 +2396,25 @@ func work() {
 		giu.Update()
 
 		// Open the volume for reading
-		fin, _ := os.Open(outputFile)
+		fin, err := os.Open(outputFile)
+		if err != nil {
+			panic(err)
+		}
 
 		// Delete existing chunks to prevent mixed chunks
-		names, _ := filepath.Glob(outputFile + ".*")
+		names, err := filepath.Glob(outputFile + ".*")
+		if err != nil {
+			panic(err)
+		}
 		for _, i := range names {
-			os.Remove(i)
+			if err := os.Remove(i); err != nil {
+				panic(err)
+			}
 		}
 
 		// Start the splitting process
 		startTime := time.Now()
-		for i := 0; i < chunks; i++ {
+		for i := range chunks {
 			// Make the chunk
 			fout, _ := os.Create(fmt.Sprintf("%s.%d.incomplete", outputFile, i))
 			done := 0
@@ -2382,7 +2468,9 @@ func work() {
 				popupStatus = fmt.Sprintf("Splitting at %.2f MiB/s (ETA: %s)", speed, eta)
 				giu.Update()
 			}
-			fout.Close()
+			if err := fout.Close(); err != nil {
+				panic(err)
+			}
 
 			// Update stats
 			finishedFiles++
@@ -2394,11 +2482,20 @@ func work() {
 			giu.Update()
 		}
 
-		fin.Close()
-		os.Remove(outputFile)
-		names, _ = filepath.Glob(outputFile + ".*.incomplete")
+		if err := fin.Close(); err != nil {
+			panic(err)
+		}
+		if err := os.Remove(outputFile); err != nil {
+			panic(err)
+		}
+		names, err = filepath.Glob(outputFile + ".*.incomplete")
+		if err != nil {
+			panic(err)
+		}
 		for _, i := range names {
-			os.Rename(i, strings.TrimSuffix(i, ".incomplete"))
+			if err := os.Rename(i, strings.TrimSuffix(i, ".incomplete")); err != nil {
+				panic(err)
+			}
 		}
 	}
 
@@ -2409,9 +2506,13 @@ func work() {
 
 	// Delete temporary files used during encryption and decryption
 	if recombine || len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
-		os.Remove(inputFile)
+		if err := os.Remove(inputFile); err != nil {
+			panic(err)
+		}
 		if deniability {
-			os.Remove(strings.TrimSuffix(inputFile, ".tmp"))
+			if err := os.Remove(strings.TrimSuffix(inputFile, ".tmp")); err != nil {
+				panic(err)
+			}
 		}
 	}
 
@@ -2428,26 +2529,38 @@ func work() {
 					if err != nil {
 						break
 					}
-					os.Remove(fmt.Sprintf("%s.%d", inputFileOld, i))
+					if err := os.Remove(fmt.Sprintf("%s.%d", inputFileOld, i)); err != nil {
+						panic(err)
+					}
 					i++
 				}
 			} else {
-				os.Remove(inputFile)
+				if err := os.Remove(inputFile); err != nil {
+					panic(err)
+				}
 				if deniability {
-					os.Remove(strings.TrimSuffix(inputFile, ".tmp"))
+					if err := os.Remove(strings.TrimSuffix(inputFile, ".tmp")); err != nil {
+						panic(err)
+					}
 				}
 			}
 		} else {
 			for _, i := range onlyFiles {
-				os.Remove(i)
+				if err := os.Remove(i); err != nil {
+					panic(err)
+				}
 			}
 			for _, i := range onlyFolders {
-				os.RemoveAll(i)
+				if err := os.RemoveAll(i); err != nil {
+					panic(err)
+				}
 			}
 		}
 	}
 	if mode == "decrypt" && deniability {
-		os.Remove(inputFile)
+		if err := os.Remove(inputFile); err != nil {
+			panic(err)
+		}
 	}
 
 	if mode == "decrypt" && !kept && autoUnzip {
@@ -2462,7 +2575,9 @@ func work() {
 			return
 		}
 
-		os.Remove(outputFile)
+		if err := os.Remove(outputFile); err != nil {
+			panic(err)
+		}
 	}
 
 	// All done, reset the UI
