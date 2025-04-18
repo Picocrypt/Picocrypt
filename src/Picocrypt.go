@@ -595,6 +595,9 @@ func draw() {
 
 							fout, err := os.Create(file)
 							if err != nil {
+								mainStatus = "Failed to create keyfile"
+								mainStatusColor = RED
+								giu.Update()
 								return
 							}
 							data := make([]byte, 32)
@@ -611,6 +614,8 @@ func draw() {
 							} else {
 								mainStatus = "Ready"
 								mainStatusColor = WHITE
+								giu.Update()
+								return
 							}
 						}),
 						giu.Tooltip("Generate a cryptographically secure keyfile"),
