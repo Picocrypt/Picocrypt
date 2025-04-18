@@ -803,6 +803,7 @@ func draw() {
 					if recombine {
 						multiplier++
 					}
+					fmt.Println(multiplier, requiredFreeSpace)
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
 						giu.Label("Ready (ensure " + sizeify(requiredFreeSpace*int64(multiplier)) + " of disk space is free)"),
 					).Build()
@@ -887,11 +888,6 @@ func onDrop(names []string) {
 			onlyFolders = append(onlyFolders, names[0])
 			inputFile = filepath.Join(filepath.Dir(names[0]), "encrypted-"+strconv.Itoa(int(time.Now().Unix()))) + ".zip"
 			outputFile = inputFile + ".pcv"
-			size, err := dirSize(names[0])
-			if err != nil {
-				panic(err)
-			}
-			requiredFreeSpace = size
 		} else { // A file was dropped
 			files++
 			requiredFreeSpace = stat.Size()
@@ -2569,20 +2565,6 @@ func unpackArchive(zipPath string) error {
 	}
 
 	return nil
-}
-
-func dirSize(path string) (int64, error) {
-	var size int64
-	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.IsDir() {
-			size += info.Size()
-		}
-		return err
-	})
-	return size, err
 }
 
 func main() {
