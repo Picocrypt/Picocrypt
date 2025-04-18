@@ -1363,7 +1363,7 @@ func work() {
 
 		// Merge all chunks into one file
 		startTime := time.Now()
-		for i := 0; i < totalFiles; i++ {
+		for i := range totalFiles {
 			fin, err := os.Open(fmt.Sprintf("%s.%d", inputFile, i))
 			if err != nil {
 				fout.Close()
@@ -1387,10 +1387,11 @@ func work() {
 					break
 				}
 				data = data[:read]
-				_, err = fout.Write(data)
+				var n int
+				n, err = fout.Write(data)
 				done += read
 
-				if err != nil {
+				if err != nil || n != len(data) {
 					insufficientSpace(fin, fout)
 					os.Remove(outputFile + ".pcv")
 					return
@@ -1402,9 +1403,13 @@ func work() {
 				popupStatus = fmt.Sprintf("Recombining at %.2f MiB/s (ETA: %s)", speed, eta)
 				giu.Update()
 			}
-			fin.Close()
+			if err := fin.Close(); err != nil {
+				panic(err)
+			}
 		}
-		fout.Close()
+		if err := fout.Close(); err != nil {
+			panic(err)
+		}
 		inputFileOld = inputFile
 		inputFile = outputFile + ".pcv"
 	}
