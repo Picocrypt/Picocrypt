@@ -790,8 +790,21 @@ func draw() {
 					return
 				}
 				if requiredFreeSpace > 0 {
+					multiplier := 1
+					if len(allFiles) > 1 || len(onlyFolders) > 0 { // need a temporary zip file
+						multiplier++
+					}
+					if deniability {
+						multiplier++
+					}
+					if split {
+						multiplier++
+					}
+					if recombine {
+						multiplier++
+					}
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
-						giu.Label("Ready (ensure " + sizeify(requiredFreeSpace) + " of disk space is free)"),
+						giu.Label("Ready (ensure " + sizeify(requiredFreeSpace*int64(multiplier)) + " of disk space is free)"),
 					).Build()
 				} else {
 					giu.Style().SetColor(giu.StyleColorText, WHITE).To(
@@ -858,7 +871,12 @@ func onDrop(names []string) {
 
 	// One item dropped
 	if len(names) == 1 {
-		stat, _ := os.Stat(names[0])
+		stat, err := os.Stat(names[0])
+		if err != nil {
+			mainStatus = "Failed to stat dropped item"
+			mainStatusColor = RED
+			return
+		}
 
 		// A folder was dropped
 		if stat.IsDir() {
@@ -873,10 +891,10 @@ func onDrop(names []string) {
 			if err != nil {
 				panic(err)
 			}
-			requiredFreeSpace = 2 * size
+			requiredFreeSpace = size
 		} else { // A file was dropped
 			files++
-			requiredFreeSpace += stat.Size()
+			requiredFreeSpace = stat.Size()
 
 			// Is the file a part of a split volume?
 			nums := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
@@ -913,8 +931,8 @@ func onDrop(names []string) {
 						}
 						totalFiles++
 						compressTotal += stat.Size()
-						requiredFreeSpace += stat.Size()
 					}
+					requiredFreeSpace = compressTotal
 				} else {
 					outputFile = names[0][:len(names[0])-4]
 				}
@@ -1017,7 +1035,7 @@ func onDrop(names []string) {
 				allFiles = append(allFiles, name)
 
 				compressTotal += stat.Size()
-				requiredFreeSpace += 2 * stat.Size()
+				requiredFreeSpace += stat.Size()
 				inputLabel = fmt.Sprintf("Scanning files... (%s)", sizeify(compressTotal))
 				giu.Update()
 			}
@@ -1056,7 +1074,7 @@ func onDrop(names []string) {
 				if err == nil && !stat.IsDir() {
 					allFiles = append(allFiles, path)
 					compressTotal += stat.Size()
-					requiredFreeSpace += 2 * stat.Size()
+					requiredFreeSpace += stat.Size()
 					inputLabel = fmt.Sprintf("Scanning files... (%s)", sizeify(compressTotal))
 					giu.Update()
 				}
@@ -1101,7 +1119,7 @@ func work() {
 	}()
 
 	// Combine/compress all files into a .zip file if needed
-	if len(allFiles) > 1 || len(onlyFolders) > 0 || compress {
+	if len(allFiles) > 1 || len(onlyFolders) > 0 {
 		// Consider case where compressing only one file
 		files := allFiles
 		if len(allFiles) == 0 {
