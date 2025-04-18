@@ -205,7 +205,7 @@ func (ezr *encryptedZipReader) Read(data []byte) (n int, err error) {
 	return n, err
 }
 
-var onClickStartButton = func() {
+func onClickStartButton() {
 	// Start button should be disabled if these conditions are true; don't do anything if so
 	if (len(keyfiles) == 0 && password == "") || (mode == "encrypt" && password != cpassword) {
 		return
@@ -214,12 +214,14 @@ var onClickStartButton = func() {
 	if keyfile && keyfiles == nil {
 		mainStatus = "Please select your keyfiles"
 		mainStatusColor = RED
+		giu.Update()
 		return
 	}
 	tmp, err := strconv.Atoi(splitSize)
-	if split && (splitSize == "" || tmp <= 0 || err != nil) {
+	if split && (splitSize == "" || err != nil || tmp <= 0) {
 		mainStatus = "Invalid chunk size"
 		mainStatusColor = RED
+		giu.Update()
 		return
 	}
 
@@ -228,7 +230,10 @@ var onClickStartButton = func() {
 
 	// Check if any split chunks already exist
 	if split {
-		names, _ := filepath.Glob(outputFile + ".*")
+		names, err2 := filepath.Glob(outputFile + ".*")
+		if err2 != nil {
+			panic(err2)
+		}
 		if len(names) > 0 {
 			err = nil
 		} else {
@@ -320,7 +325,7 @@ func draw() {
 				giu.PopupModal("Generate password:##"+strconv.Itoa(modalId)).Flags(6).Layout(
 					giu.Row(
 						giu.Label("Length:"),
-						giu.SliderInt(&passgenLength, 4, 64).Size(giu.Auto),
+						giu.SliderInt(&passgenLength, 12, 64).Size(giu.Auto),
 					),
 					giu.Checkbox("Uppercase", &passgenUpper),
 					giu.Checkbox("Lowercase", &passgenLower),
@@ -421,7 +426,8 @@ func draw() {
 			}
 
 			if showProgress {
-				giu.PopupModal(" ##"+strconv.Itoa(modalId)).Flags(6).Layout(
+				giu.PopupModal("Progress:##"+strconv.Itoa(modalId)).Flags(6|1<<0).Layout(
+					giu.Dummy(0, 0),
 					giu.Row(
 						giu.ProgressBar(progress).Size(210, 0).Overlay(progressInfo),
 						giu.Style().SetDisabled(!canCancel).To(
@@ -438,7 +444,7 @@ func draw() {
 					),
 					giu.Label(popupStatus),
 				).Build()
-				giu.OpenPopup(" ##" + strconv.Itoa(modalId))
+				giu.OpenPopup("Progress:##" + strconv.Itoa(modalId))
 				giu.Update()
 			}
 		}),
