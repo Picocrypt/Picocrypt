@@ -1,9 +1,4 @@
-# Future
-<ul>
-	<li>Figure out how to remove use of temporary files completely</li>
-</ul>
-
-# v1.48 (Released 04/15/2025)
+# v1.48 (Released 04/18/2025)
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
 	<li>✓ Update "Encrypt" button to "Zip and Encrypt" if multiple files</li>
@@ -12,6 +7,7 @@
 	<li>✓ Add `.incomplete` to filenames while work is in progress</li>
 	<li>✓ Use `encrypted-*.zip.pcv` output name instead of `Encrypted.zip.pcv`</li>
 	<li>✓ Use 0700 permissions when auto unzipping and creating folders</li>
+	<li>✓ Handle many more errors in the code where they were ignored previously</li>
 </ul>
 
 # v1.47 (Released 02/19/2025)
