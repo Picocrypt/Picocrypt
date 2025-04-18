@@ -1537,7 +1537,12 @@ func work() {
 	giu.Update()
 
 	// Subtract the header size from the total size if decrypting
-	stat, _ := os.Stat(inputFile)
+	stat, err := os.Stat(inputFile)
+	if err != nil {
+		resetUI()
+		accessDenied("Read")
+		return
+	}
 	total := stat.Size()
 	if mode == "decrypt" {
 		total -= 789
@@ -1641,6 +1646,18 @@ func work() {
 		}
 		if _, err := rand.Read(nonce); err != nil {
 			panic(err)
+		}
+		if bytes.Equal(salt, make([]byte, 16)) {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if bytes.Equal(hkdfSalt, make([]byte, 32)) {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if bytes.Equal(serpentIV, make([]byte, 16)) {
+			panic(errors.New("fatal crypto/rand error"))
+		}
+		if bytes.Equal(nonce, make([]byte, 24)) {
+			panic(errors.New("fatal crypto/rand error"))
 		}
 
 		// Encode values with Reed-Solomon and write to file
@@ -1764,6 +1781,9 @@ func work() {
 			32,
 		)
 	}
+	if bytes.Equal(key, make([]byte, 32)) {
+		panic(errors.New("fatal crypto/argon2 error"))
+	}
 
 	// If keyfiles are being used
 	if len(keyfiles) > 0 || keyfile {
@@ -1772,7 +1792,10 @@ func work() {
 
 		var keyfileTotal int64
 		for _, path := range keyfiles {
-			stat, _ := os.Stat(path)
+			stat, err := os.Stat(path)
+			if err != nil {
+				panic(err) // we already checked os.Stat in onDrop
+			}
 			keyfileTotal += stat.Size()
 		}
 
@@ -1782,7 +1805,10 @@ func work() {
 
 			// For each keyfile...
 			for _, path := range keyfiles {
-				fin, _ := os.Open(path)
+				fin, err := os.Open(path)
+				if err != nil {
+					panic(err)
+				}
 				for { // Read in chunks of 1 MiB
 					data := make([]byte, MiB)
 					size, err := fin.Read(data)
@@ -1790,27 +1816,36 @@ func work() {
 						break
 					}
 					data = data[:size]
-					tmp.Write(data) // Hash the data
+					if _, err := tmp.Write(data); err != nil { // Hash the data
+						panic(err)
+					}
 
 					// Update progress
 					keyfileDone += size
 					progress = float32(keyfileDone) / float32(keyfileTotal)
 					giu.Update()
 				}
-				fin.Close()
+				if err := fin.Close(); err != nil {
+					panic(err)
+				}
 			}
 			keyfileKey = tmp.Sum(nil) // Get the SHA3-256
 
 			// Store a hash of 'keyfileKey' for comparison
 			tmp = sha3.New256()
-			tmp.Write(keyfileKey)
+			if _, err := tmp.Write(keyfileKey); err != nil {
+				panic(err)
+			}
 			keyfileHash = tmp.Sum(nil)
 		} else { // If order doesn't matter, hash individually and combine
 			var keyfileDone int
 
 			// For each keyfile...
 			for _, path := range keyfiles {
-				fin, _ := os.Open(path)
+				fin, err := os.Open(path)
+				if err != nil {
+					panic(err)
+				}
 				tmp := sha3.New256()
 				for { // Read in chunks of 1 MiB
 					data := make([]byte, MiB)
@@ -1819,14 +1854,18 @@ func work() {
 						break
 					}
 					data = data[:size]
-					tmp.Write(data) // Hash the data
+					if _, err := tmp.Write(data); err != nil { // Hash the data
+						panic(err)
+					}
 
 					// Update progress
 					keyfileDone += size
 					progress = float32(keyfileDone) / float32(keyfileTotal)
 					giu.Update()
 				}
-				fin.Close()
+				if err := fin.Close(); err != nil {
+					panic(err)
+				}
 
 				sum := tmp.Sum(nil) // Get the SHA3-256
 
@@ -1842,7 +1881,9 @@ func work() {
 
 			// Store a hash of 'keyfileKey' for comparison
 			tmp := sha3.New256()
-			tmp.Write(keyfileKey)
+			if _, err := tmp.Write(keyfileKey); err != nil {
+				panic(err)
+			}
 			keyfileHash = tmp.Sum(nil)
 		}
 	}
@@ -1852,7 +1893,9 @@ func work() {
 
 	// Hash the encryption key for comparison when decrypting
 	tmp := sha3.New512()
-	tmp.Write(key)
+	if _, err := tmp.Write(key); err != nil {
+		panic(err)
+	}
 	keyHash = tmp.Sum(nil)
 
 	// Validate the password and/or keyfiles
@@ -1926,7 +1969,10 @@ func work() {
 	}
 
 	done, counter := 0, 0
-	chacha, _ := chacha20.NewUnauthenticatedCipher(key, nonce)
+	chacha, err := chacha20.NewUnauthenticatedCipher(key, nonce)
+	if err != nil {
+		panic(err)
+	}
 
 	// Use HKDF-SHA3 to generate a subkey for the MAC
 	var mac hash.Hash
