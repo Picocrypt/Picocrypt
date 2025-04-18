@@ -2510,9 +2510,7 @@ func work() {
 			panic(err)
 		}
 		if deniability {
-			if err := os.Remove(strings.TrimSuffix(inputFile, ".tmp")); err != nil {
-				panic(err)
-			}
+			os.Remove(strings.TrimSuffix(inputFile, ".tmp"))
 		}
 	}
 
@@ -2558,9 +2556,7 @@ func work() {
 		}
 	}
 	if mode == "decrypt" && deniability {
-		if err := os.Remove(inputFile); err != nil {
-			panic(err)
-		}
+		os.Remove(inputFile)
 	}
 
 	if mode == "decrypt" && !kept && autoUnzip {
@@ -2710,7 +2706,7 @@ func rsDecode(rs *infectious.FEC, data []byte) ([]byte, error) {
 	}
 
 	tmp := make([]infectious.Share, rs.Total())
-	for i := 0; i < rs.Total(); i++ {
+	for i := range rs.Total() {
 		tmp[i].Number = i
 		tmp[i].Data = append(tmp[i].Data, data[i])
 	}
@@ -2757,7 +2753,7 @@ func genPassword() string {
 		chars += "-=_+!@#$^&()?<>"
 	}
 	tmp := make([]byte, passgenLength)
-	for i := 0; i < int(passgenLength); i++ {
+	for i := range int(passgenLength) {
 		j, _ := rand.Int(rand.Reader, big.NewInt(int64(len(chars))))
 		tmp[i] = chars[j.Int64()]
 	}
