@@ -587,22 +587,27 @@ func draw() {
 								}
 								return filepath.Dir(onlyFolders[0])
 							}())
-							f.SetInitFilename("Keyfile")
+							f.SetInitFilename("keyfile-" + strconv.Itoa(int(time.Now().Unix())) + ".bin")
 							file, err := f.Save()
 							if file == "" || err != nil {
 								return
 							}
 
-							fout, _ := os.Create(file)
-							data := make([]byte, 32)
-							if _, err := rand.Read(data); err != nil {
-								panic(err)
-							}
-							_, err = fout.Write(data)
-							fout.Close()
+							fout, err := os.Create(file)
 							if err != nil {
-								insufficientSpace(nil, nil)
-								os.Remove(file)
+								return
+							}
+							data := make([]byte, 32)
+							if n, err := rand.Read(data); err != nil || n != 32 {
+								panic(errors.New("fatal crypto/rand error"))
+							}
+							n, err := fout.Write(data)
+							if n != 32 {
+								fout.Close()
+								panic(errors.New("failed to write full keyfile"))
+							}
+							if err := fout.Close(); err != nil {
+								panic(err)
 							} else {
 								mainStatus = "Ready"
 								mainStatusColor = WHITE
