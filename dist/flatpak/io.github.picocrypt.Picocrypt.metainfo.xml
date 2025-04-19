@@ -11,50 +11,35 @@
   <url type="homepage">https://github.com/Picocrypt/Picocrypt</url>
   <url type="bugtracker">https://github.com/Picocrypt/Picocrypt/issues</url>
   <content_rating type="oars-1.1"/>
-
   <description>
-    <p>
-      Picocrypt is a very small (hence Pico), very simple, yet very secure encryption tool that you can use to protect your files. It is designed to be the go-to tool for encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security, even from three-letter agencies like the NSA. Your privacy and security is under attack. Take it back with confidence by protecting your files with Picocrypt. For more info, please visit the project's GitHub repository.
-    </p>
-    <p>A list of features:</p>
-    <ul>
-      <li>Password generator: Picocrypt provides a secure password generator that you can use to create cryptographically secure passwords. You can customize the password length, as well as the types of characters to include.</li>
-      <li>Comments: Use this to store notes, information, and text along with the file (it won't be encrypted). For example, you can put a description of the file you're encrypting before sending it to someone. When the person you sent it to drops the file into Picocrypt, your description will be shown to that person. Comments are not authenticated, meaning it can be freely modified by an attacker. Thus, it should only be used for informational purposes in trusted environments.</li>
-      <li>Keyfiles: Picocrypt supports the use of keyfiles as an additional form of authentication (or the only form of authentication). It also provides a secure built-in keyfile generator.</li>
-      <li>Paranoid mode: Using this mode will encrypt your data with both XChaCha20 and Serpent in a cascade fashion, and use HMAC-SHA3 to authenticate data instead of BLAKE2b. Argon2 parameters will be increased significantly as well.</li>
-      <li>Reed-Solomon: This feature is very useful if you are planning to archive important data on a cloud provider or external medium for a long time. If checked, Picocrypt will use the Reed-Solomon error correction code to add 8 extra bytes for every 128 bytes of data to prevent file corruption. This means that up to ~3% of your file can corrupt and Picocrypt will still be able to correct the errors and decrypt your files with no corruption.</li>
-      <li>Force decrypt: Picocrypt automatically checks for file integrity upon decryption. If the file has been modified or is corrupted, Picocrypt will automatically delete the output for the user's safety. If you would like to override these safeguards, check this option. Also, if this option is checked and the Reed-Solomon feature was used on the encrypted volume, Picocrypt will attempt to recover as much of the file as possible during decryption.</li>
-      <li>Split into chunks: With Picocrypt, you can choose to split your output file into custom-sized chunks, so large files can become more manageable and easier to upload to cloud providers. Simply choose a unit (KiB, MiB, GiB, or TiB) and enter your desired chunk size for that unit. To decrypt the chunks, simply drag one of them into Picocrypt and the chunks will be automatically recombined during decryption.</li>
-      <li>Compress files: By default, Picocrypt uses a zip file with no compression to quickly merge files together when encrypting multiple files. If you would like to compress these files, however, simply check this box and the standard Deflate compression algorithm will be applied during encryption.</li>
-      <li>Deniability: Picocrypt volumes typically follow an easily recognizable header format. However, if you want to hide the fact that you are encrypting your files, enabling this option will provide you with plausible deniability. The output volume will indistinguishable from a stream of random bytes, and no one can prove it is a volume without the correct password.</li>
-      <li>Recursively: If you want to encrypt and/or decrypt a large set of files individually, this option will tell Picocrypt to go through every recursive file that you drop in and encrypt/decrypt it separately. This is useful, for example, if you are encrypting thousands of large documents and want to be able to decrypt any one of them in particular without having to download and decrypt the entire set of documents.</li>
-    </ul>
+    <p>Visit the project's GitHub repository to learn more.</p>
   </description>
-
   <categories>
     <category>Utility</category>
     <category>Security</category>
   </categories>
-
   <launchable type="desktop-id">io.github.picocrypt.Picocrypt.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/Picocrypt/Picocrypt/raw/4d4bd47efe88ff25f372db81c4249920d399226b/images/screenshot.png</image>
+      <image>https://raw.githubusercontent.com/Picocrypt/Picocrypt/refs/heads/main/images/screenshot.png</image>
       <caption>Main window</caption>
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.46" date="2025-01-29">
-      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v146-released-01292025</url>
+    <release version="1.48" date="2025-04-18">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v148-released-04182025</url>
       <description>
         <ul>
-          <li>Added Picocrypt version to the window title.</li>
-          <li>Added ability to automatically unpack zip archives during decryption.</li>
+          <li>Allow pressing 'Enter' key to press Start/Process button</li>
+          <li>Update "Encrypt" button to "Zip and Encrypt" if multiple files</li>
+          <li>Give user estimated required free disk space in status label</li>
+          <li>Encrypt previously unencrypted temporary zip files</li>
+          <li>Add `.incomplete` to filenames while work is in progress</li>
+          <li>Use `encrypted-*.zip.pcv` output name instead of `Encrypted.zip.pcv`</li>
+          <li>Use 0700 permissions when auto unzipping and creating folders</li>
+          <li>Handle many more errors in the code where they were ignored previously</li>
         </ul>
       </description>
-    </release>
-    <release version="1.45" date="2024-12-05">
-      <description></description>
     </release>
   </releases>
 </component>

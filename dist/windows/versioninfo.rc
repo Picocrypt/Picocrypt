@@ -1,6 +1,6 @@
 1 VERSIONINFO
-FILEVERSION 1,47,0,0
-PRODUCTVERSION 1,47,0,0
+FILEVERSION 1,48,0,0
+PRODUCTVERSION 1,48,0,0
 FILEOS 0x40004
 FILETYPE 0x1
 {
@@ -8,7 +8,7 @@ BLOCK "StringFileInfo"
 {
 	BLOCK "040904B0"
 	{
-		VALUE "FileVersion", "1.47"
+		VALUE "FileVersion", "1.48"
 		VALUE "LegalCopyright", "\xA9 Evan Su & contributors, GPLv3"
 		VALUE "ProductName", "Picocrypt"
 	}

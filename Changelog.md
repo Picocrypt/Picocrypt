@@ -1,6 +1,13 @@
-# Future
+# v1.48 (Released 04/18/2025)
 <ul>
-	<li>Migrate golang.org/x/crypto to standard library imports (https://github.com/golang/go/issues/65269)</li>
+	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
+	<li>✓ Update "Encrypt" button to "Zip and Encrypt" if multiple files</li>
+	<li>✓ Give user estimated required free disk space in status label</li>
+	<li>✓ Encrypt previously unencrypted temporary zip files</li>
+	<li>✓ Add `.incomplete` to filenames while work is in progress</li>
+	<li>✓ Use `encrypted-*.zip.pcv` output name instead of `Encrypted.zip.pcv`</li>
+	<li>✓ Use 0700 permissions when auto unzipping and creating folders</li>
+	<li>✓ Handle many more errors in the code where they were ignored previously</li>
 </ul>
 
 # v1.47 (Released 02/19/2025)
