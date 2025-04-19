@@ -289,7 +289,9 @@ func onClickStartButton() {
 					comments = oldComments
 					paranoid = oldParanoid
 					reedsolo = oldReedsolo
-					deniability = oldDeniability
+					if mode != "decrypt" {
+						deniability = oldDeniability
+					}
 					split = oldSplit
 					splitSize = oldSplitSize
 					splitSelected = oldSplitSelected
