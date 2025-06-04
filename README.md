@@ -24,6 +24,12 @@ Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://
 xattr -d com.apple.quarantine /Applications/Picocrypt.app
 ```
 
+Or, if you use Homebrew, you can add a tap and install Picocrypt:
+```
+brew tap Picocrypt/picocrypt
+brew install picocrypt --no-quarantine
+```
+
 ## Linux
 To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb">.deb</a>, <a href="https://flathub.org/apps/io.github.picocrypt.Picocrypt">Flatpak</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
 ```
