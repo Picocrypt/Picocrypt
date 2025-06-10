@@ -5,7 +5,7 @@
 
 <p align="center"><img align="center" src="/images/logo.svg" width="512" alt="Picocrypt"></p> 
 
-Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encryption tool that you can use to protect your files. It's designed to be the <i>go-to</i> tool for encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security, even from three-letter agencies like the NSA. <strong>Your privacy and security is under attack. Take it back with confidence by protecting your files with Picocrypt.</strong>
+Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encryption tool that you can use to protect your files. It'sdesigned to be the <i>go-to</i> tool for encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security, even from three-letter agencies like the NSA. <strong>Your privacy and security is under attack. Take it back with confidence by protecting your files with Picocrypt.</strong>
 
 <br>
 <p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt"></p>
@@ -44,6 +44,141 @@ A functionally limited web app is available <a href="https://picocrypt.github.io
 
 ## Mobile 🚧
 An experimental project <a href="https://github.com/Picocrypt/PicoGo">PicoGo</a> is a community-developed port of Picocrypt to platforms like Android and iOS using the Fyne GUI library. Feel free to try it out, but keep in mind that it is *not* part of the official core Picocrypt project (like the platforms listed above) and thus not subject to the same scrutiny and standards that the core project is. So, **use it with caution and diligence** during its experimental phase.
+
+# Building from Source
+
+This section provides guidance on how to build Picocrypt from source on various operating systems. The build process requires Go version 1.24 or newer.
+
+### Linux
+
+1.  **Install Prerequisites:**
+    You'll need Go and several C libraries for the GUI components.
+    ```bash
+    sudo apt update
+    sudo apt install -y golang-go gcc xorg-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa
+    ```
+    *(Note: Ensure the `golang-go` package from your distribution provides Go >=1.24. If not, install Go manually from [go.dev/dl](https://go.dev/dl/))*
+
+2.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/Picocrypt/Picocrypt.git
+    cd Picocrypt
+    ```
+
+3.  **Download Go Dependencies:**
+    Navigate to the source directory and download the module dependencies.
+    ```bash
+    cd src
+    go mod download
+    ```
+
+4.  **Build Picocrypt:**
+    Compile the application. `CGO_ENABLED=1` is required.
+    ```bash
+    CGO_ENABLED=1 go build -v -ldflags="-s -w" -o Picocrypt Picocrypt.go
+    ```
+    The `Picocrypt` executable will be created in the `src` directory. You can move it to a directory in your system's `$PATH` (e.g., `~/.local/bin` or `/usr/local/bin`) for easier access.
+
+### macOS
+
+1.  **Install Prerequisites:**
+    *   **Xcode Command Line Tools:** If not already installed, open Terminal and run:
+        ```bash
+        xcode-select --install
+        ```
+    *   **Homebrew:** Install from [brew.sh](https://brew.sh/) if you don't have it.
+    *   **Go:** Install Go (>=1.24) via Homebrew or from [go.dev/dl](https://go.dev/dl/):
+        ```bash
+        brew install go
+        ```
+    *   **Git:**
+        ```bash
+        brew install git
+        ```
+    *   **Required Libraries (GLFW & GLEW):**
+        ```bash
+        brew install glfw glew
+        ```
+
+2.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/Picocrypt/Picocrypt.git
+    cd Picocrypt
+    ```
+
+3.  **Download Go Dependencies:**
+    ```bash
+    cd src
+    go mod download
+    ```
+
+4.  **Build Picocrypt:**
+    ```bash
+    CGO_ENABLED=1 go build -v -ldflags="-s -w" -o Picocrypt Picocrypt.go
+    ```
+    The `Picocrypt` executable will be in the `src` directory.
+
+5.  **(Optional) Create .app Bundle and .dmg:**
+    To create a standard macOS application bundle and disk image:
+    *   Navigate to the repository root: `cd ..`
+    *   Copy and unzip the app template (ensure `dist/macos/Picocrypt.app.zip` exists):
+        ```bash
+        cp dist/macos/Picocrypt.app.zip .
+        unzip -d Picocrypt.app Picocrypt.app.zip
+        rm Picocrypt.app.zip
+        ```
+    *   Move the compiled binary into the bundle:
+        ```bash
+        mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
+        ```
+    *   Create the DMG:
+        ```bash
+        mkdir TempDMGFolder
+        cp -R Picocrypt.app TempDMGFolder/
+        hdiutil create Picocrypt.dmg -volname Picocrypt -fs APFS -format UDZO -srcfolder TempDMGFolder
+        rm -rf TempDMGFolder Picocrypt.app
+        ```
+
+### Windows
+
+1.  **Install Prerequisites:**
+    *   **Go:** Install Go (>=1.24) from [go.dev/dl](https://go.dev/dl/).
+    *   **C Compiler (for CGO):** MSYS2 with MinGW-w64 is recommended.
+        *   Install MSYS2 from [www.msys2.org](https://www.msys2.org/).
+        *   From an MSYS2 MINGW64 shell, install GCC:
+            ```bash
+            pacman -Syu
+            pacman -S mingw-w64-x86_64-gcc
+            ```
+        *   Ensure the MinGW-w64 `bin` directory (e.g., `C:\msys64\mingw64in`) is in your system `PATH`.
+    *   **Git:** Install Git from [git-scm.com/download/win](https://git-scm.com/download/win).
+
+2.  **Clone the Repository:**
+    Use Git Bash or Command Prompt with Git:
+    ```bash
+    git clone https://github.com/Picocrypt/Picocrypt.git
+    cd Picocrypt
+    ```
+
+3.  **Download Go Dependencies:**
+    ```bash
+    cd src
+    go mod download
+    ```
+
+4.  **Build Picocrypt (Basic Executable):**
+    In Command Prompt or PowerShell (ensure GCC is in PATH):
+    ```cmd
+    set CGO_ENABLED=1
+    go build -v -ldflags="-s -w -H=windowsgui" -o Picocrypt.exe Picocrypt.go
+    ```
+    This creates `Picocrypt.exe` in the `src` directory. This version lacks the embedded icon and manifest.
+
+5.  **(Optional) Embedding Resources and Compressing:**
+    To replicate the official release builds, you'll need:
+    *   **Resource Hacker:** Download from its official website (e.g., angusj.com/resourcehacker).
+    *   **UPX:** Download from [upx.github.io](https://upx.github.io/).
+    The GitHub Actions workflow file `.github/workflows/build-windows.yml` contains specific command-line examples for using Resource Hacker to embed the icon (`images/key.ico`), manifest (`dist/windows/manifest.xml`), and version information (`dist/windows/versioninfo.rc`), and then UPX for compression. These steps are complex and require careful execution. Always download these tools from their official sources.
 
 # Why Picocrypt?
 Why should you use Picocrypt instead of VeraCrypt, 7-Zip, BitLocker, or Cryptomator? Here are a few reasons why you should choose Picocrypt:
