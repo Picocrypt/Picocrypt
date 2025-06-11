@@ -30,6 +30,8 @@ brew tap Picocrypt/picocrypt
 brew install picocrypt --no-quarantine
 ```
 
+Note: the macOS app is built for Apple silicon only. If you're still on Intel, you can build from source.
+
 ## Linux
 To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb">.deb</a>, <a href="https://flathub.org/apps/io.github.picocrypt.Picocrypt">Flatpak</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
 ```
