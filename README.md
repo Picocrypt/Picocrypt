@@ -18,6 +18,8 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 ## Windows
 Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
 
+If Picocrypt won't start, you may be missing OpenGL support. See <a href="https://github.com/Picocrypt/Picocrypt/issues/91">here</a> for a solution.
+
 ## macOS
 Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You may need to manually trust the app from a terminal and control-click on the app if macOS prevents you from opening it:
 ```
