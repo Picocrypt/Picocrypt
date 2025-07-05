@@ -46,6 +46,8 @@ jobs:
         unzip -d Picocrypt.app Picocrypt.app.zip
         rm Picocrypt.app.zip
         mv src/Picocrypt Picocrypt.app/Contents/MacOS/Picocrypt
+        rm Picocrypt.app/Contents/Resources/icon.icns
+        mv dist/macos/iconSmall.icns Picocrypt.app/Contents/Resources/icon.icns
         mkdir out
         cp -R Picocrypt.app out
         hdiutil create Picocrypt.dmg -volname Picocrypt -fs APFS -format UDZO -srcfolder out
