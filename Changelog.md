@@ -1,3 +1,8 @@
+# v1.49 (Unreleased)
+<ul>
+	<li>✓ Update macOS icon to fit better</li>
+</ul>
+
 # v1.48 (Released 04/18/2025)
 <ul>
 	<li>✓ Allow pressing 'Enter' key to press Start/Process button</li>
