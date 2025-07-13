@@ -2,6 +2,7 @@
 <ul>
 	<li>✓ Update macOS icon to fit better</li>
 	<li>Update Flatpak runtime from 24.08 to 25.08</li>
+	<li>Fix Picocrypt not running on macOS 26 (and remember to update Homebrew after release)</li>
 </ul>
 
 # v1.48 (Released 04/18/2025)
