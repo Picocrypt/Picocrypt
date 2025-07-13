@@ -26,7 +26,7 @@ jobs:
     - name: Build Snapcraft
       run: |
         cd src
-        SNAPCRAFT_BUILD_ENVIRONMENT=multipass snapcraft
+        SNAPCRAFT_BUILD_ENVIRONMENT=multipass sudo snapcraft
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
