@@ -25,9 +25,7 @@ jobs:
     - name: Build Snapcraft
       run: |
         cd src
-        sudo usermod -aG lxd $USER
-        sudo lxd init
-        snapcraft
+        SNAPCRAFT_BUILD_ENVIRONMENT=multipass snapcraft
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
