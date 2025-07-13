@@ -32,7 +32,7 @@ jobs:
     - name: Build Snapcraft
       run: |
         cd src
-        lxd init --auto
+        sudo lxd init --auto
         snapcraft
 
     - name: Upload artifacts
