@@ -27,7 +27,7 @@ jobs:
 
     - name: Copy Snapcraft files to source
       run: |
-        mv dist/snapcraft src
+        mv dist/snapcraft/* src
 
     - name: Build Snapcraft
       run: |
