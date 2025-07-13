@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=Picocrypt
+Exec=picocrypt
+Icon=${SNAP}/meta/gui/picocrypt.svg
