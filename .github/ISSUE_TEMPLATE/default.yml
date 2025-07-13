@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        **🚨🚨🚨Please read this section carefully and *COMPLETELY*.**
+        **🚨🚨🚨Please read this section carefully and *COMPLETELY*.🚨🚨🚨**
   - type: markdown
     attributes:
       value: |
@@ -90,7 +90,7 @@ body:
     attributes:
       label: "Please confirm:"
       options:
-        - label: "I have carefully read and understand ***ALL*** of the rules outlined above"
+        - label: "**I have carefully read and understand *ALL* of the rules outlined above**"
           required: true
         - label: "I will provide as many helpful details as possible"
           required: true
