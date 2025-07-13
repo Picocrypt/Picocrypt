@@ -18,6 +18,7 @@ jobs:
         sudo snap refresh
         sudo snap install snapcraft --classic
         sudo snap install multipass
+        sudo snap install lxd
 
     - name: Copy Snapcraft files to source
       run: |
@@ -26,7 +27,9 @@ jobs:
     - name: Build Snapcraft
       run: |
         cd src
-        SNAPCRAFT_BUILD_ENVIRONMENT=multipass sudo snapcraft
+        getent group lxd | grep -qwF "$USER" || sudo usermod -aG lxd "$USER"
+        newgrp lxd
+        sudo snapcraft
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
