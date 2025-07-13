@@ -1,6 +1,7 @@
 # v1.49 (Unreleased)
 <ul>
 	<li>✓ Update macOS icon to fit better</li>
+	<li>Update Flatpak runtime from 24.08 to 25.08</li>
 </ul>
 
 # v1.48 (Released 04/18/2025)
