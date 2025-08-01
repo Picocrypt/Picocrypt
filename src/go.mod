@@ -4,7 +4,7 @@ go 1.24.2
 
 require (
 	github.com/Picocrypt/dialog v0.0.0-20250412233924-78f7b909315b
-	github.com/Picocrypt/giu v0.0.0-20250412235908-fe90a482e6f2
+	github.com/Picocrypt/giu v0.0.0-20250801020750-ec85cd24c933
 	github.com/Picocrypt/imgui-go v0.0.0-20250412235405-d86b230f5fbb
 	github.com/Picocrypt/infectious v0.0.0-20250412183341-9f88c6307b39
 	github.com/Picocrypt/serpent v0.0.0-20240830233833-9ad6ab254fd7
