@@ -1,7 +1,7 @@
 github.com/Picocrypt/dialog v0.0.0-20250412233924-78f7b909315b h1:k5YGEx61N6K8l2l6AQ1u5W2aR+47sVZWFyqXS/f5lIA=
 github.com/Picocrypt/dialog v0.0.0-20250412233924-78f7b909315b/go.mod h1:OyaP0Tz19qL3RAGq5Ntues+WVrIbHh5MrfqoA/qhqeg=
-github.com/Picocrypt/giu v0.0.0-20250412235908-fe90a482e6f2 h1:SPR2efZTpZJON/2mNifLi68Gl9Epxh/1nXb3kGGHCcg=
-github.com/Picocrypt/giu v0.0.0-20250412235908-fe90a482e6f2/go.mod h1:jd6AonK0ZI02R7GqLWb4gWJz/A2ClF36Y4fFMR8Lzbk=
+github.com/Picocrypt/giu v0.0.0-20250801020750-ec85cd24c933 h1:4K9zEOVimmirylJ2ZFSNdJeAjLSCrkgWuCtPDlWw+wo=
+github.com/Picocrypt/giu v0.0.0-20250801020750-ec85cd24c933/go.mod h1:jd6AonK0ZI02R7GqLWb4gWJz/A2ClF36Y4fFMR8Lzbk=
 github.com/Picocrypt/gl v0.0.0-20250412234430-767b58dbf936 h1:6MChjQ4AZC2ISBjbgZU/z6tSUxYP50NkRvAu0T2kjlY=
 github.com/Picocrypt/gl v0.0.0-20250412234430-767b58dbf936/go.mod h1:pMdf3io/y3I+zYZ6/xFb3MlI2AgL38enDDIKuR0n2qA=
 github.com/Picocrypt/glfw/v3.3/glfw v0.0.0-20250412234750-7b96bfdb8dd8 h1:i8wXJhSYIJTXb6sqBS6JZW7QosI9u8Ysy1BHZCTuZEc=
