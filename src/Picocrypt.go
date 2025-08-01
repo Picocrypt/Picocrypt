@@ -61,7 +61,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.48"
+var version = "v1.49"
 var dpi float32
 var mode string
 var working bool
