@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.48
+Picocrypt v1.49
 Copyright (c) Evan Su
 Released under a GNU GPL v3 License
 https://github.com/Picocrypt/Picocrypt
