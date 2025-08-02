@@ -3,7 +3,6 @@
 	<li>✓ Update macOS icon to fit better</li>
 	<li>✓ Added support for Cyrillic characters (https://github.com/Picocrypt/giu/pull/1), thanks <a href="https://github.com/Retengart">@Retengart</a></li>
 	<li>✓ upx Linux binary in addition to Windows, update upx version for Windows</li>
-	<li>Update Flatpak runtime from 24.08 to 25.08</li>
 	<li>Fix Picocrypt not running on macOS 26 (and remember to update Homebrew after release)</li>
 </ul>
 
