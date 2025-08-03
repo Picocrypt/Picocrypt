@@ -31,12 +31,6 @@ Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://
 xattr -d com.apple.quarantine /Applications/Picocrypt.app
 ```
 
-Or, if you use Homebrew, you can add a tap and install Picocrypt:
-```
-brew tap Picocrypt/picocrypt
-brew install picocrypt --no-quarantine
-```
-
 Note: the macOS app is built for Apple silicon only. If you're still on Intel, you can build from source.
 
 ## Linux
@@ -50,9 +44,6 @@ A command-line interface is available for Picocrypt <a href="https://github.com/
 
 ## Web
 A functionally limited web app is available <a href="https://picocrypt.github.io/">here</a> which allows you to encrypt and decrypt standard Picocrypt volumes (no advanced features or keyfiles) on any modern browser, including mobile devices. It's a simple, future-proof way to encrypt files that should work indefinitely due to the web's stable nature. Note that you can only encrypt single files up to a maximum size of 1 GiB.
-
-## Mobile 🚧
-An experimental project <a href="https://github.com/Picocrypt/PicoGo">PicoGo</a> is a community-developed port of Picocrypt to platforms like Android and iOS using the Fyne GUI library. Feel free to try it out, but keep in mind that it is *not* part of the official core Picocrypt project (like the platforms listed above) and thus not subject to the same scrutiny and standards that the core project is. So, **use it with caution and diligence** during its experimental phase.
 
 # Why Picocrypt?
 Why should you use Picocrypt instead of VeraCrypt, 7-Zip, BitLocker, or Cryptomator? Here are a few reasons why you should choose Picocrypt:
