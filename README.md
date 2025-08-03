@@ -45,7 +45,7 @@ sudo apt install -y libc6 libgcc-s1 libgl1 libgtk-3-0 libstdc++6 libx11-6
 A command-line interface is available for Picocrypt <a href="https://github.com/Picocrypt/CLI">here</a>. It can encrypt and decrypt files, folders, and glob patterns, and supports paranoid mode and Reed-Solomon encoding. You can use it on systems that don't have a GUI or can't run the GUI app.
 
 ## Web
-A functionally limited web app is available <a href="https://picocrypt.github.io/">here</a> which allows you to encrypt and decrypt standard Picocrypt volumes (no advanced features or keyfiles) on any modern browser, including mobile devices. It's a simple, future-proof way to securely encrypt files that should work indefinitely due to the web's stable nature. Note that you can only encrypt single files up to a maximum size of 512 MiB.
+A functionally limited web app is available <a href="https://picocrypt.github.io/">here</a> which allows you to encrypt and decrypt standard Picocrypt volumes (no advanced features or keyfiles) on any modern browser, including mobile devices. It's a simple, future-proof way to securely encrypt files that should work indefinitely due to the web's stable nature. Note that you can only encrypt/decrypt single files up to a maximum size of 512 MiB.
 
 # Comparison
 Here's how Picocrypt compares to other popular encryption tools.
