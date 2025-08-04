@@ -7,7 +7,7 @@
 
 <p align="center"><img align="center" src="/images/logo.svg" width="512" alt="Picocrypt"></p> 
 
-Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encryption tool that you can use to protect your files. It's designed to be the <i>go-to</i> tool for encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security, even from three-letter agencies like the NSA. <strong>Your privacy and security is under attack. Take it back with confidence by protecting your files with Picocrypt.</strong>
+Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encryption tool that you can use to protect your files. It's designed to be the <i>go-to</i> tool for file encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security.
 
 <br>
 <p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt"></p>
@@ -16,54 +16,36 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 
 ℹ️ **You are highly recommended to read through the [Features](https://github.com/Picocrypt/Picocrypt?tab=readme-ov-file#features) section below to fully understand the features and limitations of Picocrypt before using it.** ℹ️
 
-Make sure to only download Picocrypt from this repository to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion.
-
-Beware of picocrypt.org ([archive.org snapshot](https://web.archive.org/web/20240816235513/http://picocrypt.org/)), which claims to be the official website for this project! Remember, there is no official website for Picocrypt. Even if this self-proclaimed website is taken down, I will not remove this message; let it be a real-world warning to stay vigilant.
+Make sure to only download Picocrypt from this repository to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion. Besides this repository, there is no official website/webpage or mobile apps for Picocrypt. For example, beware of picocrypt.org ([archive.org snapshot](https://web.archive.org/web/20240816235513/http://picocrypt.org/)), which claimed to be the official website for this project.
 
 ## Windows
-Picocrypt for Windows is as simple as it gets. To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.exe">here</a>. If Microsoft Defender or your antivirus flags Picocrypt as a virus, please do your part and submit it as a false positive for the betterment of everyone.
+To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.exe">here</a>.
+
+If your antivirus flags Picocrypt as a virus, please submit it as a false positive to help everyone.
 
 If Picocrypt won't start, you may be missing OpenGL support. See <a href="https://github.com/Picocrypt/Picocrypt/issues/91">here</a> for a solution.
 
 ## macOS
-Picocrypt for macOS is very simple as well. Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You may need to manually trust the app from a terminal and control-click on the app if macOS prevents you from opening it:
+Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You will need to manually trust the app from a terminal if macOS prevents you from opening it:
 ```
 xattr -d com.apple.quarantine /Applications/Picocrypt.app
 ```
 
-Or, if you use Homebrew, you can add a tap and install Picocrypt:
-```
-brew tap Picocrypt/picocrypt
-brew install picocrypt --no-quarantine
-```
-
 Note: the macOS app is built for Apple silicon only. If you're still on Intel, you can build from source.
 
+**Warning: Picocrypt will cease to work on macOS in the future** because Apple doesn't care about backwards compatibility. Once OpenGL is removed and/or GLFW compatibility is broken, Picocrypt will no longer work and it will be very difficult to fix. If you're a macOS user, you're probably better off using the CLI or Web version instead. Maybe also consider using an OS that actually somewhat cares about its developers and users...
+
 ## Linux
-To use Picocrypt on Linux, you can download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt">here</a> (you may need to install the packages below). Alternatively, you can try the <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb">.deb</a>, <a href="https://flathub.org/apps/io.github.picocrypt.Picocrypt">Flatpak</a>, run Picocrypt through Wine, or compile from source using the instructions in the `src/` directory.
+Download the raw binary <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt">here</a> (you may need the packages below). Alternatively, try the <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.deb">.deb</a> or <a href="https://flathub.org/apps/io.github.picocrypt.Picocrypt">Flatpak</a>.
 ```
 sudo apt install -y libc6 libgcc-s1 libgl1 libgtk-3-0 libstdc++6 libx11-6
 ```
 
 ## CLI
-A command-line interface is available for Picocrypt <a href="https://github.com/Picocrypt/CLI">here</a>. It can encrypt and decrypt files, folders, and globs, and supports paranoid mode and Reed-Solomon encoding. You can use it on systems that don't have a GUI or can't run the GUI app, or to write automated shell scripts for backups, etc.
+A command-line interface is available for Picocrypt <a href="https://github.com/Picocrypt/CLI">here</a>. It can encrypt and decrypt files, folders, and glob patterns, and supports paranoid mode and Reed-Solomon encoding. You can use it on systems that don't have a GUI or can't run the GUI app.
 
 ## Web
-A functionally limited web app is available <a href="https://picocrypt.github.io/">here</a> which allows you to encrypt and decrypt standard Picocrypt volumes (no advanced features or keyfiles) on any modern browser, including mobile devices. It's a simple, future-proof way to encrypt files that should work indefinitely due to the web's stable nature. Note that you can only encrypt single files up to a maximum size of 1 GiB.
-
-## Mobile 🚧
-An experimental project <a href="https://github.com/Picocrypt/PicoGo">PicoGo</a> is a community-developed port of Picocrypt to platforms like Android and iOS using the Fyne GUI library. Feel free to try it out, but keep in mind that it is *not* part of the official core Picocrypt project (like the platforms listed above) and thus not subject to the same scrutiny and standards that the core project is. So, **use it with caution and diligence** during its experimental phase.
-
-# Why Picocrypt?
-Why should you use Picocrypt instead of VeraCrypt, 7-Zip, BitLocker, or Cryptomator? Here are a few reasons why you should choose Picocrypt:
-<ul>
-	<li>Unlike BitLocker and most cloud services, Picocrypt and its dependencies are completely open-source and auditable. You can verify for yourself that there aren't any backdoors or flaws. In fact, Picocrypt was audited by Radically Open Security in 2024 and no major security issues were discovered (you can read the full report <a href="https://github.com/Picocrypt/storage/blob/main/Picocrypt.Audit.Report.pdf">here</a>).</li>
-	<li>Picocrypt is <i>tiny</i>. While Cryptomator is over 50 MiB and VeraCrypt is over 20 MiB, Picocrypt sits at just 3 MiB, about the size of a medium-resolution photo. And that's not all - Picocrypt is portable (doesn't need to be installed) and doesn't require administrator/root privileges.</li>
-	<li>Picocrypt is easier and more productive to use than VeraCrypt. To encrypt files with VeraCrypt, you'd have to spend a minute or two just setting up a volume. With Picocrypt's simple UI, all you have to do is drag and drop your files, enter a password, and hit Encrypt. All the complex procedures are handled by Picocrypt internally. Who said secure encryption can't be simple?</li>
-	<li>Picocrypt is designed for security. 7-Zip is an archive utility and not an encryption tool, so its focus is not on security. Picocrypt, however, is built with security as the number one priority. Every part of Picocrypt exists for a reason and anything that could impact the security of Picocrypt is removed. Picocrypt is built with cryptography you can trust.</li>
-	<li>Picocrypt authenticates data in addition to protecting it, preventing hackers from maliciously modifying sensitive data. This is useful when you are sending encrypted files over an insecure channel and want to be sure that it arrives untouched.</li>
-	<li>Picocrypt actively protects header data from corruption by adding extra Reed-Solomon parity bytes, so if part of a volume's header (which contains important cryptographic components) corrupts (e.g., hard drive bit rot), Picocrypt can still recover the header and decrypt your data with a high success rate. Picocrypt can also encode the entire volume with Reed-Solomon to prevent any corruption to your important files.</li>
-</ul>
+A functionally limited web app is available <a href="https://picocrypt.github.io/">here</a> which allows you to encrypt and decrypt standard Picocrypt volumes (no advanced features or keyfiles) on any modern browser, including mobile devices. It's a simple, future-proof way to securely encrypt files that should work indefinitely due to the web's stable nature. Note that you can only encrypt/decrypt single files up to a maximum size of 512 MiB.
 
 # Comparison
 Here's how Picocrypt compares to other popular encryption tools.
@@ -86,12 +68,12 @@ Here's how Picocrypt compares to other popular encryption tools.
 | Telemetry      |✅ None        |✅ None         |✅ None        |❓ Unknown      |✅ None        |
 | Audited        |✅ [Yes](https://github.com/Picocrypt/storage/blob/main/Picocrypt.Audit.Report.pdf)       |✅ Yes          |❌ No          |❓ Unknown      |✅ Yes         |
 
-Keep in mind that while Picocrypt does most things better than other tools, it's not a one-size-fits-all and doesn't try to be. There are use cases such as full-disk encryption where VeraCrypt and BitLocker would be a better choice. So while Picocrypt is a great choice for the majority of people, you should still do your own research and use what's best for you.
+Keep in mind that while Picocrypt does most things better than other tools, it's not a one-size-fits-all and doesn't try to be. There are use cases such as full-disk encryption where VeraCrypt and BitLocker would be a better (and the only) choice. So while Picocrypt is a great choice for the majority of people doing file encryption, you should still do your own research and use what's best for you.
 
 # Features
-Picocrypt is a very simple tool, and most users will intuitively understand how to use it in a few seconds. On a basic level, simply dropping your files, entering a password, and hitting Encrypt is all that's needed to encrypt your files. Dropping the output back into Picocrypt, entering the password, and hitting Decrypt is all that's needed to decrypt those files. Pretty simple, right? For most users, this will be enough and the features below are not necessary.
+Picocrypt is a very simple tool and most users will intuitively understand how to use it in a few seconds. On a basic level, simply dropping your files, entering a password, and hitting Encrypt is all that's needed to encrypt your files. Dropping the output back into Picocrypt, entering the password, and hitting Decrypt is all that's needed to decrypt those files. Pretty simple, right?
 
-But while being simple, Picocrypt also strives to be powerful in the hands of knowledgeable and advanced users. Thus, there are some additional options that you may use to suit your needs. Read through their descriptions carefully as some of them can be complex to use correctly.
+While being simple, Picocrypt also strives to be powerful in the hands of knowledgeable and advanced users. Thus, there are some additional options that you may use to suit your needs. Read through their descriptions carefully as some of them can be complex to use correctly.
 <ul>
 	<li><strong>Password generator</strong>: Picocrypt provides a secure password generator that you can use to create cryptographically secure passwords. You can customize the password length, as well as the types of characters to include.</li>
 	<li><strong>Comments</strong>: Use this to store <strong>non-sensitive</strong> text along with the volume (<strong>it won't be encrypted</strong> and simply can't be by design). For example, you can put a description of the file you're encrypting before sending it to someone. When the person you sent it to drops the volume into Picocrypt, your description will be shown to that person. Or, if you're backing up personal files, you can give a description of the volume's contents so you can quickly remind yourself without having to fully decrypt. Since comments are neither encrypted nor authenticated, it can be freely read and modified by an attacker. <strong>Thus, it should only be used for non-sensitive, informational purposes in trusted environments.</strong></li>
@@ -173,15 +155,13 @@ Also, a huge thanks to the following people who were the first to donate and sup
 
 Finally, thanks to these people/organizations for helping me out when needed:
 <ul>
-	<li>[ REDACTED ] for helping me create an AppImage for Picocrypt</li>
-	<li>u/Upstairs-Fishing867 for helping me test PGP signatures</li>
 	<li>u/greenreddits for constant feedback and support</li>
 	<li>u/Tall_Escape for helping me test Picocrypt</li>
 	<li>u/NSABackdoors for doing plenty of testing</li>
 	<li>@samuel-lucas6 for feedback, suggestions, and support</li>
 	<li>@AsuxAX and @Minibus93 for testing new features</li>
 	<li>@mdanish-kh and @stephengillie for WinGet package</li>
-	<li>@Retengart for helping create the Flatpak</li>
+	<li>@Retengart for helping create the Flatpak and housekeeping it</li>
 	<li><a href="https://privacyguides.org">Privacy Guides</a> for listing Picocrypt</li>
 	<li><a href="https://www.radicallyopensecurity.com/">Radically Open Security</a> for auditing Picocrypt</li>
 </ul>
