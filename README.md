@@ -19,11 +19,11 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 Make sure to only download Picocrypt from this repository to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion. Besides this repository, there is no official website/webpage or mobile apps for Picocrypt. For example, beware of picocrypt.org ([archive.org snapshot](https://web.archive.org/web/20240816235513/http://picocrypt.org/)), which claimed to be the official website for this project.
 
 ## Windows
-To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.exe">here</a>.
+To download the latest, standalone, and portable executable for Windows, click <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.exe">here</a>. If it won't start, see <a href="https://github.com/Picocrypt/Picocrypt/issues/91">here</a> for a solution or use the installer below which automatically fixes the issue (recommended).
 
-If your antivirus flags Picocrypt as a virus, please submit it as a false positive to help everyone.
+If you use Picocrypt frequently, you can also download the [installer](https://github.com/Picocrypt/Picocrypt/releases/download/1.49/Installer.exe) for easy access, automatic file extension association, and bundled compatibility helpers. Administrator privileges are not required to run the installer.
 
-If Picocrypt won't start, you may be missing OpenGL support. See <a href="https://github.com/Picocrypt/Picocrypt/issues/91">here</a> for a solution.
+If your antivirus flags Picocrypt as a virus, please report it as a false positive to help everyone.
 
 ## macOS
 Download Picocrypt <a href="https://github.com/Picocrypt/Picocrypt/releases/latest/download/Picocrypt.dmg">here</a>, open the container, and drag Picocrypt to your Applications. You will need to manually trust the app from a terminal if macOS prevents you from opening it:
