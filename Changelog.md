@@ -1,9 +1,8 @@
-# v1.49 (Unreleased)
+# v1.49 (Released 08/03/2025)
 <ul>
 	<li>✓ Update macOS icon to fit better</li>
 	<li>✓ Added support for Cyrillic characters (https://github.com/Picocrypt/giu/pull/1), thanks <a href="https://github.com/Retengart">@Retengart</a></li>
 	<li>✓ upx Linux binary in addition to Windows, update upx version for Windows</li>
-	<li>Fix Picocrypt not running on macOS 26 (and remember to update Homebrew after release)</li>
 </ul>
 
 # v1.48 (Released 04/18/2025)
