@@ -26,11 +26,11 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.49" date="2025-04-18">
-      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v148-released-04182025</url>
+    <release version="1.49" date="2025-08-03">
+      <url type="details">https://github.com/Picocrypt/Picocrypt/blob/main/Changelog.md#v149-released-08032025</url>
       <description>
         <ul>
-          <li>TO BE UPDATED</li>
+          <li>Added support for displaying Cyrillic characters in the UI</li>
         </ul>
       </description>
     </release>
