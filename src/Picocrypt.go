@@ -1637,17 +1637,17 @@ func work() {
 		_, errs[3] = fout.Write(rsEncode(rs5, flags))
 
 		// Fill values with Go's CSPRNG
-		if _, err := rand.Read(salt); err != nil {
-			panic(err)
+		if n, err := rand.Read(salt); err != nil || n != 16 {
+			panic(errors.New("failed to read 16 bytes from crypto/rand"))
 		}
-		if _, err := rand.Read(hkdfSalt); err != nil {
-			panic(err)
+		if n, err := rand.Read(hkdfSalt); err != nil || n != 32 {
+			panic(errors.New("failed to read 32 bytes from crypto/rand"))
 		}
-		if _, err := rand.Read(serpentIV); err != nil {
-			panic(err)
+		if n, err := rand.Read(serpentIV); err != nil || n != 16 {
+			panic(errors.New("failed to read 16 bytes from crypto/rand"))
 		}
-		if _, err := rand.Read(nonce); err != nil {
-			panic(err)
+		if n, err := rand.Read(nonce); err != nil || n != 24 {
+			panic(errors.New("failed to read 24 bytes from crypto/rand"))
 		}
 		if bytes.Equal(salt, make([]byte, 16)) {
 			panic(errors.New("fatal crypto/rand error"))
