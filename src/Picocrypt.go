@@ -2,7 +2,7 @@ package main
 
 /*
 
-Picocrypt v1.49
+Picocrypt v2.00
 Copyright (c) Evan Su
 Released under GPL-3.0-only
 https://github.com/Picocrypt/Picocrypt
@@ -61,7 +61,7 @@ var TRANSPARENT = color.RGBA{0x00, 0x00, 0x00, 0x00}
 
 // Generic variables
 var window *giu.MasterWindow
-var version = "v1.49"
+var version = "v2.00"
 var dpi float32
 var mode string
 var working bool
@@ -1186,12 +1186,18 @@ func work() {
 	var hkdfSalt []byte                // HKDF-SHA3 salt, 32 bytes
 	var serpentIV []byte               // Serpent IV, 16 bytes
 	var nonce []byte                   // 24-byte XChaCha20 nonce
-	var keyHash []byte                 // SHA3-512 hash of encryption key
+	var keyHash []byte                 // HMAC-SHA3-512 of header
 	var keyHashRef []byte              // Same as 'keyHash', but used for comparison
 	var keyfileKey []byte              // The SHA3-256 hashes of keyfiles
 	var keyfileHash = make([]byte, 32) // The SHA3-256 of 'keyfileKey'
 	var keyfileHashRef []byte          // Same as 'keyfileHash', but used for comparison
 	var authTag []byte                 // 64-byte authentication tag (BLAKE2b or HMAC-SHA3)
+
+	// Header fields decoded (used for MAC verification)
+	var headerVersion []byte
+	var headerComments []byte
+	var headerCommentsLen int
+	var headerFlags []byte
 
 	var tempZipCipherW *chacha20.Cipher
 	var tempZipCipherR *chacha20.Cipher
@@ -1690,9 +1696,9 @@ func work() {
 		// Stores any Reed-Solomon decoding errors
 		errs := make([]error, 10)
 
-		version := make([]byte, 15)
-		fin.Read(version)
-		_, errs[0] = rsDecode(rs5, version)
+		versionEnc := make([]byte, 15)
+		fin.Read(versionEnc)
+		headerVersion, errs[0] = rsDecode(rs5, versionEnc)
 
 		tmp := make([]byte, 15)
 		fin.Read(tmp)
@@ -1704,12 +1710,23 @@ func work() {
 		}
 
 		commentsLength, _ := strconv.Atoi(string(tmp))
-		fin.Read(make([]byte, commentsLength*3))
+		headerCommentsLen = commentsLength
+		headerComments = make([]byte, 0, commentsLength)
+		for i := 0; i < commentsLength; i++ {
+			cEnc := make([]byte, 3)
+			fin.Read(cEnc)
+			cDec, err := rsDecode(rs1, cEnc)
+			if err != nil {
+				errs[1] = err
+			}
+			headerComments = append(headerComments, cDec...)
+		}
 		total -= int64(commentsLength) * 3
 
 		flags := make([]byte, 15)
 		fin.Read(flags)
 		flags, errs[2] = rsDecode(rs5, flags)
+		headerFlags = flags
 		paranoid = flags[0] == 1
 		reedsolo = flags[3] == 1
 		padded = flags[4] == 1
@@ -1893,58 +1910,93 @@ func work() {
 	popupStatus = "Calculating values..."
 	giu.Update()
 
-	// Hash the encryption key for comparison when decrypting
-	tmp := sha3.New512()
-	if _, err := tmp.Write(key); err != nil {
-		panic(err)
-	}
-	keyHash = tmp.Sum(nil)
-
-	// Validate the password and/or keyfiles
-	if mode == "decrypt" {
-		keyCorrect := subtle.ConstantTimeCompare(keyHash, keyHashRef) == 1
-		keyfileCorrect := subtle.ConstantTimeCompare(keyfileHash, keyfileHashRef) == 1
-		incorrect := !keyCorrect
-		if keyfile || len(keyfiles) > 0 {
-			incorrect = !keyCorrect || !keyfileCorrect
+	// Compute or verify header MAC (HMAC-SHA3-512)
+	{
+		// Derive a subkey for the header MAC
+		subkeyHeader := make([]byte, 64)
+		hk := hkdf.New(sha3.New512, key, hkdfSalt, nil)
+		if n, err := hk.Read(subkeyHeader); err != nil || n != 64 {
+			panic(errors.New("fatal hkdf.Read error"))
 		}
 
-		// If something is incorrect
-		if incorrect {
-			if keep {
-				kept = true
-			} else {
-				if !keyCorrect {
-					mainStatus = "The provided password is incorrect"
+		macHeader := hmac.New(sha3.New512, subkeyHeader)
+
+		if mode == "encrypt" {
+			// Reconstruct flags
+			flagsHeader := make([]byte, 5)
+			if paranoid { flagsHeader[0] = 1 }
+			if len(keyfiles) > 0 { flagsHeader[1] = 1 }
+			if keyfileOrdered { flagsHeader[2] = 1 }
+			if reedsolo { flagsHeader[3] = 1 }
+			if total%int64(MiB) >= int64(MiB)-128 { flagsHeader[4] = 1 }
+
+			macHeader.Write([]byte(version))
+			macHeader.Write([]byte(fmt.Sprintf("%05d", len(comments))))
+			macHeader.Write([]byte(comments))
+			macHeader.Write(flagsHeader)
+			macHeader.Write(salt)
+			macHeader.Write(hkdfSalt)
+			macHeader.Write(serpentIV)
+			macHeader.Write(nonce)
+			macHeader.Write(keyfileHash)
+
+			keyHash = macHeader.Sum(nil)
+		} else { // decrypt
+			macHeader.Write(headerVersion)
+			macHeader.Write([]byte(fmt.Sprintf("%05d", headerCommentsLen)))
+			macHeader.Write(headerComments)
+			macHeader.Write(headerFlags)
+			macHeader.Write(salt)
+			macHeader.Write(hkdfSalt)
+			macHeader.Write(serpentIV)
+			macHeader.Write(nonce)
+			macHeader.Write(keyfileHash)
+
+			keyHash = macHeader.Sum(nil)
+
+			headerValid := subtle.ConstantTimeCompare(keyHash, keyHashRef) == 1
+			keyfileCorrect := subtle.ConstantTimeCompare(keyfileHash, keyfileHashRef) == 1
+			incorrect := !headerValid
+			if keyfile || len(keyfiles) > 0 {
+				incorrect = !headerValid || !keyfileCorrect
+			}
+
+			if incorrect {
+				if keep {
+					kept = true
 				} else {
-					if keyfileOrdered {
-						mainStatus = "Incorrect keyfiles or ordering"
+					if !headerValid {
+						mainStatus = "The password is incorrect or header is tampered"
 					} else {
-						mainStatus = "Incorrect keyfiles"
+						if keyfileOrdered {
+							mainStatus = "Incorrect keyfiles or ordering"
+						} else {
+							mainStatus = "Incorrect keyfiles"
+						}
+						if deniability {
+							fin.Close()
+							os.Remove(inputFile)
+							inputFile = strings.TrimSuffix(inputFile, ".tmp")
+						}
 					}
-					if deniability {
-						fin.Close()
-						os.Remove(inputFile)
-						inputFile = strings.TrimSuffix(inputFile, ".tmp")
+					broken(fin, nil, mainStatus, true)
+					if recombine {
+						inputFile = inputFileOld
 					}
+					return
 				}
-				broken(fin, nil, mainStatus, true)
+			}
+
+			// Create the output file for decryption (moved here after validation)
+			fout, err = os.Create(outputFile + ".incomplete")
+			if err != nil {
+				fin.Close()
 				if recombine {
-					inputFile = inputFileOld
+					os.Remove(inputFile)
 				}
+				accessDenied("Write")
 				return
 			}
-		}
-
-		// Create the output file for decryption
-		fout, err = os.Create(outputFile + ".incomplete")
-		if err != nil {
-			fin.Close()
-			if recombine {
-				os.Remove(inputFile)
-			}
-			accessDenied("Write")
-			return
 		}
 	}
 
