@@ -113,7 +113,7 @@ No, it doesn't shred any files and just deletes them as your file manager would.
 Yes, Picocrypt is secure against quantum computers. All of the cryptography used in Picocrypt works off of a private key, and private-key cryptography is considered to be resistant against all current and future developments, including quantum computers.
 
 # License
-All original code (not a fork) in the [Picocrypt organization](https://github.com/orgs/Picocrypt/repositories) licensed under `GPL-3.0-only`. This includes the GUI, CLI, and Web versions. Forked repositories retain the license of their respective upstream sources.
+All original code (non-forked repositories) in the [Picocrypt organization](https://github.com/orgs/Picocrypt/repositories) is licensed under **GPL-3.0-only**. This includes the GUI, CLI, and web application. Forked repositories retain their respective upstream licenses.
 
 # Acknowledgements
 A thank you from the bottom of my heart to the significant contributors on [Open Collective](https://opencollective.com/picocrypt):
