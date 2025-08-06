@@ -4,7 +4,7 @@ package main
 
 Picocrypt v1.49
 Copyright (c) Evan Su
-Released under GPL-3.0-or-later
+Released under GPL-3.0-only
 https://github.com/Picocrypt/Picocrypt
 
 ~ In cryptography we trust ~
