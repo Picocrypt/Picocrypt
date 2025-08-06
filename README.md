@@ -12,6 +12,14 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 <br>
 <p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt"></p>
 
+> # ❄️ Project archived ❄️
+>
+> Picocrypt has been permanently archived and frozen into a read-only state. [Read the explanation](https://github.com/Picocrypt/Picocrypt/issues/134).
+>
+> **Picocrypt is still fully functional, stable, and secure as is. You can continue using it confidently.**
+>
+> Archiving Picocrypt doesn't mean there's anything wrong with it, just that I'm done working on it.
+
 # Downloads
 
 ℹ️ **You are highly recommended to read through the [Features](https://github.com/Picocrypt/Picocrypt?tab=readme-ov-file#features) section below to fully understand the features and limitations of Picocrypt before using it.** ℹ️
@@ -162,6 +170,6 @@ Finally, thanks to these people/organizations for helping me out when needed:
 	<li>@AsuxAX and @Minibus93 for testing new features</li>
 	<li>@mdanish-kh and @stephengillie for WinGet package</li>
 	<li>@Retengart for helping create the Flatpak and housekeeping it</li>
-	<li><a href="https://privacyguides.org">Privacy Guides</a> for listing Picocrypt</li>
+	<li><a href="https://privacyguides.org">Privacy Guides</a> for (previously) listing Picocrypt</li>
 	<li><a href="https://www.radicallyopensecurity.com/">Radically Open Security</a> for auditing Picocrypt</li>
 </ul>
