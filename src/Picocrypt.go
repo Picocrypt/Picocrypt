@@ -2,10 +2,10 @@ package main
 
 /*
 
-Picocrypt v2.00
-Copyright (c) Evan Su
+Picocrypt-NG v2.00
+Copyright (c) Picocrypt NG developers
 Released under GPL-3.0-only
-https://github.com/Picocrypt/Picocrypt
+https://github.com/Picocrypt-NG/Picocrypt-NG
 
 ~ In cryptography we trust ~
 
