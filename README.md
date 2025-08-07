@@ -12,13 +12,19 @@ Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encr
 <br>
 <p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt"></p>
 
-> # ❄️ Project archived ❄️
->
-> Picocrypt has been permanently archived and frozen into a read-only state. [Read the explanation](https://github.com/Picocrypt/Picocrypt/issues/134).
->
-> **Picocrypt is still fully functional, stable, and secure as is. You can continue using it confidently.**
->
-> Archiving Picocrypt doesn't mean there's anything wrong with it, just that I'm done working on it.
+# ❄️ Project archived ❄️
+
+Picocrypt has been permanently archived and frozen into a read-only state.
+
+Read the [reason](https://github.com/Picocrypt/Picocrypt/issues/134) why. ***Please read it carefully and fully**; it's not the format you might expect.*
+
+**Picocrypt is still fully functional, stable, and secure as is. You can continue using it confidently.**
+
+Archiving Picocrypt doesn't mean there's anything wrong with it, just that I'm done working on it.
+
+A community-developed successor to Picocrypt is available and called [Picocrypt NG](https://github.com/Picocrypt-NG).
+
+**I do not endorse, develop, nor support Picocrypt NG; use it at your own risk.**
 
 # Downloads
 
