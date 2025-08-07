@@ -21,6 +21,10 @@ jobs:
         check-latest: true
         cache: false
 
+    - name: Update repository
+      run: |
+        sudo apt update
+
     - name: Install packages
       run: |
         sudo apt install -y gcc xorg-dev libgtk-3-dev libgl1-mesa-dev libglu1-mesa wget
