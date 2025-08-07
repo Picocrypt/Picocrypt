@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.picocrypt.Picocrypt</id>
-  <name>Picocrypt</name>
+  <id>io.github.picocrypt-ng.Picocrypt-NG</id>
+  <name>Picocrypt-NG</name>
   <summary>A very small, very simple, yet very secure encryption tool.</summary>
-  <developer id="io.github.picocrypt">
-    <name>Evan Su</name>
+  <developer id="io.github.picocrypt-ng">
+    <name>Picocrypt NG contributors</name>
   </developer>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
-  <url type="homepage">https://github.com/Picocrypt/Picocrypt</url>
-  <url type="bugtracker">https://github.com/Picocrypt/Picocrypt/issues</url>
+  <url type="homepage">https://github.com/Picocrypt-NG/Picocrypt-NG</url>
+  <url type="bugtracker">https://github.com/Picocrypt-NG/Picocrypt-NG/issues</url>
   <content_rating type="oars-1.1"/>
   <description>
     <p>Visit the project's GitHub repository to learn more.</p>
@@ -18,10 +18,10 @@
     <category>Utility</category>
     <category>Security</category>
   </categories>
-  <launchable type="desktop-id">io.github.picocrypt.Picocrypt.desktop</launchable>
+  <launchable type="desktop-id">io.github.picocrypt-ng.Picocrypt-NG.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Picocrypt/Picocrypt/refs/heads/main/images/screenshot.png</image>
+      <image>https://raw.githubusercontent.com/Picocrypt-NG/Picocrypt-NG/refs/heads/main/images/screenshot.png</image>
       <caption>Main window</caption>
     </screenshot>
   </screenshots>
