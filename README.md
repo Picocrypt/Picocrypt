@@ -1,28 +1,27 @@
-🍁 **Proudly made in Canada.** 🍁
-
 <a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-windows.yml/badge.svg"></a>
 <a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-macos.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-macos.yml/badge.svg"></a>
 <a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-linux.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/build-linux.yml/badge.svg"></a>
 <a href="https://github.com/Picocrypt/Picocrypt/actions/workflows/codeql-analysis.yml"><img src="https://github.com/Picocrypt/Picocrypt/actions/workflows/codeql-analysis.yml/badge.svg"></a>
 
+> ### 🚧update this to Picocrypt NG ---v
 <p align="center"><img align="center" src="/images/logo.svg" width="512" alt="Picocrypt"></p> 
 
-Picocrypt is a very small (hence <i>Pico</i>), very simple, yet very secure encryption tool that you can use to protect your files. It's designed to be the <i>go-to</i> tool for file encryption, with a focus on security, simplicity, and reliability. Picocrypt uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security.
+Picocrypt NG is a very small (hence <i>Pico</i>), very simple, yet very secure encryption tool that you can use to protect your files. It's designed to be the <i>go-to</i> tool for file encryption, with a focus on security, simplicity, and reliability. Picocrypt NG uses the secure XChaCha20 cipher and the Argon2id key derivation function to provide a high level of security.
 
 <br>
-<p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt"></p>
+<p align="center"><img align="center" src="/images/screenshot.png" width="318" alt="Picocrypt NG"></p>
 
-> # ❄️ Project archived ❄️
->
-> Picocrypt has been permanently archived and frozen into a read-only state. [Read the explanation](https://github.com/Picocrypt/Picocrypt/issues/134).
->
-> **Picocrypt is still fully functional, stable, and secure as is. You can continue using it confidently.**
->
-> Archiving Picocrypt doesn't mean there's anything wrong with it, just that I'm done working on it.
+<!--  DO NOT REMOVE (but you can add more lines)  -->
+# History
+
+Picocrypt NG is a community-developed continuation of the archived [Picocrypt](https://github.com/Picocrypt) project.
+
+The original Picocrypt author does not endorse, develop, nor support Picocrypt NG.
+<!--/ DO NOT REMOVE  -->
 
 # Downloads
 
-ℹ️ **You are highly recommended to read through the [Features](https://github.com/Picocrypt/Picocrypt?tab=readme-ov-file#features) section below to fully understand the features and limitations of Picocrypt before using it.** ℹ️
+ℹ️ **You are highly recommended to read through the [Features](https://github.com/Picocrypt-NG/Picocrypt-NG?tab=readme-ov-file#features) section below to fully understand the features and limitations of Picocrypt before using it.** ℹ️
 
 Make sure to only download Picocrypt from this repository to ensure that you get the authentic and backdoor-free Picocrypt. When sharing Picocrypt with others, be sure to link to this repository to prevent any confusion. Besides this repository, there is no official website/webpage or mobile apps for Picocrypt. For example, beware of picocrypt.org ([archive.org snapshot](https://web.archive.org/web/20240816235513/http://picocrypt.org/)), which claimed to be the official website for this project.
 
@@ -99,9 +98,6 @@ While being simple, Picocrypt also strives to be powerful in the hands of knowle
 For more information on how Picocrypt handles cryptography, see <a href="Internals.md">Internals</a> for the technical details. If you're worried about the safety of me or this project, let me assure you that this repository won't be hijacked or backdoored. I have 2FA (TOTP) enabled on all accounts with a tie to Picocrypt (GitHub, etc.), in addition to full-disk encryption on all of my portable devices. For further hardening, Picocrypt uses my isolated forks of dependencies and I fetch upstream only when I have taken a look at the changes and believe that there aren't any security issues. This means that if a dependency gets hacked or deleted by the author, Picocrypt will be using my fork of it and remain completely unaffected. I've also meticulously gone through every single setting in the Picocrypt organization and repos, locking down access behind multiple layers of security such as read-only base-level member permissions, required PRs and mandatory approvals (which no one can do but me), mandatory CODEOWNERS approvals, and I'm the only member of the Picocrypt organization and repos (except for PicoGo). You can feel confident about using Picocrypt as long as you understand:
 
 <strong>Picocrypt operates under the assumption that the host machine it is running on is safe and trusted. If that is not the case, no piece of software will be secure, and you will have much bigger problems to worry about. As such, Picocrypt is designed for the offline security of volumes and does not attempt to protect against side-channel analysis.</strong>
-
-# Donations
-When I was actively developing Picocrypt, I accepted donations, but now that Picocrypt is complete and production-ready, there's no need anymore. Instead, take your time and effort to share the love of Picocrypt with others. Donations are nice, but being able to help others is a lot more valuable to me than a few spare dollars. Knowing that Picocrypt is helping people secure their files is plenty enough for me.
 
 # FAQ
 **Does the "Delete files" feature shred files?**
