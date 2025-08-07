@@ -1528,7 +1528,7 @@ func work() {
 			panic(err)
 		}
 		tmp, err = rsDecode(rs5, tmp)
-		if valid, _ := regexp.Match(`^v1\.\d{2}`, tmp); err != nil || !valid {
+		if valid, _ := regexp.Match(`^v\d\.\d{2}`, tmp); err != nil || !valid {
 			os.Remove(inputFile)
 			inputFile = strings.TrimSuffix(inputFile, ".tmp")
 			broken(nil, nil, "Password is incorrect or the file is not a volume", true)
