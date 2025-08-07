@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Terminal=false
-Name=Picocrypt
+Name=Picocrypt-NG
 Comment=A very small, very simple, yet very secure encryption tool
 Type=Application
 Exec=picocrypt-gui
-Icon=io.github.picocrypt.Picocrypt
+Icon=io.github.picocrypt-ng.Picocrypt-NG
 Categories=Utility;Security;
