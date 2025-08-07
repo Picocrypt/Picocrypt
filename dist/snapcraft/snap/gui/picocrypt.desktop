@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 Terminal=false
-Name=Picocrypt
-Exec=picocrypt
-Icon=${SNAP}/meta/gui/picocrypt.svg
+Name=Picocrypt NG
+Exec=picocrypt-ng
+Icon=${SNAP}/meta/gui/picocrypt-ng.svg
